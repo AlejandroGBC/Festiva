@@ -56,13 +56,14 @@ Festiva/
     │   ├── api-client.ts           # Wrapper fetch hacia el backend Node
     │   └── auth-context.tsx        # AuthProvider para Client Components
     │
-    ├── hooks/shared/               # Hooks globales
-    │   ├── useAuth.ts
-    │
-    └── types/shared/               # Tipos globales
-        ├── api.types.ts
-        ├── supabase.types.ts       # Generado con Supabase CLI
-        └── auth.types.ts
+    └── shared/               # Hooks globales
+        ├── hooks/
+        │    └── useAuth.ts
+        ├── components/                 # Cualquier componente compartido (botones, colores, etc.)
+        └── types/                      # Tipos globales
+            ├── api.types.ts
+            ├── supabase.types.ts       # Generado con Supabase CLI
+            └── auth.types.ts
 ```
 
 ---
@@ -108,10 +109,9 @@ export async function crearPedido(payload: CrearPedidoDTO) {
 ## Variables de entorno
 
 ```bash
-# .env.local
-NEXT_PUBLIC_SUPABASE_URL=
-NEXT_PUBLIC_SUPABASE_ANON_KEY=
-NEXT_PUBLIC_API_URL=http://localhost:3001
+# .env (agregar valores)
+SUPABASE_URL=
+SUPABASE_SERVICE_KEY=
 ```
 
 ---
@@ -119,19 +119,27 @@ NEXT_PUBLIC_API_URL=http://localhost:3001
 ## Instalación y desarrollo
 
 ```bash
+# Copiar .env.example y reemplazar variable
+cp .env.example .env
+
 # Instalar dependencias
 npm install
-
-# Generar tipos de Supabase (requiere Supabase CLI)
-# --project-id <id>: ID del proyecto en Supabase
-# Se obtiene en: Supabase Dashboard → Project Settings → General → Project I
-npx supabase gen types typescript --project-id <id> > src/types/shared/supabase.types.ts
 
 # Ejecución
 npm run dev
 
 # Build
 npm run build
+
+# Extra para supabase
+
+# Generar tipos de Supabase (requiere Supabase CLI)
+# --project-id <id>: ID del proyecto en Supabase
+# Se obtiene en: Supabase Dashboard → Project Settings → General → Project ID
+npx supabase gen types typescript --project-id <id> > src/shared/types/supabase.types.ts
+
+# Volver a generar los tipados si llegasen a cambiar en la base de datos
+npm run generate-types
 ```
 
 ---

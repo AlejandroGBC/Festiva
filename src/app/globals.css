@@ -7,12 +7,14 @@
   --foreground: #171717;
 }
 
+/* //Modo oscuro comentado
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
   }
 }
+*/
 
 body {
   color: var(--foreground);
@@ -24,4 +26,24 @@ body {
   .text-balance {
     text-wrap: balance;
   }
+}
+
+/* globals.css */
+.mobile-shell-wrapper {
+  display: flex;
+  justify-content: center;
+  min-height: 100dvh;
+  background: #e5e5e5; /* fondo "fuera" del teléfono, solo se ve en desktop */
+}
+
+.mobile-shell {
+  width: 100%;
+  max-width: 430px;       /* ancho tipo teléfono */
+  min-height: 100dvh;
+  background: white;      /* fondo real de tu app */
+  position: relative;
+  overflow-x: hidden;
+  padding: 2rem 2rem;          /* padding horizontal para que no toque los bordes del teléfono */
+  background: #F7F5FC;
+  box-shadow: 0 0 40px rgba(0,0,0,0.15); /* efecto "frame" en desktop */
 }
