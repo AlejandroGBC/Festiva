@@ -1,6 +1,7 @@
+import Navbar from "@/components/shared/Navbar";
 
 export default function Home() {
   return (
-    <div>Hello World!</div>
+    <Navbar />
   );
 }
