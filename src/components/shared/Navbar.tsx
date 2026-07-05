@@ -31,15 +31,17 @@ export function Navbar() {
       {navLinks.map((link) => {
         const Icon = link.icon;
         return (
-          <a key={link.href} href={link.href} className="flex flex-col items-center hover:bg-[#FE4C8C] hover:rounded-full hover:py-1 hover:px-5">
-            <Icon size={20} className="text-[#48454F] transition-colors" />
+          <a key={link.href} href={link.href} className="group flex flex-col items-center rounded-full px-5 py-1 transition-colors hover:bg-[#FE4C8C]">
+            <Icon size={20} className="text-[#48454F] transition-colors group-hover:text-[#590027]" />
 
-            <span className="text-[#48454F] ">{link.label}</span>
+            <span className="text-[#48454F] transition-colors group-hover:text-[#590027]">
+              {link.label}
+            </span>
           </a>
         );
       })}
     </nav>
-  ); 
+  );
 }
 
 export default Navbar;
