@@ -46,10 +46,6 @@ Festiva/
     │   └── proveedor/
     │       └── perfil/             # misma estructura
     │
-    ├── components/shared/          # UI reutilizable entre sistemas
-    │   ├── Button.tsx              # Buttons.tsx reutilizable por ejemplo
-    │   ├── Input.tsx
-    │
     ├── lib/                        # Inicialización y clientes externos
     │   ├── supabase.ts             # Cliente Supabase (browser)
     │   ├── supabase-server.ts      # Cliente Supabase (SSR / Server Components)
