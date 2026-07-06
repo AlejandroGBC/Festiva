@@ -35,7 +35,7 @@ export function Navbar() {
         const Icon = link.icon;
         const isActive = pathname === link.href;
         return (
-          <Link key={link.href} href={link.href} className={`group flex flex-1 flex-col items-center rounded-full py-1 transition-colors ${isActive ? "bg-festiva-euphoric-pink" : "hover:bg-festiva-euphoric-pink"} `}>
+          <Link key={link.href} href={link.href} className={`group flex flex-col items-center rounded-full py-1 px-5 transition-colors ${isActive ? "bg-festiva-euphoric-pink" : "hover:bg-festiva-euphoric-pink"} `}>
             <Icon size={18} className={`text-[#48454F] transition-colors ${isActive ? "text-[#590027]" : "group-hover:text-[#590027]" }`}/>
             <span className={`mt-1 text-[11px] text-[#48454F] transition-colors ${isActive ? "text-[#590027]" : "group-hover:text-[#590027]" } font-medium tracking-[0.5px]`}>
               {link.label}
