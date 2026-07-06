@@ -2,15 +2,23 @@ import type { Config } from "tailwindcss";
 
 const config: Config = {
   content: [
-    "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
     extend: {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        festiva: {
+          'midnight-blue': "#261E4E",
+          'euphoric-pink': "#FF4D8D",
+          'electric-violet': "#7B3FE4",
+          'confetti-orange': "#FF9C2E",
+          'mint-neon': "#2EC4B6",
+        },
+      },
+      fontFamily: {
+        sans: ["var(--font-poppins)", "sans-serif"],
       },
     },
   },
