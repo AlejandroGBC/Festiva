@@ -1,6 +1,6 @@
 "use client";
 
-import { Home, PartyPopper, MessageSquare, User, Search} from "lucide-react";
+import { Home, Calendar, MessageSquare, User, Search} from "lucide-react";
 import { usePathname } from "next/navigation";
 import Link from 'next/link';
 
@@ -18,7 +18,7 @@ const navLinks = [
   {
     label: "Eventos",
     href: "/eventos",
-    icon: PartyPopper,
+    icon: Calendar,
   },
   {
     label: "Chat",
