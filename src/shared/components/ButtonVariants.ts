@@ -9,7 +9,8 @@ export const buttonVariants = cva(
     "cursor-pointer",
     "disabled:pointer-events-none disabled:opacity-50",
     "active:scale-[0.98]",
-    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-festiva-electric-violet/40"
+    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-festiva-electric-violet/40",
+    "rounded-xl"
   ].join(" "),
   {
     variants: {
