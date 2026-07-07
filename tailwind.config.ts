@@ -15,6 +15,7 @@ const config: Config = {
           'electric-violet': "#7B3FE4",
           'confetti-orange': "#FF9C2E",
           'mint-neon': "#2EC4B6",
+          'monochromatic': "#f5f2fa",
         },
       },
       fontFamily: {
