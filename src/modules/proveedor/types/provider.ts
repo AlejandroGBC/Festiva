@@ -4,6 +4,7 @@ export interface ProviderProfile {
   city: string;
   phone: string;
   completionPercentage: number;
+  specialist: string;
   specialties: string[];
   portfolioImages: string[];
   availability: {

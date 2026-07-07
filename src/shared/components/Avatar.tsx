@@ -1,4 +1,5 @@
 import React from 'react';
+import { Plus } from 'lucide-react';
 
 interface AvatarProps {
     initials: string;
@@ -7,13 +8,12 @@ interface AvatarProps {
 
 export default function Avatar({ initials, editable = false }: AvatarProps) {
     return (
-        <div className="edit-av">
+        <div className="relative flex h-[72px] w-[72px] items-center justify-center rounded-full border-[3px] border-white bg-festiva-electric-violet font-sans text-[22px] font-extrabold text-white shadow-sm">
             {initials}
+            
             {editable && (
-                <div className="edit-av-badge">
-                    <svg className="ic" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M5 12h14"/><path d="M12 5v14"/>
-                    </svg>
+                <div className="absolute bottom-0 right-0 flex h-6 w-6 items-center justify-center rounded-full border-2 border-white bg-festiva-euphoric-pink shadow-sm">
+                <Plus className="h-3 w-3 stroke-[2.5] text-white" />
                 </div>
             )}
         </div>

@@ -9,6 +9,7 @@ export const providerService = {
         city: 'Tegucigalpa, Francisco Morazan',
         phone: '+504 33345678',
         completionPercentage: 92,
+        specialist: 'Decoración',
         specialties: ['Decoracion floral', 'Iluminacion', 'Montajes', 'Bodas', 'XV Anos'],
         portfolioImages: ['pink', 'purple', 'orange', 'teal', 'navy'],
         availability: [
