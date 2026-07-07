@@ -7,7 +7,7 @@ export default function ClienteLayout({
 }) {
     return (
         <div className="min-h-screen flex flex-col">
-            <main className="flex-1 pb-4">
+            <main className="flex-1 pb-4 p-5">
                 {children}
             </main>
 
