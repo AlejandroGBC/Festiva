@@ -7,25 +7,37 @@ const sidebarMainLinks = [
         label: "Inicio",
         href: "/cliente/inicio",
         icon: Home,
-        color: "festiva-electric-violet"
+        color: {
+            text: "text-festiva-electric-violet",
+            bg: "bg-festiva-electric-violet/10"
+        }
     },
     {
         label: "Mis Eventos",
         href: "",
         icon: Calendar,
-        color: "festiva-confetti-orange"
+        color: {
+            text: "text-festiva-confetti-orange",
+            bg: "bg-festiva-confetti-orange/10"
+        }
     },
     {
         label: "Ofertas recibidas",
         href: "",
         icon: Briefcase,
-        color: "festiva-euphoric-pink"
+        color: {
+            text: "text-festiva-euphoric-pink",
+            bg: "bg-festiva-euphoric-pink/10"
+        }
     },
     {
         label: "Chat",
         href: "",
         icon: MessageSquare,
-        color: "festiva-mint-neon"
+        color: {
+            text: "text-festiva-mint-neon",
+            bg: "bg-festiva-mint-neon/10"
+        }
     }
 ]
 
@@ -51,7 +63,7 @@ export function Sidebar() {
     return (
         <div className="w-80 h-full">
             <div className="bg-festiva-midnight-blue px-4 pt-10 pb-4">
-                <span className="bg-festiva-euphoric-pink text-white rounded-[999px] p-3 h-auto items-center text-lg font-bold">
+                <span className="bg-festiva-euphoric-pink text-white rounded-full w-12 h-12 flex items-center justify-center text-lg font-bold">
                     {usuarioCliente.abreviatura}
                 </span>
                 <h1 className="text-white font-bold mt-4 mb-0">{usuarioCliente.nombre}</h1>
@@ -65,14 +77,15 @@ export function Sidebar() {
                 <div className="flex flex-col gap-2 mt-3">
                     {sidebarMainLinks.map((link) => {
                         const Icon = link.icon;
-                        const color = link.color;
+                        const textColor = link.color.text;
+                        const backgorundColor = link.color.bg;
                         return (
                             <Link
                                 key={link.label}
                                 href={link.href}
                                 className="flex items-center gap-3 rounded-lg text-sm transition-colors py-1"
                             >
-                                <Icon size={36} className={`text-${color} bg-${color}/10 p-2 rounded-xl`} />
+                                <Icon size={36} className={`${textColor} ${backgorundColor} p-2 rounded-xl`} />
                                 <span className="text-festiva-midnight-blue font-semibold">{link.label}</span>
                             </Link>
                         );
