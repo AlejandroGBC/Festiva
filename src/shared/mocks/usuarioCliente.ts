@@ -3,7 +3,7 @@ export const usuarioCliente = {
     correo: "wilson@festiva.app",
     contrasenia: "Usuario1234@",
     abreviatura : "WA",
-    clienteVerificada: true
+    clienteVerificado: true
 };
 
 export default usuarioCliente;
