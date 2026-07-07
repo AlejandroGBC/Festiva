@@ -61,7 +61,7 @@ const sidebarSecondaryLinks = [
 
 export function Sidebar() {
     return (
-        <div className="w-80 h-full">
+        <div className="w-80 h-full flex flex-col">
             <div className="bg-festiva-midnight-blue px-4 pt-10 pb-4">
                 <span className="bg-festiva-euphoric-pink text-white rounded-full w-12 h-12 flex items-center justify-center text-lg font-bold">
                     {usuarioCliente.abreviatura}
@@ -108,7 +108,7 @@ export function Sidebar() {
                 </div>
             </div>
 
-            <div className="flex justify-center px-4">
+            <div className="flex justify-center px-4 mt-auto pb-6">
                 <button className="flex items-center justify-center gap-2 w-full bg-festiva-midnight-blue/10 text-festiva-midnight-blue font-bold py-2.5 px-[1.125rem] rounded-xl">
                     <LogOut size={20} />
                     Cerrar sesión
