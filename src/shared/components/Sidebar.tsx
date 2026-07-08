@@ -114,8 +114,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                                     className={`group flex items-center gap-3 px-4 py-2 text-sm transition-all duration-200 
                                     ${isActive ? `${backgroundColor} ${borderLeftColor}` : hoverBg}`}>
                                     <Icon size={36} className={`${textColor} ${backgroundColor} p-2 rounded-xl`} />
-                                    <span className={`font-semibold transition-colors ${isActive ? textColor : `text-festiva-midnight-blue ${hoverText}`
-                                        }`}>
+                                    <span className={`font-semibold transition-colors ${isActive ? textColor : `text-festiva-midnight-blue ${hoverText}`}`}>
                                         {link.label}
                                     </span>
                                 </Link>

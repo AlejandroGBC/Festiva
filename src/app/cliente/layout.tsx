@@ -13,7 +13,7 @@ export default function ClienteLayout({
     const [sidebarOpen, setSidebarOpen] = useState(false);
 
     return (
-        <div className="min-h-screen flex flex-col">
+        <div className="h-screen flex flex-col">
             <Header onMenuClick={() => setSidebarOpen(true)} />
 
             <Sidebar
@@ -21,7 +21,7 @@ export default function ClienteLayout({
                 onClose={() => setSidebarOpen(false)}
             />
 
-            <main className="flex-1 pb-4 p-5">
+            <main className="flex-1 overflow-y-auto px-5">
                 {children}
             </main>
 
