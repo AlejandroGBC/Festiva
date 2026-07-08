@@ -19,8 +19,8 @@ export default function InicioPage() {
                     Nuevo evento
                 </button>
             </HeroBanner>
-            <div className="flex justify-evenly text-center items-center">
-                {servicios.slice(0,4).map((servicio) => (
+            <div className="flex justify-between text-center items-center">
+                {servicios.slice(0,5).map((servicio) => (
                     <IconTile
                         key={servicio.id}
                         nombre={servicio.nombre}
