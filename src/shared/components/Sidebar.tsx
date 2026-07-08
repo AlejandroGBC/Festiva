@@ -1,6 +1,9 @@
+"use client";
+
 import usuarioCliente from "../mocks/usuarioCliente";
 import { User, Home, Calendar, Briefcase, MessageSquare, CreditCard, Settings, LogOut } from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const sidebarMainLinks = [
     {
@@ -9,7 +12,8 @@ const sidebarMainLinks = [
         icon: Home,
         color: {
             text: "text-festiva-electric-violet",
-            bg: "bg-festiva-electric-violet/10"
+            bg: "bg-festiva-electric-violet/10",
+            bl: "border-l-4 border-l-festiva-electric-violet"
         }
     },
     {
@@ -18,7 +22,8 @@ const sidebarMainLinks = [
         icon: Calendar,
         color: {
             text: "text-festiva-confetti-orange",
-            bg: "bg-festiva-confetti-orange/10"
+            bg: "bg-festiva-confetti-orange/10",
+            bl: "border-l-4 border-l-festiva-confetti-orange"
         }
     },
     {
@@ -27,7 +32,8 @@ const sidebarMainLinks = [
         icon: Briefcase,
         color: {
             text: "text-festiva-euphoric-pink",
-            bg: "bg-festiva-euphoric-pink/10"
+            bg: "bg-festiva-euphoric-pink/10",
+            bl: "border-l-4 border-l-festiva-euphoric-pink"
         }
     },
     {
@@ -36,7 +42,8 @@ const sidebarMainLinks = [
         icon: MessageSquare,
         color: {
             text: "text-festiva-mint-neon",
-            bg: "bg-festiva-mint-neon/10"
+            bg: "bg-festiva-mint-neon/10",
+            bl: "border-l-4 border-l-festiva-mint-neon"
         }
     }
 ]
@@ -60,9 +67,10 @@ const sidebarSecondaryLinks = [
 ]
 
 export function Sidebar() {
+    const pathname = usePathname();
     return (
-        <div className="w-80 h-full flex flex-col">
-            <div className="bg-festiva-midnight-blue px-4 pt-10 pb-4">
+        <div className="w-72 h-full flex flex-col">
+            <div className="bg-festiva-midnight-blue px-4 pt-9 pb-4">
                 <span className="bg-festiva-euphoric-pink text-white rounded-full w-12 h-12 flex items-center justify-center text-lg font-bold">
                     {usuarioCliente.abreviatura}
                 </span>
@@ -73,32 +81,44 @@ export function Sidebar() {
                     {usuarioCliente.clienteVerificado ? "Cliente verificado" : "Cliente no verificado"}
                 </span>
             </div>
-            <div className="px-4">
-                <div className="flex flex-col gap-2 mt-3">
+            <div className="py-4">
+                <div className="flex flex-col gap-2">
                     {sidebarMainLinks.map((link) => {
                         const Icon = link.icon;
                         const textColor = link.color.text;
-                        const backgorundColor = link.color.bg;
+                        const backgroundColor = link.color.bg;
+                        const isActive = pathname === link.href;
+                        const borderLeftColor = link.color.bl;
                         return (
                             <Link
                                 key={link.label}
                                 href={link.href}
-                                className="flex items-center gap-3 rounded-lg text-sm transition-colors py-1"
-                            >
-                                <Icon size={36} className={`${textColor} ${backgorundColor} p-2 rounded-xl`} />
-                                <span className="text-festiva-midnight-blue font-semibold">{link.label}</span>
+                                className={`group flex items-center gap-3 px-4 py-2 text-sm transition-all duration-200 
+                                    ${isActive ? `${backgroundColor} ${borderLeftColor}` : `hover:${backgroundColor}`}`}>
+                                <Icon size={36} className={`${textColor} ${backgroundColor} p-2 rounded-xl`} />
+                                <span className={`font-semibold transition-colors ${isActive ? textColor : "text-festiva-midnight-blue"
+                                    }`}>
+                                    {link.label}
+                                </span>
                             </Link>
                         );
                     })}
                 </div>
-                <div className="border-t-2 border-solid b-festiva-midnight-blue/45 mt-3 pt-4">
+                <div className="px-4 my-4">
+                    <hr className="border-t-2 border-festiva-midnight-blue/10" />
+                </div>
+                <div className="mt-3">
                     {sidebarSecondaryLinks.map((link) => {
                         const Icon = link.icon;
+                        const isActive = pathname === link.href
                         return (
                             <Link
                                 key={link.label}
                                 href={link.href}
-                                className="flex items-center gap-3 transition-colors text-sm text-festiva-midnight-blue font-semibold py-1"
+                                className={`flex items-center gap-3 text-sm px-4 py-2 font-semibold text-festiva-midnight-blue transition-colors duration-200 ${isActive
+                                    ? "bg-festiva-midnight-blue/5"
+                                    : "hover:bg-festiva-midnight-blue/5"
+                                    }`}
                             >
                                 <Icon size={36} className="bg-festiva-midnight-blue/5 p-2 rounded-xl" />
                                 <span>{link.label}</span>
