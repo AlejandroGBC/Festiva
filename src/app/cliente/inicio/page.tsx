@@ -5,6 +5,9 @@ import { Plus } from "lucide-react"
 import { servicios } from "@/shared/mocks/servicios";
 import { IconTile } from "@/shared/components/IconTile";
 import SectionHeader from "@/shared/components/SectionHeader";
+import { proveedoresDestacados } from "@/shared/mocks/proveedoresDestacados";
+import { ProviderCard } from "@/shared/components/ProviderCard";
+
 
 export default function InicioPage() {
     return (
@@ -22,7 +25,7 @@ export default function InicioPage() {
             </HeroBanner>
 
             <article className="my-6">
-                <SectionHeader title="Categorias" accion="Ver todos"/>
+                <SectionHeader title="Categorias" accion="Ver todos" />
                 <div className="flex justify-between text-center items-center">
                     {servicios.slice(0, 5).map((servicio) => (
                         <IconTile
@@ -35,8 +38,14 @@ export default function InicioPage() {
                 </div>
             </article>
             <article className="my-6">
-                <SectionHeader title="Proveedores destacados" accion="Ver todos"/>
-                
+                <SectionHeader title="Proveedores destacados" accion="Ver todos" />
+                <div className="flex justify-between">
+                    {proveedoresDestacados.slice(0, 2).map((proveedor) =>
+                        <ProviderCard key={proveedor.id} nombre={proveedor.nombre} categoria={proveedor.categoria} calificacion={proveedor.calificacion} 
+                            cantidadCalificaciones={proveedor.cantidadCalificaciones} precio={proveedor.precioContratacion}
+                            img={proveedor.link}/>
+                    )}
+                </div>
             </article>
         </section>
     );
