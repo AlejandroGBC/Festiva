@@ -19,18 +19,18 @@ export function ProviderCard({
     img,
 }: ProviderCardProps) {
     return (
-        <div className="rounded-xl overflow-hidden border bg-white w-[10.75rem]">
+        <div className="rounded-xl overflow-hidden border bg-white">
             <img
                 src={img}
                 alt={nombre}
                 className="w-full h-24 object-cover"
             />
 
-            <div className="px-3 py-1">
+            <div className="px-3 py-1 w-full">
                 <h3 className="font-bold text-sm text-festiva-midnight-blue">{nombre}</h3>
                 <p className="text-xs text-festiva-midnight-blue/45">{categoria}</p>
 
-                <div className="flex justify-between items-center gap-7">
+                <div className="flex justify-between items-center">
                     <div className="flex items-center gap-1 text-sm">
                         <Star
                             className="w-4 h-4 fill-festiva-confetti-orange text-festiva-confetti-orange"
