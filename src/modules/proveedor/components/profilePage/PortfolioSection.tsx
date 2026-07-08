@@ -1,28 +1,49 @@
 import React from 'react';
+import { Image, Flower, PartyPopper, Award, Images, Plus } from 'lucide-react';
+import Card from '@/shared/components/Card';
 import SectionTitle from '../../../../shared/components/SectionTitle';
 
 interface PortfolioSectionProps {
     images: string[];
 }
 
+const brandStyles: Record<string, { bg: string; text: string; icon: React.ComponentType<{ className?: string }> }> = {
+  'pink': { bg: 'bg-festiva-euphoric-pink/10', text: 'text-festiva-euphoric-pink', icon: Image },
+  'purple': { bg: 'bg-festiva-electric-violet/10', text: 'text-festiva-electric-violet', icon: Flower },
+  'orange': { bg: 'bg-festiva-confetti-orange/10', text: 'text-festiva-confetti-orange', icon: PartyPopper },
+  'teal': { bg: 'bg-festiva-mint-neon/10', text: 'text-festiva-mint-neon', icon: Award },
+  'navy': { bg: 'bg-festiva-midnight-blue/10', text: 'text-festiva-midnight-blue', icon: Images },
+};
+
 export default function PortfolioSection({ images }: PortfolioSectionProps) {
     return (
-        <div>
-            <SectionTitle title="Portafolio" actionLabel="Gestionar" />
-            <div className="port-edit-grid">
-                {images.map((colorKey, index) => (
-                    <div key={index} className="port-edit-cell" style={{ background: `rgba(var(--${colorKey}-rgb, 38,30,78), .08)` }}>
-                        <svg style={{ color: `var(--${colorKey})` }} className="ic" xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
-                            <rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>
-                        </svg>
-                    </div>
-                ))}
-                <div className="port-edit-cell port-add">
-                    <svg className="ic" xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M5 12h14"/><path d="M12 5v14"/>
-                    </svg>
-                </div>
+        <Card>
+            <SectionTitle
+                title="Portafolio"
+                actionLabel="Gestionar"
+                onActionClick={() => console.log('Gestionar portafolio')}
+            />
+            <div className="grid grid-cols-3 gap-3 mt-2">
+                {images.map((colorKey, index) => {
+                    const config = brandStyles[colorKey] || { bg: 'bg-slate-100', text: 'text-slate-400', icon: Image };
+                    const IconComponent = config.icon;
+                    return (
+                        <div
+                            key={index}
+                            className={`aspect-square flex items-center justify-center rounded-[20px] transition-transform hover:scale-[1.02] cursor-pointer ${config.bg}`}
+                        >
+                            <IconComponent className={`w-7 h-7 stroke-[1.5] ${config.text}`} />
+                        </div>
+                    );
+                })}
+                <button
+                    type="button"
+                    className="aspect-square flex flex-col items-center justify-center rounded-[20px] border-2 border-dashed border-slate-200 text-slate-400 bg-transparent hover:bg-slate-50 hover:border-slate-300 transition-all gap-1 cursor-pointer"
+                >
+                    <Plus className="w-6 h-6 stroke-[2]" />
+                    <span className="text-[11px] font-medium text-slate-400">Subir</span>
+                </button>
             </div>
-        </div>
+        </Card>
     );
 }

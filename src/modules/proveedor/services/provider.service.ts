@@ -5,12 +5,12 @@ export const providerService = {
       // Simulación de data
       return {
         businessName: 'Decos Magicos',
-        description: '5 años de experiencia en decoración para eventos especiales. Especialistas en bodas, xv anos y corporativos. Trabajamos con flores naturales de temporada.',
-        city: 'Tegucigalpa, Francisco Morazan',
+        description: '5 años de experiencia en decoración para eventos especiales. Especialistas en bodas, xv años y corporativos. Trabajamos con flores naturales de temporada.',
+        city: 'Tegucigalpa, Francisco Morazán',
         phone: '+504 33345678',
         completionPercentage: 92,
         specialist: 'Decoración',
-        specialties: ['Decoracion floral', 'Iluminacion', 'Montajes', 'Bodas', 'XV Anos'],
+        initialSpecialties: ['Decoracion floral', 'Iluminacion', 'Montajes', 'Bodas', 'XV Años'],
         portfolioImages: ['pink', 'purple', 'orange', 'teal', 'navy'],
         availability: [
           { dayRange: 'Lunes – Viernes', hours: '9:00 – 19:00', available: true },

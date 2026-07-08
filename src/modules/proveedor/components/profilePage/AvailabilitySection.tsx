@@ -1,6 +1,7 @@
 import React from 'react';
 import Card from '../../../../shared/components/Card';
 import Toggle from '../../../../shared/components/Toggle';
+import SectionTitle from '@/shared/components/SectionTitle';
 
 interface AvailabilityItem {
     dayRange: string;
@@ -15,21 +16,33 @@ interface AvailabilitySectionProps {
 
 export default function AvailabilitySection({ availability, onToggleChange }: AvailabilitySectionProps) {
     return (
-        <div>
-            <p style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '1.5px', textTransform: 'uppercase', color: 'var(--muted)', marginBottom: '10px' }}>
-                Disponibilidad semanal
-            </p>
-            <Card>
+        <Card>
+            <SectionTitle
+                title="Disponibilidad semanal"
+                actionLabel='Cambiar' //Pronto: cambiar horarios de disponibilidad
+            />
+            <div className="flex flex-col mt-2">
                 {availability.map((item, index) => (
-                    <div className="avail-item" key={index}>
-                        <div>
-                            <div className="avail-day">{item.dayRange}</div>
-                            <div className="avail-hours">{item.hours}</div>
+                    <div 
+                        key={index} 
+                        className={`flex justify-between items-center py-3.5 ${
+                        index !== availability.length - 1 ? 'border-b border-slate-100' : ''
+                        }`}
+                    >
+                        <div className="flex flex-col gap-0.5">
+                            <span className="text-[15px] font-bold text-festiva-midnight-blue leading-tight">
+                                {item.dayRange}
+                            </span>
+                            <span className={`text-[13px] font-medium leading-tight ${
+                                item.available ? 'text-slate-400' : 'text-slate-300'
+                            }`}>
+                                {item.hours}
+                            </span>
                         </div>
                         <Toggle isOn={item.available} onToggle={() => onToggleChange(index)} />
                     </div>
                 ))}
-            </Card>
-        </div>
+            </div>
+        </Card>
     );
 }
