@@ -4,7 +4,6 @@ import usuarioCliente from "../mocks/usuarioCliente";
 import { User, Home, Calendar, Briefcase, MessageSquare, CreditCard, Settings, LogOut } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { text } from "stream/consumers";
 
 const sidebarMainLinks = [
     {
@@ -21,7 +20,7 @@ const sidebarMainLinks = [
     },
     {
         label: "Mis Eventos",
-        href: "/",
+        href: "",
         icon: Calendar,
         color: {
             text: "text-festiva-confetti-orange",
