@@ -3,11 +3,15 @@ import Image from "next/image";
 import isotipoColor from "@/shared/img/isotipoColor.svg";
 import usuarioCliente from "@/shared/mocks/usuarioCliente";
 
-export function Header() {
+interface HeaderProps {
+    onMenuClick: () => void;
+}
+
+export function Header({ onMenuClick }: HeaderProps) {
     return (
         <header className="justify-between flex pb-4 p-5">
             <div className="flex gap-3">
-                <button id="sidebar-btn" className="bg-white rounded-[999px] p-3 border-solid border-[1px] border-festiva-midnight-blue/9">
+                <button id="sidebar-btn" onClick={onMenuClick} className="bg-white rounded-[999px] p-3 border-solid border-[1px] border-festiva-midnight-blue/9">
                     <Menu size={20} className="text-festiva-midnight-blue" strokeWidth={2} />
                 </button>
                 <Image
