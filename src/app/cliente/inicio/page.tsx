@@ -9,7 +9,7 @@ import { IconTile } from "@/shared/components/IconTile";
 import SectionHeader from "@/shared/components/SectionHeader";
 import { proveedoresDestacados } from "@/shared/mocks/proveedoresDestacados";
 import { ProviderCard } from "@/shared/components/ProviderCard";
-import Header from "@/shared/components/Header";
+import Header from "@/shared/components/HeaderInicio";
 import Sidebar from "@/shared/components/Sidebar";
 import { useState } from "react";
 import Navbar from "@/shared/components/Navbar";
