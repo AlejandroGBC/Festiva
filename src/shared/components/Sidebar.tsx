@@ -4,6 +4,7 @@ import usuarioCliente from "../mocks/usuarioCliente";
 import { User, Home, Calendar, Briefcase, MessageSquare, CreditCard, Settings, LogOut } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { text } from "stream/consumers";
 
 const sidebarMainLinks = [
     {
@@ -13,16 +14,20 @@ const sidebarMainLinks = [
         color: {
             text: "text-festiva-electric-violet",
             bg: "bg-festiva-electric-violet/10",
+            hoverBg: "hover:bg-festiva-electric-violet/10",
+            hoverText: "group-hover:text-festiva-electric-violet",
             bl: "border-l-4 border-l-festiva-electric-violet"
         }
     },
     {
         label: "Mis Eventos",
-        href: "",
+        href: "/",
         icon: Calendar,
         color: {
             text: "text-festiva-confetti-orange",
             bg: "bg-festiva-confetti-orange/10",
+            hoverBg: "hover:bg-festiva-confetti-orange/10",
+            hoverText: "group-hover:text-festiva-confetti-orange",
             bl: "border-l-4 border-l-festiva-confetti-orange"
         }
     },
@@ -33,6 +38,8 @@ const sidebarMainLinks = [
         color: {
             text: "text-festiva-euphoric-pink",
             bg: "bg-festiva-euphoric-pink/10",
+            hoverBg: "hover:bg-festiva-euphoric-pink/10",
+            hoverText: "group-hover:text-festiva-euphoric-pink",
             bl: "border-l-4 border-l-festiva-euphoric-pink"
         }
     },
@@ -43,6 +50,8 @@ const sidebarMainLinks = [
         color: {
             text: "text-festiva-mint-neon",
             bg: "bg-festiva-mint-neon/10",
+            hoverBg: "hover:bg-festiva-mint-neon/10",
+            hoverText: "group-hover:text-festiva-mint-neon",
             bl: "border-l-4 border-l-festiva-mint-neon"
         }
     }
@@ -89,14 +98,16 @@ export function Sidebar() {
                         const backgroundColor = link.color.bg;
                         const isActive = pathname === link.href;
                         const borderLeftColor = link.color.bl;
+                        const hoverBg = link.color.hoverBg;
+                        const hoverText = link.color.hoverText;
                         return (
                             <Link
                                 key={link.label}
                                 href={link.href}
                                 className={`group flex items-center gap-3 px-4 py-2 text-sm transition-all duration-200 
-                                    ${isActive ? `${backgroundColor} ${borderLeftColor}` : `hover:${backgroundColor}`}`}>
+                                    ${isActive ? `${backgroundColor} ${borderLeftColor}` :  hoverBg }`}>
                                 <Icon size={36} className={`${textColor} ${backgroundColor} p-2 rounded-xl`} />
-                                <span className={`font-semibold transition-colors ${isActive ? textColor : "text-festiva-midnight-blue"
+                                <span className={`font-semibold transition-colors ${isActive ? textColor : `text-festiva-midnight-blue ${hoverText}`
                                     }`}>
                                     {link.label}
                                 </span>
