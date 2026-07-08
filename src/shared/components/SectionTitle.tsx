@@ -4,16 +4,25 @@ interface SectionTitleProps {
     title: string;
     actionLabel?: string;
     onActionClick?: () => void;
+    actionClassName?: string;
 }
 
-export default function SectionTitle({ title, actionLabel, onActionClick }: SectionTitleProps) {
+export default function SectionTitle({ 
+    title,
+    actionLabel,
+    onActionClick,
+    actionClassName = 'text-festiva-euphoric-pink hover:opacity-80'
+}:SectionTitleProps) {
     return (
-        <div className="sh">
-            <span style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '1.5px', textTransform: 'uppercase', color: 'var(--muted)' }}>
+        <div className="flex justify-between items-center mb-4 w-full">
+            <p className="text-[11px] font-bold tracking-wider text-slate-400 uppercase">
                 {title}
-            </span>
+            </p>
             {actionLabel && (
-                <button className="sh-link" onClick={onActionClick}>
+                <button 
+                    onClick={onActionClick}
+                    className={`text-[13px] font-bold transition-all ${actionClassName}`}
+                >
                     {actionLabel}
                 </button>
             )}

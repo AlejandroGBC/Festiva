@@ -26,9 +26,9 @@ export function Header({ onMenuClick }: HeaderProps) {
                 <button id="notif-btn" className="bg-white rounded-[999px] p-3 border-solid border-[1px] border-festiva-midnight-blue/9">
                     <Bell size={20} className="text-festiva-midnight-blue" strokeWidth={2} />
                 </button>
-                <button className="bg-festiva-euphoric-pink text-white font-medium rounded-[999px] p-2.5">
+                <span className="flex items-center justify-center w-11 h-11 bg-festiva-euphoric-pink text-white font-bold rounded-full text-sm shadow-sm">
                     {usuarioCliente.abreviatura}
-                </button>
+                </span>
             </div>
         </header>
     );
