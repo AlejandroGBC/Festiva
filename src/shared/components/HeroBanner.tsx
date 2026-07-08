@@ -19,9 +19,9 @@ export function HeroBanner({
                 </div>
             )}
             <div className="">
-                <h1 className="text-white text-xl text-left font-bold mb-2 w-52">
+                <h2 className="text-white text-xl text-left font-bold mb-2 w-52">
                     {title}
-                </h1>
+                </h2>
                 <p className="text-white/60 text-sm">
                     {description}
                 </p>

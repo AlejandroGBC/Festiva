@@ -4,6 +4,7 @@ import HeroBanner from "@/shared/components/HeroBanner";
 import { Plus } from "lucide-react"
 import { servicios } from "@/shared/mocks/servicios";
 import { IconTile } from "@/shared/components/IconTile";
+import SectionHeader from "@/shared/components/SectionHeader";
 
 export default function InicioPage() {
     return (
@@ -19,16 +20,24 @@ export default function InicioPage() {
                     Nuevo evento
                 </button>
             </HeroBanner>
-            <div className="flex justify-between text-center items-center">
-                {servicios.slice(0,5).map((servicio) => (
-                    <IconTile
-                        key={servicio.id}
-                        nombre={servicio.nombre}
-                        Icon={servicio.icon}
-                        iconColor={servicio.color.text}
-                        bgColor={servicio.color.bg}
-                    />))}
-            </div>
+
+            <article className="my-6">
+                <SectionHeader title="Categorias" accion="Ver todos"/>
+                <div className="flex justify-between text-center items-center">
+                    {servicios.slice(0, 5).map((servicio) => (
+                        <IconTile
+                            key={servicio.id}
+                            nombre={servicio.nombre}
+                            Icon={servicio.icon}
+                            iconColor={servicio.color.text}
+                            bgColor={servicio.color.bg}
+                        />))}
+                </div>
+            </article>
+            <article className="my-6">
+                <SectionHeader title="Proveedores destacados" accion="Ver todos"/>
+                
+            </article>
         </section>
     );
 }
