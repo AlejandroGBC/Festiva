@@ -19,29 +19,29 @@ export function ProviderCard({
     img,
 }: ProviderCardProps) {
     return (
-        <div className="rounded-xl overflow-hidden border bg-white w-1/2">
+        <div className="rounded-xl overflow-hidden border bg-white w-[10.75rem]">
             <img
                 src={img}
                 alt={nombre}
-                className="w-full h-40 object-cover"
+                className="w-full h-24 object-cover"
             />
 
-            <div className="p-4">
-                <h3 className="font-semibold text-lg">{nombre}</h3>
-                <p className="text-sm text-gray-500">{categoria}</p>
+            <div className="px-3 py-1">
+                <h3 className="font-bold text-sm text-festiva-midnight-blue">{nombre}</h3>
+                <p className="text-xs text-festiva-midnight-blue/45">{categoria}</p>
 
-                <div className="flex justify-between items-center mt-3">
+                <div className="flex justify-between items-center gap-7">
                     <div className="flex items-center gap-1 text-sm">
                         <Star
                             className="w-4 h-4 fill-festiva-confetti-orange text-festiva-confetti-orange"
                         />
-                        <span>{calificacion}</span>
-                        <span className="text-gray-500">
+                        <span className="text-festiva-midnight-blue font-bold">{calificacion}</span>
+                        <span className="text-festiva-midnight-blue/45">
                             ({cantidadCalificaciones})
                         </span>
                     </div>
 
-                    <p className="font-semibold">
+                    <p className="font-bold text-xs text-festiva-electric-violet">
                         Desde L.{precio}
                     </p>
                 </div>
