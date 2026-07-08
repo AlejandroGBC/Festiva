@@ -21,7 +21,7 @@ export default function ClienteLayout({
                 onClose={() => setSidebarOpen(false)}
             />
 
-            <main className="flex-1 pb-4 p-5">
+            <main className="flex-1 px-5">
                 {children}
             </main>
 
