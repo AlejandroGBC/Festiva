@@ -27,13 +27,13 @@ export default function EditProviderProfilePage() {
         updateField('availability', updated);
     };
 
-    const handleSpecialtiesChange = (updatedSpecs: string[]) => {
-        updateField('initialSpecialties', updatedSpecs);
-    };
+    // const handleSpecialtiesChange = (updatedSpecs: string[]) => {
+    //     updateField('initialSpecialties', updatedSpecs);
+    // };
 
-    const handlePortfolioChange = (updatedImages: string[]) => {
-        updateField('portfolioImages', updatedImages);
-    };
+    // const handlePortfolioChange = (updatedImages: string[]) => {
+    //     updateField('portfolioImages', updatedImages);
+    // };
 
     const onSaveTrigger = async () => {
         setIsSaving(true);
