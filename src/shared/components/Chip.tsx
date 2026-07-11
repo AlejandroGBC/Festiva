@@ -7,6 +7,7 @@ export type BrandVariant = 'euphoric-pink' | 'electric-violet' | 'mint-neon' | '
 interface ChipProps {
     variant?: BrandVariant;
     children: React.ReactNode;
+    icon?: React.ComponentType<{ className?: string }>;
     onDelete?: () => void;
     onClickIcon?: () => void;
 }
@@ -27,9 +28,9 @@ const variantIcons: Record<BrandVariant, React.ComponentType<{ className?: strin
   'default': HelpCircle
 };
 
-export default function Chip({ variant = 'default', children, onDelete, onClickIcon }: ChipProps) {
+export default function Chip({ variant = 'default', children, icon, onDelete, onClickIcon }: ChipProps) {
     
-    const IconComponent = variantIcons[variant];
+    const IconComponent = icon || variantIcons[variant];
     
     return (
         <span className={`inline-flex items-center gap-1.5 h-[32px] px-3.5 rounded-full border text-[13px] font-bold transition-all ${variantClasses[variant]}`}>
