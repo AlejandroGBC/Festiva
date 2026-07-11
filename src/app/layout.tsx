@@ -11,6 +11,10 @@ const poppins = Poppins({
 
 export const metadata: Metadata = {
   title: "Festiva",
+  description: 'La plataforma que conecta a personas que organizan eventos con proveedores.',
+  icons: {
+    icon: '/icon.svg',
+  },
 };
 
 export default function RootLayout({
@@ -19,10 +23,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${poppins.variable}`}>
-      <body
-        className={`font-sans antialiased`}
-      >
+    <html lang="es" className={`${poppins.variable}`}>
+      <body className={`font-sans antialiased`}>
         <MobileShell>{children}</MobileShell>
       </body>
     </html>
