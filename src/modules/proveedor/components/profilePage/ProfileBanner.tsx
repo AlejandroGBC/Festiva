@@ -4,12 +4,16 @@ import { ArrowLeft, Share2 } from 'lucide-react';
 import Button from '../../../../shared/components/Button';
 import Avatar from '../../../../shared/components/Avatar';
 
-export default function ProfileBanner() {
+interface ProfileBannerProps {
+    isEditable?: boolean;
+    showShare?: boolean;
+    initials?: string;
+}
 
-    const router = useRouter();
-
+export default function ProfileBanner({ isEditable = true, showShare = true, initials = "DM" }: ProfileBannerProps) {
+    const router = useRouter();    
     return (
-        <div className="edit-banner">
+        <div className="edit-banner relative">
             <svg 
                 style={{
                     position: 'absolute',
@@ -34,17 +38,22 @@ export default function ProfileBanner() {
                 >
                     <ArrowLeft className="w-5 h-5" />
                 </Button>
-                <Button
-                    variant="ghost" 
-                    size="icon" 
-                    shape="pill"
-                    className="text-white hover:bg-white/20"
-                >
-                    <Share2 className="w-5 h-5" />
-                </Button>
+
+                {showShare ? (
+                    <Button
+                        variant="ghost" 
+                        size="icon" 
+                        shape="pill"
+                        className="text-white hover:bg-white/20"
+                    >
+                        <Share2 className="w-5 h-5" />
+                    </Button>
+                ) : (
+                    <div className="w-9" />
+                )}                
             </div>
             <div className="absolute -bottom-[30px] left-5 z-30">
-                <Avatar initials="DM" editable={true} />
+                <Avatar initials={initials} editable={isEditable} />
             </div>
         </div>
     );
