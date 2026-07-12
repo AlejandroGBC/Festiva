@@ -3,10 +3,10 @@ import {
   User, Shield, Phone, CreditCard, Percent, BarChart3, 
   Bell, Mail, MessageSquare, Lock, FileText, LogOut, Trash2 
 } from 'lucide-react';
-import TopBanner from '../../../shared/components/TopNavbar'
+import TopBanner from '../../../../shared/components/TopNavbar'
 import { useSettings } from '../hooks/useSettings';
-import ConfigSection from '../components/setting/ConfigSection';
-import ConfigRow from '../components/setting/ConfigRow';
+import ConfigSection from './ConfigSection';
+import ConfigRow from './ConfigRow';
 import Toggle from '@/shared/components/Toggle';
 import Chip from '@/shared/components/Chip';
 import { Check } from 'lucide-react';

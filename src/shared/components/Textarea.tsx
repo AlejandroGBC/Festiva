@@ -13,7 +13,7 @@ export default function Textarea({ label, ...props }: TextareaProps) {
       
       <textarea 
         rows={4} 
-        className="w-full p-4 rounded-[16px] bg-[#f8f9fd] border border-transparent text-[15px] font-medium text-festiva-midnight-blue placeholder-slate-400 resize-none focus:outline-none focus:border-slate-200 focus:bg-white transition-all duration-200 leading-relaxed" 
+        className="w-full p-4 rounded-[16px] border border-transparent text-[15px] font-medium text-festiva-midnight-blue placeholder-slate-400 resize-none focus:outline-none border-slate-200 bg-white transition-all duration-200 leading-relaxed" 
         {...props} 
       />
     </div>

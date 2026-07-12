@@ -1,12 +1,12 @@
 'use client';
 
-import EditProviderProfilePage from '@/modules/proveedor/pages/EditProviderProfilePage';
+import SettingPage from '@/modules/proveedor/configuracion/components/SettingsPage';
 import Navbar from '@/shared/components/Navbar';
 
 export default function Page() {
   return (
     <main>
-      <EditProviderProfilePage />
+      <SettingPage/>
       <Navbar />
     </main>
   );
