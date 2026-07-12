@@ -1,34 +1,109 @@
-import React from 'react';
-import Chip from '../../../../shared/components/Chip';
+import React, { useState } from 'react';
+import { Plus } from 'lucide-react';
+import Card from '../../../../shared/components/Card';
+import Chip, { BrandVariant } from '../../../../shared/components/Chip';
 import Button from '../../../../shared/components/Button';
+import SectionTitle from '../../../../shared/components/SectionTitle';
 
 interface SpecialtiesSectionProps {
-    specialties: string[];
+    initialSpecialties: string[];
 }
 
-export default function SpecialtiesSection({ specialties }: SpecialtiesSectionProps) {
-    // Mapeo manual de variantes - se cambiará
-    const getVariant = (index: number) => {
-        const variants: ('pink' | 'purple' | 'orange' | 'teal')[] = ['pink', 'purple', 'orange', 'teal'];
-        return variants[index % variants.length];
+interface SpecialtyObject {
+    id: string;
+    name: string;
+    variant: BrandVariant;
+}
+
+export default function SpecialtiesSection({ initialSpecialties }: SpecialtiesSectionProps) {
+    const brandVariants: BrandVariant[] = ['euphoric-pink', 'electric-violet', 'confetti-orange', 'mint-neon'];
+
+    const [specialties, setSpecialties] = useState<SpecialtyObject[]>(
+        initialSpecialties.map((spec, idx) => ({
+            id: `${spec}-${idx}`,
+            name: spec,
+            variant: brandVariants[idx % brandVariants.length]
+        }))
+    );
+
+    const [isEditing, setIsEditing] = useState(false);
+
+    // Eliminar Chip
+    const handleDelete = (id: string) => {
+        setSpecialties(specialties.filter(item => item.id !== id));
+    };
+
+    // Alternar Icono / Variante de Color al dar clic
+    const handleCycleIcon = (id: string) => {
+        if (!isEditing) return;
+            setSpecialties(specialties.map(item => {
+            if (item.id === id) {
+                const currentIndex = brandVariants.indexOf(item.variant);
+                const nextIndex = (currentIndex + 1) % brandVariants.length;
+                return { ...item, variant: brandVariants[nextIndex] };
+            }
+            return item;
+        }));
+    };
+
+    // Modificar Nombre dinámicamente
+    const handleNameChange = (id: string, newName: string) => {
+        setSpecialties(specialties.map(item => 
+            item.id === id ? { ...item, name: newName } : item
+        ));
+    };
+
+    // Agregar nueva especialidad en blanco
+    const handleAdd = () => {
+        const nextVariant = brandVariants[specialties.length % brandVariants.length];
+        const newSpec: SpecialtyObject = {
+            id: `new-${Date.now()}`,
+            name: 'Nueva Especialidad',
+            variant: nextVariant
+        };
+        setSpecialties([...specialties, newSpec]);
+        setIsEditing(true);
     };
 
   return (
-    <div>
-        <p style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '1.5px', textTransform: 'uppercase', color: 'var(--muted)', marginBottom: '10px' }}>
-            Especialidades
-        </p>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-            {specialties.map((spec, idx) => (
-            <Chip key={spec} variant={getVariant(idx)}>
-                {spec}
-            </Chip>
+    <Card>
+        <SectionTitle 
+            title="Especialidades"
+            actionLabel={isEditing ? 'Guardar' : 'Editar'}
+            onActionClick={() => setIsEditing(!isEditing)}
+        />
+        <div className="flex flex-wrap gap-2 items-center">
+            {specialties.map((spec) => (
+                <Chip 
+                    key={spec.id} 
+                    variant={spec.variant}
+                    onDelete={isEditing ? () => handleDelete(spec.id) : undefined}
+                    onClickIcon={isEditing ? () => handleCycleIcon(spec.id) : undefined}
+                >
+                    {isEditing ? (
+                        <input
+                            type="text"
+                            value={spec.name}
+                            onChange={(e) => handleNameChange(spec.id, e.target.value)}
+                            className="bg-transparent border-none outline-none p-0 m-0 w-auto font-bold focus:ring-0 inline-block"
+                            style={{ width: `${Math.max(spec.name.length * 8.5, 40)}px` }} // Ancho responsivo al texto escrito
+                        />
+                    ) : (
+                        spec.name
+                    )}
+                </Chip>
             ))}
-            <Button variant="outline" size="sm" style={{ width: 'auto', gap: '5px', fontSize: '12px' }}>
-                <svg className="ic" xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
-                Agregar
+
+            <Button
+                variant="outline"
+                size="sm"
+                onClick={handleAdd}
+                className="h-[32px] px-3 border-dashed border-slate-300 text-slate-500 font-medium text-[12px] gap-1 hover:bg-slate-50 rounded-full w-auto"
+            >
+                <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
+                <span>Agregar</span>
             </Button>
         </div>
-    </div>
+    </Card>
   );
 }

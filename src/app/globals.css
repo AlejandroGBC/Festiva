@@ -43,7 +43,16 @@ body {
   background: white;      /* fondo real de tu app */
   position: relative;
   overflow-x: hidden;
-  padding: 2rem 2rem;          /* padding horizontal para que no toque los bordes del teléfono */
   background: #F7F5FC;
   box-shadow: 0 0 40px rgba(0,0,0,0.15); /* efecto "frame" en desktop */
 }
+
+.edit-banner {
+  background-color: #261E4E;
+  height: 160px;
+  position:relative;
+  flex-shrink:0;
+}
+
+
+
