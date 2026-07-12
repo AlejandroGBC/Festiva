@@ -1,9 +1,11 @@
 import { Check, Clock } from "lucide-react";
+import Card from "@/shared/components/Card";
+import Chip from "@/shared/components/Chip";
 import { ProveedorContratado } from "../types/eventos.types";
 
-const estadoStyles: Record<ProveedorContratado["estado"], string> = {
-  confirmado: "bg-festiva-mint-neon/10 text-festiva-mint-neon",
-  pendiente: "bg-festiva-confetti-orange/10 text-festiva-confetti-orange",
+const estadoVariant: Record<ProveedorContratado["estado"], "mint-neon" | "confetti-orange"> = {
+  confirmado: "mint-neon",
+  pendiente: "confetti-orange",
 };
 
 const estadoLabel: Record<ProveedorContratado["estado"], string> = {
@@ -11,14 +13,14 @@ const estadoLabel: Record<ProveedorContratado["estado"], string> = {
   pendiente: "Pendiente",
 };
 
-const estadoIcono: Record<ProveedorContratado["estado"], React.ReactNode> = {
-  confirmado: <Check size={12} />,
-  pendiente: <Clock size={12} />,
+const estadoIcono: Record<ProveedorContratado["estado"], React.ComponentType<{ className?: string }>> = {
+  confirmado: Check,
+  pendiente: Clock,
 };
 
 export const ProveedorContratadoCard = ({ proveedor }: { proveedor: ProveedorContratado }) => {
   return (
-    <div className="flex items-center gap-3 bg-white rounded-xl p-4 shadow-sm">
+    <Card className="flex items-center gap-3">
       <div className="w-11 h-11 rounded-full bg-festiva-euphoric-pink/10 text-festiva-euphoric-pink font-bold flex items-center justify-center shrink-0">
         {proveedor.iniciales}
       </div>
@@ -30,10 +32,9 @@ export const ProveedorContratadoCard = ({ proveedor }: { proveedor: ProveedorCon
         </p>
       </div>
 
-      <span className={`flex items-center gap-1 text-xs font-semibold px-3 py-1 rounded-full whitespace-nowrap ${estadoStyles[proveedor.estado]}`}>
-        {estadoIcono[proveedor.estado]}
+      <Chip variant={estadoVariant[proveedor.estado]} icon={estadoIcono[proveedor.estado]}>
         {estadoLabel[proveedor.estado]}
-      </span>
-    </div>
+      </Chip>
+    </Card>
   );
 };

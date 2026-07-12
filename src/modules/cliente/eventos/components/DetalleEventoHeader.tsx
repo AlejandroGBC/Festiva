@@ -1,4 +1,5 @@
 import { RefreshCw } from "lucide-react";
+import ProgressBar from "@/shared/components/ProgressBar";
 
 interface DetalleEventoHeaderProps {
   titulo: string;
@@ -26,9 +27,7 @@ export const DetalleEventoHeader = ({ titulo, fecha, ubicacion, progreso }: Deta
           <span className="text-white/70">Progreso del evento</span>
           <span className="font-semibold">{progreso}%</span>
         </div>
-        <div className="h-2 bg-white/20 rounded-full overflow-hidden">
-          <div className="h-full bg-festiva-euphoric-pink rounded-full" style={{ width: `${progreso}%` }} />
-        </div>
+        <ProgressBar percentage={progreso} color="euphoric-pink" />
       </div>
     </div>
   );

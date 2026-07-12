@@ -2,6 +2,8 @@ import { DetalleEventoHeader } from "@/modules/cliente/eventos/components/Detall
 import { ProveedorContratadoCard } from "@/modules/cliente/eventos/components/ProveedorContratadoCard";
 import { TimelineItem } from "@/modules/cliente/eventos/components/TimelineItem";
 import { ChatRapidoCard } from "@/modules/cliente/eventos/components/ChatRapidoCard";
+import SectionHeader from "@/shared/components/SectionHeader";
+import Navbar from "@/shared/components/Navbar";
 import type { TimelinePaso, ProveedorContratado } from "@/modules/cliente/eventos/types/eventos.types";
 
 // TODO: reemplazar por fetch real a eventos.service.ts cuando conectemos Supabase
@@ -20,9 +22,7 @@ const pasosMock: TimelinePaso[] = [
 
 export default function DetalleEventoPage({ params }: { params: { id: string } }) {
   return (
-    // -m-8 cancela el padding de 2rem heredado de .mobile-shell (globals.css)
-    // así esta página controla su propio espaciado de borde a borde
-    <div className="-m-8 min-h-screen">
+    <div>
       <DetalleEventoHeader
         titulo="Cumpleaños Carlos 40"
         fecha="10 julio, 2026"
@@ -30,15 +30,9 @@ export default function DetalleEventoPage({ params }: { params: { id: string } }
         progreso={65}
       />
 
-      <div className="px-5 pt-6 pb-24 flex flex-col gap-8">
+      <div className="px-5 pt-6 pb-8 flex flex-col gap-8">
         <div>
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="font-bold text-festiva-midnight-blue">Proveedores contratados</h2>
-            <button type="button" className="text-sm font-semibold text-festiva-euphoric-pink">
-              Ver todos
-            </button>
-          </div>
-
+          <SectionHeader title="Proveedores contratados" accion="Ver todos" />
           <div className="flex flex-col gap-3">
             {proveedoresMock.map((proveedor) => (
               <ProveedorContratadoCard key={proveedor.id} proveedor={proveedor} />
@@ -47,7 +41,7 @@ export default function DetalleEventoPage({ params }: { params: { id: string } }
         </div>
 
         <div>
-          <h2 className="font-bold text-festiva-midnight-blue mb-4">Timeline del evento</h2>
+          <SectionHeader title="Timeline del evento" accion="" />
           <div className="flex flex-col">
             {pasosMock.map((paso, index) => (
               <TimelineItem key={paso.titulo} {...paso} esUltimo={index === pasosMock.length - 1}>
@@ -57,6 +51,8 @@ export default function DetalleEventoPage({ params }: { params: { id: string } }
           </div>
         </div>
       </div>
+
+      <Navbar />
     </div>
   );
 }
