@@ -13,6 +13,7 @@ export const FormCliente = () => {
             icon={<User/>}
             type="text" 
             placeholder="Tu nombre completo"
+            required={true}
           />
         </div>
 
@@ -21,7 +22,8 @@ export const FormCliente = () => {
             label="Correo electrónico"
             icon={<Mail/>}
             type="email" 
-            placeholder="correo@ejemplo.com" 
+            placeholder="correo@ejemplo.com"
+            required={true} 
           />
         </div>
 
@@ -30,24 +32,8 @@ export const FormCliente = () => {
             label="Contraseña"
             icon={<Lock/>}
             type="password" 
-            placeholder="Mínimo 8 caracteres" 
-          />
-        </div>
-
-        {/* Barra de progreso */}
-        <div className="flex gap-2">
-          <div className="h-1 flex-1 bg-festiva-mint-neon rounded-full" />
-          <div className="h-1 flex-1 bg-festiva-mint-neon rounded-full" />
-          <div className="h-1 flex-1 bg-festiva-mint-neon rounded-full" />
-          <div className="h-1 flex-1 bg-gray-200 rounded-full" />
-        </div>
-
-        <div className={baseInputContainerClass}>
-          <Input
-            label="Confirmar contraseña"
-            icon={<Lock/>}
-            type="password" 
-            placeholder="Repite tu contraseña" 
+            placeholder="Mínimo 6 caracteres"
+            required={true}
           />
         </div>
 

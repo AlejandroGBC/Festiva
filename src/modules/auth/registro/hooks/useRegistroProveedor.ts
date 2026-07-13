@@ -3,6 +3,7 @@
 import { ChangeEvent, FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import { RegistroProveedorFormData } from "../types/registro.types";
+import { registrarProveedor } from "../services/registro.service";
 
 const initialState: RegistroProveedorFormData = {
   nombreEmpresa: "",
@@ -10,6 +11,7 @@ const initialState: RegistroProveedorFormData = {
   especialidad: "",
   serviciosAdicionales: [],
   ciudad: "",
+  rol: "proveedor",
   descripcion: "",
   contrasena: "",
 };
@@ -27,7 +29,7 @@ export function useRegistroProveedor() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   }
 
-  function toggleServicio(id: string) {
+  function toggleServicio(id: number) {
     setFormData((prev) => ({
       ...prev,
       serviciosAdicionales: prev.serviciosAdicionales.includes(id)
@@ -41,12 +43,25 @@ export function useRegistroProveedor() {
     setErrors({});
     setIsSubmitting(true);
 
-    // TODO: reemplazar por llamada real (perfil.service.ts) cuando exista la API
-    console.log("Registro proveedor simulado:", formData);
-    await new Promise((resolve) => setTimeout(resolve, 800));
+    try {
+      await registrarProveedor({
+        nombreCompleto: formData.nombreEmpresa,
+        correo: formData.correo,
+        contrasena: formData.contrasena,
+        rol: "proveedor",
+        ciudad: formData.ciudad,
+        descripcion: formData.descripcion,
+        especialidad: formData.especialidad,
+        serviciosAdicionales: formData.serviciosAdicionales,
+      });
 
-    setIsSubmitting(false);
-    router.push("/proveedor/perfil");
+      router.push("/proveedor/perfil");
+      router.refresh();
+    } catch (err) {
+      setErrors({ general: err instanceof Error ? err.message : "No se pudo crear el perfil" });
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return { formData, handleChange, toggleServicio, handleSubmit, isSubmitting, errors };

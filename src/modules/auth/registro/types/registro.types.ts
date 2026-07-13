@@ -1,14 +1,24 @@
 export interface RegistroProveedorFormData {
   nombreEmpresa: string;
   correo: string;
-  especialidad: string;
-  serviciosAdicionales: string[];
+  contrasena: string;
+  rol: "proveedor";
   ciudad: string;
   descripcion: string;
-  contrasena: string;
+  especialidad: string;
+  serviciosAdicionales: number[];
 }
 
-export interface RegistroProveedorPayload extends RegistroProveedorFormData {}
+export interface RegistroProveedorPayload {
+  nombreCompleto: string;
+  correo: string;
+  contrasena: string;
+  rol: "proveedor";
+  ciudad: string;
+  descripcion: string;
+  especialidad: string;
+  serviciosAdicionales: number[];
+}
 
 export interface ServicioOption {
   id: string;

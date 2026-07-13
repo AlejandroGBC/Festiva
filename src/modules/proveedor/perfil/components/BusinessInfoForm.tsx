@@ -28,6 +28,7 @@ export default function BusinessInfoForm({ data, onChange }: BusinessInfoFormPro
                     value={data.businessName} 
                     onChange={(e) => onChange('businessName', e.target.value)}
                     icon={<Building2 className="w-4 h-4 text-slate-400 stroke-[1.8]" />}
+                    variant={'muted'}
                 />
                 <Textarea 
                     label="Descripcion profesional" 
@@ -39,6 +40,7 @@ export default function BusinessInfoForm({ data, onChange }: BusinessInfoFormPro
                     value={data.city} 
                     onChange={(e) => onChange('city', e.target.value)}
                     icon={<MapPin className="w-4 h-4 text-slate-400 stroke-[1.8]" />} 
+                    variant={'muted'}
                 />
                 <Input 
                     label="Telefono de contacto" 
@@ -46,6 +48,7 @@ export default function BusinessInfoForm({ data, onChange }: BusinessInfoFormPro
                     value={data.phone} 
                     onChange={(e) => onChange('phone', e.target.value)}
                     icon={<Phone className="w-4 h-4 text-slate-400 stroke-[1.8]" />}
+                    variant={'muted'}
                 />
             </div>
         </Card>
