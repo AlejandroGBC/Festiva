@@ -26,8 +26,8 @@ export default function SettingPage() {
         <div>
             <div className="body">
         
-                <TopBanner title="Configuracion"/>
-                <div className="body px-5 pb-8 flex flex-col gap-2">
+                <TopBanner title="Configuración"/>
+                <div style={{ padding: '42px 20px 24px', display: 'flex', flexDirection: 'column', gap: '18px' }}>
                     {/* Sección Cuenta */}
                     <ConfigSection label="Cuenta">
                         <ConfigRow
