@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { ProviderProfile } from '../types/provider';
-import { providerService } from '../services/provider.service';
+import { ProviderProfile } from '../../types/provider';
+import { providerService } from '../../services/provider.service';
 
 export function useProviderProfile() {
     const [profile, setProfile] = useState<ProviderProfile | null>(null);

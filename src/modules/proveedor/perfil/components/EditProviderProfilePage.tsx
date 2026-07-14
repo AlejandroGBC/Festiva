@@ -2,14 +2,14 @@
 
 import React, { useState } from 'react';
 import { useProviderProfile } from '../hooks/useProviderProfile';
-import ProfileBanner from '../components/profilePage/ProfileBanner';
-import ProfileHeader from '../components/profilePage/ProfileHeader';
-import CompletionProgress from '../components/profilePage/CompletionProgress';
-import BusinessInfoForm from '../components/profilePage/BusinessInfoForm';
-import SpecialtiesSection from '../components/profilePage/SpecialtiesSection';
-import PortfolioSection from '../components/profilePage/PortfolioSection';
-import AvailabilitySection from '../components/profilePage/AvailabilitySection';
-import SaveProfileButton from '../components/profilePage/SaveProfileButton';
+import ProfileBanner from './ProfileBanner';
+import ProfileHeader from './ProfileHeader';
+import CompletionProgress from './CompletionProgress';
+import BusinessInfoForm from './BusinessInfoForm';
+import SpecialtiesSection from './SpecialtiesSection';
+import PortfolioSection from './PortfolioSection';
+import AvailabilitySection from './AvailabilitySection';
+import SaveProfileButton from './SaveProfileButton';
 
 export default function EditProviderProfilePage() {
     const { profile, loading, updateField, handleSave } = useProviderProfile();
