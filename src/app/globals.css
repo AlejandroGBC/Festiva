@@ -40,24 +40,20 @@ body {
 .mobile-shell-wrapper {
   display: flex;
   justify-content: center;
-  height: 100dvh;              /* Altura FIJA del viewport */
-  background: #e5e5e5;
+  min-height: 100dvh;
+  background: #e5e5e5; /* fondo "fuera" del teléfono, solo se ve en desktop */
 }
 
 .mobile-shell {
   width: 100%;
-  max-width: 430px;
-  height: 100dvh;               /* El frame nunca crece más que la pantalla */
-  position: relative;
-  overflow: hidden;             /* nada se sale del frame */
+  max-width: 430px;       /* ancho tipo teléfono */
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;     /* fondo real de tu app */
   background: #F7F5FC;
-  box-shadow: 0 0 40px rgba(0,0,0,0.15);
-}
-
-.mobile-shell-scroll {
-  height: 100%;
-  overflow-y: auto;
-  overscroll-behavior: contain; /* evita que el scroll "rebote" hacia el fondo gris en desktop */
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0 40px rgba(0,0,0,0.15); /* efecto "frame" en desktop */
 }
 
 .edit-banner {

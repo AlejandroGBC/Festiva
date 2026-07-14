@@ -6,8 +6,8 @@ import {
 } from 'lucide-react';
 import TopNavbar from '@/shared/components/TopNavbar';
 import { useSettings } from '../hooks/useSettings';
-import ConfigSection from './ConfigSection';
-import ConfigRow from './ConfigRow';
+import ConfigSection from '../components/setting/ConfigSection';
+import ConfigRow from '../components/setting/ConfigRow';
 import Toggle from '@/shared/components/Toggle';
 import Chip from '@/shared/components/Chip';
 import { Check } from 'lucide-react';

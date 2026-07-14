@@ -1,36 +1,31 @@
-import Button from "@/shared/components/Button"
-import Input from "@/shared/components/Input"
-import { Lock, Mail, User } from "lucide-react"
-
-const baseInputContainerClass = 'flex flex-col gap-1'
 
 export const FormCliente = () => {
     return(
       <form className="flex flex-col gap-4">
-        <div className={baseInputContainerClass}>
-          <Input
-            label="Nombre completo"
-            icon={<User/>}
+        <div className="flex flex-col gap-1">
+          <label className="text-sm font-medium text-festiva-midnight-blue">Nombre completo</label>
+          <input 
             type="text" 
-            placeholder="Tu nombre completo"
+            placeholder="Tu nombre completo" 
+            className="p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-festiva-electric-violet"
           />
         </div>
 
-        <div className={baseInputContainerClass}>
-          <Input
-            label="Correo electrónico"
-            icon={<Mail/>}
+        <div className="flex flex-col gap-1">
+          <label className="text-sm font-medium text-festiva-midnight-blue">Correo electronico</label>
+          <input 
             type="email" 
             placeholder="correo@ejemplo.com" 
+            className="p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-festiva-electric-violet"
           />
         </div>
 
-        <div className={baseInputContainerClass}>
-          <Input 
-            label="Contraseña"
-            icon={<Lock/>}
+        <div className="flex flex-col gap-1">
+          <label className="text-sm font-medium text-festiva-midnight-blue">Contrasena</label>
+          <input 
             type="password" 
-            placeholder="Mínimo 8 caracteres" 
+            placeholder="Minimo 8 caracteres" 
+            className="p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-festiva-electric-violet"
           />
         </div>
 
@@ -42,12 +37,12 @@ export const FormCliente = () => {
           <div className="h-1 flex-1 bg-gray-200 rounded-full" />
         </div>
 
-        <div className={baseInputContainerClass}>
-          <Input
-            label="Confirmar contraseña"
-            icon={<Lock/>}
+        <div className="flex flex-col gap-1">
+          <label className="text-sm font-medium text-festiva-midnight-blue">Confirmar contrasena</label>
+          <input 
             type="password" 
             placeholder="Repite tu contraseña" 
+            className="p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-festiva-electric-violet"
           />
         </div>
 
@@ -56,9 +51,12 @@ export const FormCliente = () => {
           <span>Acepto los <b className="text-festiva-midnight-blue">Terminos y Condiciones</b> y la <b className="text-festiva-midnight-blue">Politica de Privacidad</b> de Festiva</span>
         </label>
 
-        <Button>
+        <button 
+          type="button" //Submit mas adelante
+          className="bg-festiva-euphoric-pink text-white w-full py-3 rounded-lg font-semibold hover:opacity-90 transition-opacity"
+        >
           Crear mi cuenta
-        </Button>
+        </button>
       </form>
     )
 }
