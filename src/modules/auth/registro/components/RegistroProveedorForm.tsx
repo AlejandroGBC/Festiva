@@ -1,22 +1,13 @@
 "use client";
 
-import { Briefcase, Mail, MapPin, Lock, Layers } from "lucide-react";
+import { Briefcase, Mail, MapPin, Lock } from "lucide-react";
 import Input from "@/shared/components/Input";
-import Select from "@/shared/components/Select";
 import Textarea from "@/shared/components/Textarea";
 import Button from "@/shared/components/Button";
 import ServiciosAdicionales from "./ServiciosAdicionales";
 import { useRegistroProveedor } from "../hooks/useRegistroProveedor";
 
-const ESPECIALIDADES = [
-  { value: "decoracion", label: "Decoracion y ambientacion" },
-  { value: "fotografia", label: "Fotografia y video" },
-  { value: "catering", label: "Catering y banquetes" },
-  { value: "musica", label: "Musica y entretenimiento" },
-  { value: "locaciones", label: "Locaciones y salones" },
-];
-
-export default function PerfilProfesionalForm() {
+export default function RegistroProveedorForm() {
   const {
     formData,
     handleChange,
@@ -35,6 +26,7 @@ export default function PerfilProfesionalForm() {
         placeholder="Tu nombre o razon social"
         value={formData.nombreEmpresa}
         onChange={handleChange}
+        required={true}
       />
 
       <Input
@@ -45,15 +37,7 @@ export default function PerfilProfesionalForm() {
         placeholder="correo@empresa.com"
         value={formData.correo}
         onChange={handleChange}
-      />
-
-      <Select
-        label="Especialidad principal"
-        icon={<Layers size={20}/>}
-        name="especialidad"
-        value={formData.especialidad}
-        onChange={handleChange}
-        options={ESPECIALIDADES}
+        required={true}
       />
 
       <ServiciosAdicionales
@@ -68,6 +52,7 @@ export default function PerfilProfesionalForm() {
         placeholder="Donde operas principalmente"
         value={formData.ciudad}
         onChange={handleChange}
+        required={true}
       />
 
       <Textarea
@@ -76,6 +61,7 @@ export default function PerfilProfesionalForm() {
         placeholder="Describe brevemente tu experiencia y propuesta de valor..."
         value={formData.descripcion}
         onChange={handleChange}
+        required={true}
       />
 
       <Input
@@ -83,9 +69,10 @@ export default function PerfilProfesionalForm() {
         icon={<Lock className="h-[18px] w-[18px]" />}
         type="password"
         name="contrasena"
-        placeholder="Minimo 8 caracteres"
+        placeholder="Minimo 6 caracteres"
         value={formData.contrasena}
         onChange={handleChange}
+        required={true}
       />
 
       {errors.general && (

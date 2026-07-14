@@ -23,11 +23,11 @@ export default function LoginForm() {
 
       <div className="flex flex-col gap-1.5">
         <Input
-          label="Contrasena"
+          label="Contraseña"
           icon={<Lock className="h-[18px] w-[18px]" />}
           type={"password"}
           name="contrasena"
-          placeholder="Minimo 8 caracteres"
+          placeholder="********"
           value={formData.contrasena}
           onChange={handleChange}
         />
@@ -46,7 +46,7 @@ export default function LoginForm() {
         disabled={isSubmitting}
         className="w-full"
       >
-        {isSubmitting ? "Ingresando..." : "Iniciar sesion"}
+        {isSubmitting ? "Ingresando..." : "Iniciar sesión"}
       </Button>
     </form>
   );

@@ -1,62 +1,75 @@
+"use client";
+
+import { User, Mail, Lock } from "lucide-react";
+import Input from "@/shared/components/Input";
+import Button from "@/shared/components/Button";
+import { useRegistroCliente } from "../hooks/useRegistroCliente";
+
+const baseInputContainerClass = "flex flex-col gap-1";
 
 export const FormCliente = () => {
-    return(
-      <form className="flex flex-col gap-4">
-        <div className="flex flex-col gap-1">
-          <label className="text-sm font-medium text-festiva-midnight-blue">Nombre completo</label>
-          <input 
-            type="text" 
-            placeholder="Tu nombre completo" 
-            className="p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-festiva-electric-violet"
-          />
-        </div>
+  const { formData, handleChange, handleSubmit, isSubmitting, errors } = useRegistroCliente();
 
-        <div className="flex flex-col gap-1">
-          <label className="text-sm font-medium text-festiva-midnight-blue">Correo electronico</label>
-          <input 
-            type="email" 
-            placeholder="correo@ejemplo.com" 
-            className="p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-festiva-electric-violet"
-          />
-        </div>
+  return (
+    <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+      <div className={baseInputContainerClass}>
+        <Input
+          label="Nombre completo"
+          icon={<User />}
+          name="nombreCompleto"
+          type="text"
+          placeholder="Tu nombre completo"
+          value={formData.nombreCompleto}
+          onChange={handleChange}
+          required
+        />
+      </div>
 
-        <div className="flex flex-col gap-1">
-          <label className="text-sm font-medium text-festiva-midnight-blue">Contrasena</label>
-          <input 
-            type="password" 
-            placeholder="Minimo 8 caracteres" 
-            className="p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-festiva-electric-violet"
-          />
-        </div>
+      <div className={baseInputContainerClass}>
+        <Input
+          label="Correo electrónico"
+          icon={<Mail />}
+          name="correo"
+          type="email"
+          placeholder="correo@ejemplo.com"
+          value={formData.correo}
+          onChange={handleChange}
+          required
+        />
+      </div>
 
-        {/* Barra de progreso */}
-        <div className="flex gap-2">
-          <div className="h-1 flex-1 bg-festiva-mint-neon rounded-full" />
-          <div className="h-1 flex-1 bg-festiva-mint-neon rounded-full" />
-          <div className="h-1 flex-1 bg-festiva-mint-neon rounded-full" />
-          <div className="h-1 flex-1 bg-gray-200 rounded-full" />
-        </div>
+      <div className={baseInputContainerClass}>
+        <Input
+          label="Contraseña"
+          icon={<Lock />}
+          name="contrasena"
+          type="password"
+          placeholder="Mínimo 6 caracteres"
+          value={formData.contrasena}
+          onChange={handleChange}
+          required
+        />
+      </div>
 
-        <div className="flex flex-col gap-1">
-          <label className="text-sm font-medium text-festiva-midnight-blue">Confirmar contrasena</label>
-          <input 
-            type="password" 
-            placeholder="Repite tu contraseña" 
-            className="p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-festiva-electric-violet"
-          />
-        </div>
+      <label className="flex items-center gap-2 text-sm text-festiva-secondary">
+        <input
+          type="checkbox"
+          name="aceptaTerminos"
+          className="accent-festiva-electric-violet"
+        />
+        <span>
+          Acepto los <b className="text-festiva-midnight-blue">Terminos y Condiciones</b> y la{" "}
+          <b className="text-festiva-midnight-blue">Politica de Privacidad</b> de Festiva
+        </span>
+      </label>
 
-        <label className="flex items-center gap-2 text-sm text-festiva-secondary">
-          <input type="checkbox" className="accent-festiva-electric-violet" />
-          <span>Acepto los <b className="text-festiva-midnight-blue">Terminos y Condiciones</b> y la <b className="text-festiva-midnight-blue">Politica de Privacidad</b> de Festiva</span>
-        </label>
+      {errors.general && (
+        <p className="text-sm text-red-500 text-center">{errors.general}</p>
+      )}
 
-        <button 
-          type="button" //Submit mas adelante
-          className="bg-festiva-euphoric-pink text-white w-full py-3 rounded-lg font-semibold hover:opacity-90 transition-opacity"
-        >
-          Crear mi cuenta
-        </button>
-      </form>
-    )
-}
+      <Button type="submit" disabled={isSubmitting}>
+        {isSubmitting ? "Creando cuenta..." : "Crear mi cuenta"}
+      </Button>
+    </form>
+  );
+};

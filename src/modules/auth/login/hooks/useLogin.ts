@@ -2,15 +2,14 @@
 
 import { ChangeEvent, FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
+import { iniciarSesion } from "../services/login.service";
 import { LoginFormData } from "../types/login.types";
+import { routeGeneratorOverLogin } from "@/shared/utils/routeGeneratosOverLogin";
 
-const initialState: LoginFormData = {
-  correo: "",
-  contrasena: "",
-};
+const initialState: LoginFormData = { correo: "", contrasena: "" };
 
 export function useLogin() {
-  //const router = useRouter();
+  const router = useRouter();
   const [formData, setFormData] = useState<LoginFormData>(initialState);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<{ general?: string }>({});
@@ -25,14 +24,16 @@ export function useLogin() {
     setErrors({});
     setIsSubmitting(true);
 
-    // TODO: reemplazar por llamada real cuando exista la API
-    // await iniciarSesion(formData);
-    console.log("Login simulado con:", formData);
-
-    await new Promise((resolve) => setTimeout(resolve, 800)); // simula latencia
-
-    setIsSubmitting(false);
-    //router.push("/perfil");
+    try {
+      const user = await iniciarSesion(formData);
+      const ruta = routeGeneratorOverLogin(user.rol)
+      router.push(ruta);
+      router.refresh(); // fuerza a que el middleware/RSC vean la sesión nueva
+    } catch (err) {
+      setErrors({ general: err instanceof Error ? err.message : "Error inesperado" });
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return { formData, handleChange, handleSubmit, isSubmitting, errors };
