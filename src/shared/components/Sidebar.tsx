@@ -68,7 +68,7 @@ const sidebarSecondaryLinks = [
         icon: CreditCard,
     },
     {
-        label: "Configuración",
+        label: "Configuracion",
         href: "",
         icon: Settings,
     }
