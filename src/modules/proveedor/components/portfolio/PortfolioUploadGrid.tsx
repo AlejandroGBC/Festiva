@@ -20,7 +20,7 @@ const brandStyles: Record<string, { bg: string; text: string; icon: React.Compon
 export default function PortfolioUploadGrid({ items, onDelete, onAddSample }: PortfolioUploadGridProps) {
 
     return (
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-[repeat(3,minmax(0,1fr))] gap-3 w-full min-w-0">
             {items?.map((item) => {
                 const config = brandStyles[item.type] || { bg: 'bg-slate-100', text: 'text-slate-400', icon: ImageIcon };
                 const IconComponent = config.icon;
