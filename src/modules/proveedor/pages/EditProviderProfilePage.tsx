@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState } from 'react';
 import { useProviderProfile } from '../hooks/useProviderProfile';
 import ProfileBanner from '../components/profilePage/ProfileBanner';
@@ -14,11 +16,11 @@ export default function EditProviderProfilePage() {
     const [isSaving, setIsSaving] = useState(false);
 
     if (loading || !profile) {
-        return ( 
-            <div style={{ color: 'var(--navy)', fontFamily: 'var(--font)', padding: '20px' }}>
-                Cargando Perfil...
+        return (
+            <div className="body flex items-center justify-center min-h-screen">
+                <p className="text-sm font-medium text-slate-400 animate-pulse">Cargando perfil de Festiva...</p>
             </div>
-        )
+        );
     }
 
     const handleAvailabilityToggle = (index: number) => {
@@ -47,48 +49,48 @@ export default function EditProviderProfilePage() {
     };
 
     return (
-        <div>
-            <div className="body">
+        <div className="flex flex-col h-full w-full overflow-hidden">
                 <ProfileBanner />
-                
-                <div style={{ padding: '42px 20px 24px', display: 'flex', flexDirection: 'column', gap: '18px' }}>
-                    <ProfileHeader 
-                        businessName={profile.businessName} 
-                        specialist={profile.specialist}
-                        location={profile.city}
-                        percentage={profile.completionPercentage}
-                    />
+                <div className="flex-1 overflow-y-auto no-scrollbar w-full pb-32">
+                    <div style={{ padding: '42px 20px 24px', display: 'flex', flexDirection: 'column', gap: '18px' }}>
+                        
+                        <ProfileHeader 
+                            businessName={profile.businessName} 
+                            specialist={profile.specialist}
+                            location={profile.city}
+                            percentage={profile.completionPercentage}
+                        />
+                        
+                        <CompletionProgress percentage={profile.completionPercentage} />
+                        
+                        <BusinessInfoForm 
+                            data={{
+                            businessName: profile.businessName,
+                            description: profile.description,
+                            city: profile.city,
+                            phone: profile.phone
+                            }} 
+                            onChange={updateField} 
+                        />
                     
-                    <CompletionProgress percentage={profile.completionPercentage} />
-                    
-                    <BusinessInfoForm 
-                        data={{
-                        businessName: profile.businessName,
-                        description: profile.description,
-                        city: profile.city,
-                        phone: profile.phone
-                        }} 
-                        onChange={updateField} 
-                    />
-                
-                    <SpecialtiesSection 
-                        initialSpecialties={profile.initialSpecialties || []} 
-                        // onChange={handleSpecialtiesChange}
-                    />
-                    
-                    <PortfolioSection 
-                        images={profile.portfolioImages || []} 
-                        // onChange={handlePortfolioChange}
-                    />
-                    
-                    <AvailabilitySection 
-                        availability={profile.availability} 
-                        onToggleChange={handleAvailabilityToggle} 
-                    />
-                    
-                    <SaveProfileButton onClick={onSaveTrigger} isSaving={isSaving} />
+                        <SpecialtiesSection 
+                            initialSpecialties={profile.initialSpecialties || []} 
+                            // onChange={handleSpecialtiesChange}
+                        />
+                        
+                        <PortfolioSection 
+                            images={profile.portfolioImages || []} 
+                            // onChange={handlePortfolioChange}
+                        />
+                        
+                        <AvailabilitySection 
+                            availability={profile.availability} 
+                            onToggleChange={handleAvailabilityToggle} 
+                        />
+                        
+                        <SaveProfileButton onClick={onSaveTrigger} isSaving={isSaving} />
+                    </div>
                 </div>
-            </div>
         </div>
   );
 }
