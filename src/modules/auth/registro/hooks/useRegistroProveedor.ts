@@ -3,6 +3,8 @@
 import { ChangeEvent, FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import { RegistroProveedorFormData } from "../types/registro.types";
+import { registrarProveedor } from "../services/registro.service";
+import { routeGeneratorOverLogin } from "@/shared/utils/routeGeneratosOverLogin";
 
 const initialState: RegistroProveedorFormData = {
   nombreEmpresa: "",
@@ -10,6 +12,7 @@ const initialState: RegistroProveedorFormData = {
   especialidad: "",
   serviciosAdicionales: [],
   ciudad: "",
+  rol: "proveedor",
   descripcion: "",
   contrasena: "",
 };
@@ -27,7 +30,7 @@ export function useRegistroProveedor() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   }
 
-  function toggleServicio(id: string) {
+  function toggleServicio(id: number) {
     setFormData((prev) => ({
       ...prev,
       serviciosAdicionales: prev.serviciosAdicionales.includes(id)
@@ -36,17 +39,32 @@ export function useRegistroProveedor() {
     }));
   }
 
-  async function handleSubmit(e: FormEvent) {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setErrors({});
     setIsSubmitting(true);
 
-    // TODO: reemplazar por llamada real (perfil.service.ts) cuando exista la API
-    console.log("Registro proveedor simulado:", formData);
-    await new Promise((resolve) => setTimeout(resolve, 800));
-
-    setIsSubmitting(false);
-    router.push("/proveedor/perfil");
+    registrarProveedor({
+      nombreCompleto: formData.nombreEmpresa,
+      correo: formData.correo,
+      contrasena: formData.contrasena,
+      rol: "proveedor",
+      ciudad: formData.ciudad,
+      descripcion: formData.descripcion,
+      especialidad: formData.especialidad,
+      serviciosAdicionales: formData.serviciosAdicionales,
+    })
+    .then((user) => {
+      const ruta = routeGeneratorOverLogin(user.rol)
+      router.push(ruta);
+      router.refresh();
+    })
+    .catch((err) => {
+      setErrors({ general: err instanceof Error ? err.message : "No se pudo crear el perfil" });
+    })
+    .finally(() => {
+      setIsSubmitting(false);
+    })
   }
 
   return { formData, handleChange, toggleServicio, handleSubmit, isSubmitting, errors };

@@ -106,8 +106,9 @@ export async function crearPedido(payload: CrearPedidoDTO) {
 
 ```bash
 # .env (agregar valores)
-SUPABASE_URL=
-SUPABASE_SERVICE_KEY=
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+SUPABASE_SERVICE_ROLE_KEY=
 ```
 
 ---
@@ -130,12 +131,11 @@ npm run build
 # Extra para supabase
 
 # Generar tipos de Supabase (requiere Supabase CLI)
-# --project-id <id>: ID del proyecto en Supabase
+# --project-id <id>: reemplazar '<id>' por el ID del proyecto en Supabase
 # Se obtiene en: Supabase Dashboard → Project Settings → General → Project ID
+# Este comando sirve tambien para volver a generar los tipados si llegasen a cambiar en la base de datos
 npx supabase gen types typescript --project-id <id> > src/shared/types/supabase.types.ts
 
-# Volver a generar los tipados si llegasen a cambiar en la base de datos
-npm run generate-types
 ```
 
 ---

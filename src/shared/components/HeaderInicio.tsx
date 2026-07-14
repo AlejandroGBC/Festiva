@@ -1,13 +1,16 @@
 import { Menu, Bell } from "lucide-react";
 import Image from "next/image";
 import isotipoColor from "@/shared/img/isotipoColor.svg";
-import usuarioCliente from "@/shared/mocks/usuarioCliente";
+import { obtenerIniciales } from "../utils/obtenerIniciales";
+import { UsuarioSesion } from "../types/auth.types";
 
 interface HeaderProps {
     onMenuClick: () => void;
+    user: UsuarioSesion
 }
 
-export function Header({ onMenuClick }: HeaderProps) {
+export function Header({ onMenuClick, user }: HeaderProps) {
+
     return (
         <header className="justify-between flex p-5">
             <div className="flex gap-3">
@@ -27,7 +30,7 @@ export function Header({ onMenuClick }: HeaderProps) {
                     <Bell size={20} className="text-festiva-midnight-blue" strokeWidth={2} />
                 </button>
                 <span className="flex items-center justify-center w-11 h-11 bg-festiva-euphoric-pink text-white font-bold rounded-full text-sm shadow-sm">
-                    {usuarioCliente.abreviatura}
+                    {obtenerIniciales(user?.nombre)}
                 </span>
             </div>
         </header>
