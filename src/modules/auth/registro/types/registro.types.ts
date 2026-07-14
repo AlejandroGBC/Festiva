@@ -24,3 +24,13 @@ export interface ServicioOption {
   id: string;
   label: string;
 }
+
+export interface RegistroClienteFormData {
+  nombreCompleto: string;
+  correo: string;
+  contrasena: string;
+}
+
+export interface RegistroClientePayload extends Omit<RegistroClienteFormData, "aceptaTerminos"> {
+  rol: "cliente";
+}

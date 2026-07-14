@@ -11,6 +11,7 @@ interface RegistroBody {
   rol: "cliente" | "proveedor";
   ciudad?: string;
   descripcion?: string;
+  serviciosAdicionales?: number[];
 }
 
 export async function POST(request: NextRequest) {
@@ -63,6 +64,21 @@ export async function POST(request: NextRequest) {
   if (perfilError) {
     await serviceClient.auth.admin.deleteUser(userId);
     return apiError(perfilError.message, 500);
+  }
+
+  if (rol === "proveedor" && body.serviciosAdicionales && body.serviciosAdicionales.length > 0) {
+    const filasServicios = body.serviciosAdicionales.map((idServicio) => ({
+      id_proveedor: userId,
+      id_servicio: idServicio,
+    }));
+
+    const { error: serviciosError } = await serviceClient
+      .from("tbl_proveedor_servicios")
+      .insert(filasServicios);
+
+    if (serviciosError) {
+      console.error("Error insertando servicios del proveedor:", serviciosError.message);
+    }
   }
 
   const data: UsuarioSesion & { requiereConfirmacionCorreo: boolean } = {

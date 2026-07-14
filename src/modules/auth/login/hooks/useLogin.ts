@@ -4,6 +4,7 @@ import { ChangeEvent, FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import { iniciarSesion } from "../services/login.service";
 import { LoginFormData } from "../types/login.types";
+import { routeGeneratorOverLogin } from "@/shared/utils/routeGeneratosOverLogin";
 
 const initialState: LoginFormData = { correo: "", contrasena: "" };
 
@@ -25,7 +26,8 @@ export function useLogin() {
 
     try {
       const user = await iniciarSesion(formData);
-      router.push(`/${user.rol}/perfil`);
+      const ruta = routeGeneratorOverLogin(user.rol)
+      router.push(ruta);
       router.refresh(); // fuerza a que el middleware/RSC vean la sesión nueva
     } catch (err) {
       setErrors({ general: err instanceof Error ? err.message : "Error inesperado" });

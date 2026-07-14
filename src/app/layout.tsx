@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Poppins } from 'next/font/google';
 import "./globals.css";
 import MobileShell from "@/shared/layouts/MobileShell";
+import { AuthProvider } from "@/lib/context/auth-context";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -25,7 +26,9 @@ export default function RootLayout({
   return (
     <html lang="es" className={`${poppins.variable}`}>
       <body className={`font-sans antialiased`}>
-        <MobileShell>{children}</MobileShell>
+        <AuthProvider>
+          <MobileShell>{children}</MobileShell>
+        </AuthProvider>
       </body>
     </html>
   );

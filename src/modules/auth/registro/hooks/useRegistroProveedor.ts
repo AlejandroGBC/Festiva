@@ -4,6 +4,7 @@ import { ChangeEvent, FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import { RegistroProveedorFormData } from "../types/registro.types";
 import { registrarProveedor } from "../services/registro.service";
+import { routeGeneratorOverLogin } from "@/shared/utils/routeGeneratosOverLogin";
 
 const initialState: RegistroProveedorFormData = {
   nombreEmpresa: "",
@@ -38,30 +39,32 @@ export function useRegistroProveedor() {
     }));
   }
 
-  async function handleSubmit(e: FormEvent) {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setErrors({});
     setIsSubmitting(true);
 
-    try {
-      await registrarProveedor({
-        nombreCompleto: formData.nombreEmpresa,
-        correo: formData.correo,
-        contrasena: formData.contrasena,
-        rol: "proveedor",
-        ciudad: formData.ciudad,
-        descripcion: formData.descripcion,
-        especialidad: formData.especialidad,
-        serviciosAdicionales: formData.serviciosAdicionales,
-      });
-
-      router.push("/proveedor/perfil");
+    registrarProveedor({
+      nombreCompleto: formData.nombreEmpresa,
+      correo: formData.correo,
+      contrasena: formData.contrasena,
+      rol: "proveedor",
+      ciudad: formData.ciudad,
+      descripcion: formData.descripcion,
+      especialidad: formData.especialidad,
+      serviciosAdicionales: formData.serviciosAdicionales,
+    })
+    .then((user) => {
+      const ruta = routeGeneratorOverLogin(user.rol)
+      router.push(ruta);
       router.refresh();
-    } catch (err) {
+    })
+    .catch((err) => {
       setErrors({ general: err instanceof Error ? err.message : "No se pudo crear el perfil" });
-    } finally {
+    })
+    .finally(() => {
       setIsSubmitting(false);
-    }
+    })
   }
 
   return { formData, handleChange, toggleServicio, handleSubmit, isSubmitting, errors };
