@@ -1,5 +1,4 @@
 import { RegistroCliente } from "@/modules/auth/registro/components/RegistroCliente";
-import RegistroProveedorPage from "@/modules/auth/registro/components/RegistroProveedor";
 import { Roles } from "@/modules/auth/types/login.types";
 
 export default function RegistroPage({ params }: { params: { rol: Roles } }) {
@@ -12,7 +11,9 @@ export default function RegistroPage({ params }: { params: { rol: Roles } }) {
       )}
 
       {rol === "proveedor" && (
-        <RegistroProveedorPage/>
+        <div>
+          <h1>Registro de Proveedor</h1>
+        </div>
       )}
 
       {rol === "admin" && (

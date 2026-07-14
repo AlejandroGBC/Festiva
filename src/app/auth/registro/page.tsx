@@ -1,11 +1,6 @@
-import RolCardList from "@/modules/auth/registro/components/RolCardList";
-import SeleccionarRolHeader from "@/modules/auth/registro/components/SeleccionarRolHeader";
 
-export default function SeleccionarRolPage() {
-  return (
-    <div className="flex flex-col gap-10 justify-center">
-      <SeleccionarRolHeader />
-      <RolCardList />
-    </div>
-  );
+export default function RegistroPage(){
+    return(
+        <div>Esta sera la pagina selectora de roles para el registro</div>
+    )
 }
