@@ -1,3 +1,12 @@
+// src/shared/components/Sidebar.tsx
+//
+// ÚNICO CAMBIO respecto al original: subir el z-index del backdrop y del
+// aside. Button.tsx le pone "z-50" a TODOS los botones automáticamente
+// (vía buttonVariants), así que cualquier Button que aparezca después del
+// Sidebar en el DOM le gana el empate de z-index y se pinta encima.
+// Subiendo el Sidebar por encima de 50, siempre gana sin importar el
+// orden del DOM.
+
 "use client";
 
 import usuarioCliente from "../mocks/usuarioCliente";
@@ -20,7 +29,7 @@ const sidebarMainLinks = [
     },
     {
         label: "Mis Eventos",
-        href: "",
+        href: "/cliente/eventos",
         icon: Calendar,
         color: {
             text: "text-festiva-confetti-orange",
@@ -32,7 +41,7 @@ const sidebarMainLinks = [
     },
     {
         label: "Ofertas recibidas",
-        href: "",
+        href: "/cliente/ofertas",
         icon: Briefcase,
         color: {
             text: "text-festiva-euphoric-pink",
@@ -44,7 +53,7 @@ const sidebarMainLinks = [
     },
     {
         label: "Chat",
-        href: "",
+        href: "/cliente/chat",
         icon: MessageSquare,
         color: {
             text: "text-festiva-mint-neon",
@@ -59,17 +68,17 @@ const sidebarMainLinks = [
 const sidebarSecondaryLinks = [
     {
         label: "Perfil",
-        href: "",
+        href: "/cliente/perfil",
         icon: User,
     },
     {
         label: "Pagos",
-        href: "",
+        href: "/cliente/pagos",
         icon: CreditCard,
     },
     {
         label: "Configuracion",
-        href: "",
+        href: "/cliente/configuracion",
         icon: Settings,
     }
 ]
@@ -79,13 +88,14 @@ interface SidebarProps {
     onClose: () => void;
 }
 
-
 export function Sidebar({ isOpen, onClose }: SidebarProps) {
     const pathname = usePathname();
     return (
         <div>
-            <div onClick={onClose} className={`absolute inset-0 z-40 bg-black/30 transition-opacity duration-300 ${ isOpen ? "opacity-100 visible" : "opacity-0 invisible" }`}/>
-            <aside className={`absolute top-0 left-0 z-50 w-72 h-full flex flex-col bg-white shadow-xl transition-transform duration-300 ease-in-out ${ isOpen ? "translate-x-0" : "-translate-x-full" }`}>
+            {/* z-40 → z-[55]: por encima de cualquier Button (z-50 fijo) */}
+            <div onClick={onClose} className={`absolute inset-0 z-[55] bg-black/30 transition-opacity duration-300 ${ isOpen ? "opacity-100 visible" : "opacity-0 invisible" }`}/>
+            {/* z-50 → z-[60]: por encima de cualquier Button (z-50 fijo) */}
+            <aside className={`absolute top-0 left-0 z-[60] w-72 h-full flex flex-col bg-white shadow-xl transition-transform duration-300 ease-in-out ${ isOpen ? "translate-x-0" : "-translate-x-full" }`}>
                 <div className="bg-festiva-midnight-blue px-4 pt-9 pb-4">
                     <span className="bg-festiva-euphoric-pink text-white rounded-full w-12 h-12 flex items-center justify-center text-lg font-bold">
                         {usuarioCliente.abreviatura}
