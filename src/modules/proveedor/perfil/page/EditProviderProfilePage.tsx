@@ -2,15 +2,15 @@
 
 import React, { useState } from 'react';
 import { useProviderProfile } from '../hooks/useProviderProfile';
-import ProfileBanner from '../components/profilePage/ProfileBanner';
-import ProfileHeader from '../components/profilePage/ProfileHeader';
-import CompletionProgress from '../components/profilePage/CompletionProgress';
-import BusinessInfoForm from '../components/profilePage/BusinessInfoForm';
-import SpecialtiesSection from '../components/profilePage/SpecialtiesSection';
-import PortfolioSection from '../components/profilePage/PortfolioSection';
-import AvailabilitySection from '../components/profilePage/AvailabilitySection';
-import SaveProfileButton from '../components/profilePage/SaveProfileButton';
-import Loading from "@/shared/components/Loading"; // <--- Tu componente compartido importado
+import ProfileBanner from '../components/ProfileBanner';
+import ProfileHeader from '../components/ProfileHeader';
+import CompletionProgress from '../components/CompletionProgress';
+import BusinessInfoForm from '../components/BusinessInfoForm';
+import SpecialtiesSection from '../components/SpecialtiesSection';
+import PortfolioSection from '../components/PortfolioSection';
+import AvailabilitySection from '../components/AvailabilitySection';
+import SaveProfileButton from '../components/SaveProfileButton';
+import Loading from "@/shared/components/Loading";
 import { Navbar } from '@/shared/components/Navbar';
 
 export default function EditProviderProfilePage() {

@@ -1,5 +1,5 @@
 import React from 'react';
-import PortfolioView from '@/modules/proveedor/pages/ManagePortfolioView';
+import PortfolioView from '@/modules/proveedor/portfolio/pages/ManagePortfolioView';
 
 
 export const metadata = {

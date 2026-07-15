@@ -1,4 +1,4 @@
-import EditProviderProfilePage from '@/modules/proveedor/pages/EditProviderProfilePage';
+import EditProviderProfilePage from '@/modules/proveedor/perfil/page/EditProviderProfilePage';
 
 export const metadata = {
     title: 'Festiva - Mi Perfil',

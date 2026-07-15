@@ -1,4 +1,4 @@
-import SettingPage from '@/modules/proveedor/pages/SettingsPage';
+import SettingPage from '@/modules/proveedor/setting/pages/SettingsPage';
 
 export const metadata = {
     title: 'Festiva - Configuración',

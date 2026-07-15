@@ -5,8 +5,8 @@ import {
     Type, MapPin, AlignLeft, Link2, 
 } from 'lucide-react';
 import TopNavbar from '@/shared/components/TopNavbar'
-import PortfolioUploadGrid from '../components/portfolio/PortfolioUploadGrid';
-import CaseListCard from '../components/portfolio/CaseListCard';
+import PortfolioUploadGrid from '../components/PortfolioUploadGrid';
+import CaseListCard from '../components/CaseListCard';
 import Card from '@/shared/components/Card';
 import Input from '@/shared/components/Input';
 import SectionTitle from '@/shared/components/SectionTitle';

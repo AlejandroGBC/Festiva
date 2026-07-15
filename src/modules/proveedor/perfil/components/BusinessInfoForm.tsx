@@ -27,28 +27,29 @@ export default function BusinessInfoForm({ data, onChange }: BusinessInfoFormPro
                     label="Nombre de la empresa" 
                     value={data.businessName} 
                     onChange={(e) => onChange('businessName', e.target.value)}
-                    icon={<Building2 className="w-4 h-4 text-slate-400 stroke-[1.8]" />}
-                    variant={'muted'}
+                    placeholder='Decos Magicos'
+                    icon={Building2}
                 />
                 <Textarea 
                     label="Descripcion profesional" 
                     value={data.description} 
                     onChange={(e) => onChange('description', e.target.value)}
+                    placeholder='Especialistas en bodas, xv años y corporativos...'
                 />
                 <Input 
                     label="Ciudad principal" 
                     value={data.city} 
                     onChange={(e) => onChange('city', e.target.value)}
-                    icon={<MapPin className="w-4 h-4 text-slate-400 stroke-[1.8]" />} 
-                    variant={'muted'}
+                    placeholder='Tegucigalpa, Francisco Morazán'
+                    icon={MapPin} 
                 />
                 <Input 
                     label="Telefono de contacto" 
                     type="tel" 
                     value={data.phone} 
                     onChange={(e) => onChange('phone', e.target.value)}
-                    icon={<Phone className="w-4 h-4 text-slate-400 stroke-[1.8]" />}
-                    variant={'muted'}
+                    placeholder='+504 33345678'
+                    icon={Phone}
                 />
             </div>
         </Card>
