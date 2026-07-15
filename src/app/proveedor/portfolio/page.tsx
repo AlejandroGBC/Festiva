@@ -1,6 +1,6 @@
 import React from 'react';
 import PortfolioView from '@/modules/proveedor/pages/ManagePortfolioView';
-import Navbar from '@/shared/components/Navbar';
+import { Navbar } from '@/shared/components/Navbar';
 
 export const metadata = {
     title: 'Festiva - Mi Portafolio',

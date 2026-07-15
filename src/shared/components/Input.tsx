@@ -36,12 +36,16 @@ export default function Input({
   const renderIcon = () => {
     if (!Icon) return null;
     
-    if (typeof Icon === 'function') {
+    if (React.isValidElement(Icon)) {
+      return Icon;
+    }
+
+    if (typeof Icon === 'function' || (typeof Icon === 'object' && Icon !== null && 'render' in Icon)) {
       const LucideIconComponent = Icon as React.ComponentType<{ className?: string }>;
-      return <LucideIconComponent className="w-4 h-4 stroke-[2]" />;
+      return <LucideIconComponent className="w-4 h-4 stroke-[1.8]" />;
     }
     
-    return Icon;
+    return null;
   };
 
   return (

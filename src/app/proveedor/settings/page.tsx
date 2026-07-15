@@ -1,5 +1,6 @@
 import SettingPage from '@/modules/proveedor/pages/SettingsPage';
-import Navbar from '@/shared/components/Navbar';
+import { Navbar } from '@/shared/components/Navbar';
+
 export const metadata = {
     title: 'Festiva - Configuración',
     description: '',
