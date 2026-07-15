@@ -11,20 +11,18 @@ import ConfigRow from '../components/setting/ConfigRow';
 import Toggle from '@/shared/components/Toggle';
 import Chip from '@/shared/components/Chip';
 import { Check } from 'lucide-react';
+import { Navbar } from '@/shared/components/Navbar';
+import Loading from "@/shared/components/Loading";
 
 export default function SettingPage() {
     const { settings, loading, toggleSetting } = useSettings();
 
     if (loading || !settings) {
-        return (
-            <div className="body flex items-center justify-center min-h-screen">
-                <p className="text-sm font-medium text-slate-400 animate-pulse">Cargando configuraciones de Festiva...</p>
-            </div>
-        );
+        return <Loading fullScreen label="Cargando configuración de Festiva..." />;
     }
 
     return (
-        <div className="flex flex-col h-full w-full overflow-hidden">
+        <>
             <TopNavbar title="Configuración"/>
             <div className="flex-1 overflow-y-auto no-scrollbar w-full px-5 pt-10 pb-36 flex flex-col gap-[18px]">
                 {/* Sección Cuenta */}
@@ -152,6 +150,7 @@ export default function SettingPage() {
                     Festiva v2.4.1 · © 2026 Festiva Technologies
                 </p>
             </div>
-        </div>
+            <Navbar />
+        </>
     );
 }

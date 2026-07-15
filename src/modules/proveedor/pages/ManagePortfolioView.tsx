@@ -12,6 +12,8 @@ import Input from '@/shared/components/Input';
 import SectionTitle from '@/shared/components/SectionTitle';
 import Button from '@/shared/components/Button'
 import { usePortfolio } from '../hooks/usePortfolio';
+import Loading from "@/shared/components/Loading";
+import { Navbar } from '@/shared/components/Navbar';
 
 interface PortfolioForm {
     title: string;
@@ -56,21 +58,15 @@ export default function ManagePortfolioView() {
     };
 
     if (loading) {
-        return (
-            <div className="body flex items-center justify-center min-h-screen">
-                <p className="text-sm font-medium text-slate-400 animate-pulse">Cargando portafolio de Festiva...</p>
-            </div>
-        );
+        return <Loading fullScreen label="Cargando portafolio de Festiva..." />;
     }
 
     return (
-        <div className="flex flex-col h-full w-full overflow-hidden">
+        <>
             <TopNavbar title="Gestionar Portafolio"/>
 
-            <div className="flex-1 overflow-y-auto no-scrollbar pb-32">
+            <div className="flex-1 overflow-y-auto no-scrollbar w-full px-3 pt-6 pb-36 flex flex-col gap-[18px]">
 
-                {/* <div style={{ padding: '42px 20px 24px', display: 'flex', flexDirection: 'column', gap: '18px' }}> */}
-                <div className="flex flex-col gap-4 w-full pt-6">
                     <div className="bg-white p-1 rounded-[16px] shadow-[0_4px_20px_rgba(0,0,0,0.05)] grid grid-cols-2 text-center text-sm font-bold text-slate-400">
                         <button
                             onClick={() => setActiveSection('multimedia')}
@@ -183,8 +179,8 @@ export default function ManagePortfolioView() {
                             </div>
                         )}
                     </Card>
-                </div>
             </div>
-        </div>
+            <Navbar/>
+        </>
     );
 }
