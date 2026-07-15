@@ -62,11 +62,13 @@ function tiempoRelativo(fechaISO: string): string {
 interface OfertasRecibidasViewProps {
   eventos: EventoFiltro[];
   ofertas: OfertaListado[];
+  tieneNotificacionesNuevas?: boolean;
 }
 
 export default function OfertasRecibidasView({
   eventos,
   ofertas,
+  tieneNotificacionesNuevas,
 }: OfertasRecibidasViewProps) {
   const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -92,7 +94,7 @@ export default function OfertasRecibidasView({
 
   return (
     <div className="relative min-h-dvh bg-[#F5F2FA] flex flex-col">
-      <Header onMenuClick={() => setSidebarOpen(true)} />
+      <Header onMenuClick={() => setSidebarOpen(true)} tieneNotificacionesNuevas={tieneNotificacionesNuevas} />
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
       <section className="px-5 flex-1 pb-6">

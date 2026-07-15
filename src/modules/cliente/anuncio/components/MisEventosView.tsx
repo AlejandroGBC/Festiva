@@ -50,9 +50,10 @@ type FiltroId = (typeof FILTROS)[number]["id"];
 
 interface MisEventosViewProps {
   eventos: EventoListado[];
+  tieneNotificacionesNuevas?: boolean;
 }
 
-export default function MisEventosView({ eventos }: MisEventosViewProps) {
+export default function MisEventosView({ eventos, tieneNotificacionesNuevas }: MisEventosViewProps) {
   const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [filtro, setFiltro] = useState<FiltroId>("todos");
@@ -62,7 +63,7 @@ export default function MisEventosView({ eventos }: MisEventosViewProps) {
 
   return (
     <div className="relative min-h-dvh bg-[#F5F2FA] flex flex-col">
-      <Header onMenuClick={() => setSidebarOpen(true)} />
+      <Header onMenuClick={() => setSidebarOpen(true)} tieneNotificacionesNuevas={tieneNotificacionesNuevas} />
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
       <section className="px-5 flex-1">

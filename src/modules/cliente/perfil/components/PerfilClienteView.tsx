@@ -67,15 +67,16 @@ function FilaCuenta({ icon, iconBg, titulo, subtitulo, onClick }: FilaCuentaProp
 
 interface PerfilClienteViewProps {
   perfil: PerfilClienteData;
+  tieneNotificacionesNuevas?: boolean;
 }
 
-export default function PerfilClienteView({ perfil }: PerfilClienteViewProps) {
+export default function PerfilClienteView({ perfil, tieneNotificacionesNuevas }: PerfilClienteViewProps) {
   const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
     <div className="relative min-h-dvh bg-[#F5F2FA] flex flex-col">
-      <Header onMenuClick={() => setSidebarOpen(true)} />
+      <Header onMenuClick={() => setSidebarOpen(true)} tieneNotificacionesNuevas={tieneNotificacionesNuevas} />
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
       <section className="px-5 flex-1 pb-6">

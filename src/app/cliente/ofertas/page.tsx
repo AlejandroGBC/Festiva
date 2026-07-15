@@ -6,9 +6,19 @@
  */
 
 import { getOfertasRecibidas } from "@/modules/cliente/ofertas/services/ofertas-list.service";
+import { contarNotificacionesNuevas } from "@/modules/cliente/notificaciones/services/notificaciones-list.service";
 import OfertasRecibidasView from "@/modules/cliente/ofertas/components/OfertasRecibidasView";
 
 export default async function OfertasRecibidasPage() {
-  const { eventos, ofertas } = await getOfertasRecibidas();
-  return <OfertasRecibidasView eventos={eventos} ofertas={ofertas} />;
+  const [{ eventos, ofertas }, notificacionesNuevas] = await Promise.all([
+    getOfertasRecibidas(),
+    contarNotificacionesNuevas(),
+  ]);
+  return (
+    <OfertasRecibidasView
+      eventos={eventos}
+      ofertas={ofertas}
+      tieneNotificacionesNuevas={notificacionesNuevas > 0}
+    />
+  );
 }
