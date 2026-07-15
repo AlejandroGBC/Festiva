@@ -4,7 +4,7 @@ import {
   User, Shield, Phone, CreditCard, Percent, BarChart3, 
   Bell, Mail, MessageSquare, Lock, FileText, LogOut, Trash2 
 } from 'lucide-react';
-import TopNavbar from '../../../shared/components/TopNavbar'
+import TopNavbar from '@/shared/components/TopNavbar'
 import { useSettings } from '../hooks/useSettings';
 import ConfigSection from '../components/setting/ConfigSection';
 import ConfigRow from '../components/setting/ConfigRow';
