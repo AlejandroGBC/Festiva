@@ -4,7 +4,7 @@ import RegistroProveedorHeader from "./RegistroProveedorHeader";
 
 export default function RegistroProveedorPage() {
   return (
-    <div className="flex flex-col gap-8 bg-[#F7F5FC] min-h-screen">
+    <div className="flex flex-col gap-8 bg-[#F7F5FC] h-screen">
       <RegistroProveedorHeader />
       <RegistroProveedorForm />
       <RegistroProveedorFooter />

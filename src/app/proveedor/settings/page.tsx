@@ -1,13 +1,10 @@
-'use client';
+import SettingPage from '@/modules/proveedor/setting/pages/SettingsPage';
 
-import SettingPage from '@/modules/proveedor/configuracion/components/SettingsPage';
-import Navbar from '@/shared/components/Navbar';
+export const metadata = {
+    title: 'Festiva - Configuración',
+    description: '',
+};
 
 export default function Page() {
-  return (
-    <main>
-      <SettingPage/>
-      <Navbar />
-    </main>
-  );
+  return <SettingPage/>;
 }

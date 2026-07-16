@@ -1,13 +1,10 @@
-'use client';
+import EditProviderProfilePage from '@/modules/proveedor/perfil/page/EditProviderProfilePage';
 
-import EditProviderProfilePage from '@/modules/proveedor/perfil/components/EditProviderProfilePage';
-import Navbar from '@/shared/components/Navbar';
+export const metadata = {
+    title: 'Festiva - Mi Perfil',
+    description: '',
+};
 
 export default function Page() {
-  return (
-    <main>
-      <EditProviderProfilePage />
-      <Navbar />
-    </main>
-  );
+  return <EditProviderProfilePage />;
 }

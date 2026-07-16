@@ -1,6 +1,5 @@
 "use client";
 
-import usuarioCliente from "@/shared/mocks/usuarioCliente";
 import SearchBar from "@/shared/components/SearchBar";
 import HeroBanner from "@/shared/components/HeroBanner";
 import { Plus } from "lucide-react"
@@ -13,22 +12,30 @@ import Header from "@/shared/components/HeaderInicio";
 import Sidebar from "@/shared/components/Sidebar";
 import { useState } from "react";
 import Navbar from "@/shared/components/Navbar";
+import { useAuthContext } from "@/lib/context/auth-context";
+import Loading from "@/shared/components/Loading";
 
 
 export default function InicioPage() {
     const [sidebarOpen, setSidebarOpen] = useState(false);
+    const {user, isLoading, signOut} = useAuthContext()
+
+    if (isLoading) return <Loading fullScreen label="Cargando..." />;
+
     return (
         <div>
-            <Header onMenuClick={() => setSidebarOpen(true)} />
+            <Header user={user!} onMenuClick={() => setSidebarOpen(true)} />
 
             <Sidebar
                 isOpen={sidebarOpen}
                 onClose={() => setSidebarOpen(false)}
+                user={user!}
+                signOut={signOut}
             />
             <section className="px-5">
                 <div className="pb-7">
                     <p className="text-festiva-midnight-blue/45 text-sm pb-2">Buenos dias</p>
-                    <h1 className="text-festiva-midnight-blue font-bold text-3xl">{usuarioCliente.soloNombre}</h1>
+                    <h1 className="text-festiva-midnight-blue font-bold text-3xl">{user?.nombre}</h1>
                 </div>
                 <SearchBar showButton placeholder="Buscar proveedores o servicios" />
                 <HeroBanner title="Publica tu evento y recibe propuestas" description="Los mejores proveedores compiten por tu evento">
