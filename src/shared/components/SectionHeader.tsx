@@ -10,9 +10,9 @@ export function SectionHeader({ title = "", accion = "" }: SectionHeaderProps) {
                 {title}
             </h2>
 
-            <a href="" className="text-sm text-festiva-euphoric-pink font-semibold">
+            <span className="text-sm text-festiva-euphoric-pink font-semibold cursor-pointer">
                 {accion}
-            </a>
+            </span>
         </div>
     );
 }

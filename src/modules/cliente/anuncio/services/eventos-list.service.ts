@@ -66,7 +66,21 @@ export async function getEventosCliente(): Promise<EventoListado[]> {
     return [];
   }
 
-  return (data ?? []).map((ev: any) => ({
+  interface EventoConTipoRow {
+    id_evento: string;
+    titulo: string;
+    descripcion: string;
+    fecha_evento: string;
+    ubicacion: string;
+    cantidad_invitados: number;
+    presupuesto_min: number | null;
+    presupuesto_max: number | null;
+    estado: string | null;
+    creado_en: string | null;
+    tbl_tipo_evento: { nombre: string } | null;
+  }
+
+  return ((data ?? []) as EventoConTipoRow[]).map((ev) => ({
     id_evento: ev.id_evento,
     titulo: ev.titulo,
     descripcion: ev.descripcion,
@@ -75,8 +89,8 @@ export async function getEventosCliente(): Promise<EventoListado[]> {
     cantidad_invitados: ev.cantidad_invitados,
     presupuesto_min: ev.presupuesto_min,
     presupuesto_max: ev.presupuesto_max,
-    estado: ev.estado,
-    creado_en: ev.creado_en,
+    estado: ev.estado ?? "recibiendo_ofertas",
+    creado_en: ev.creado_en ?? new Date().toISOString(),
     tipo_evento: ev.tbl_tipo_evento?.nombre ?? null,
   }));
 }

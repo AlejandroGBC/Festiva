@@ -16,11 +16,8 @@ export async function marcarNotificacionesVistas(): Promise<void> {
   } = await supabase.auth.getUser();
   if (!user) return;
 
-  // NOTA TEMPORAL: "as any" mientras se corre migracion_notificaciones.sql
-  // y se regeneran los tipos (npx supabase gen types ...). Sacar el cast
-  // apenas notificaciones_vistas_en aparezca en supabase.types.ts.
   await supabase
     .from("tbl_perfiles_cliente")
-    .update({ notificaciones_vistas_en: new Date().toISOString() } as any)
+    .update({ notificaciones_vistas_en: new Date().toISOString() })
     .eq("id_cliente", user.id);
 }

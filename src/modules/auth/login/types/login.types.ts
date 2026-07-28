@@ -4,4 +4,4 @@ export interface LoginFormData {
   contrasena: string;
 }
 
-export interface LoginPayload extends LoginFormData {}
+export type LoginPayload = LoginFormData;

@@ -3,6 +3,7 @@ import { Poppins } from 'next/font/google';
 import "./globals.css";
 import MobileShell from "@/shared/layouts/MobileShell";
 import { AuthProvider } from "@/lib/context/auth-context";
+import ServiceWorkerRegister from "@/shared/components/ServiceWorkerRegister";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -29,6 +30,7 @@ export default function RootLayout({
         <AuthProvider>
           <MobileShell>{children}</MobileShell>
         </AuthProvider>
+        <ServiceWorkerRegister />
       </body>
     </html>
   );

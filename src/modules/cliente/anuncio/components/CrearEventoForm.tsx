@@ -14,8 +14,12 @@
  *
  * Notas sobre el mapeo a componentes reales:
  * - Chip no es seleccionable (no tiene onClick/selected), solo etiqueta.
- *   Para tipo de evento / servicios uso <Button variant shape="pill" size="sm">
- *   alternando "outline" (no seleccionado) y "secondary" (seleccionado).
+ *   Para tipo de evento / servicios uso botones propios (TipoEventoChip /
+ *   ServicioChip) con ícono + color por categoría, reusando
+ *   servicio-icono.ts (servicios) y tipo-evento-icono.ts (tipos de
+ *   evento) — el mismo sistema de color que ya usa el resto de la app
+ *   (categorías del inicio, tarjetas de proveedor), para que se sienta
+ *   coherente y no una paleta inventada solo para este form.
  * - TopNavbar solo acepta { title } y su flecha siempre hace router.back(),
  *   así que la uso como "salir del flujo"; el retroceso entre pasos lo
  *   manejan los botones "Volver" de cada paso (llaman a prevStep()).
@@ -37,7 +41,7 @@ import {
 
 import Card from "@/shared/components/Card";
 import SectionTitle from "@/shared/components/SectionTitle";
-import Chip from "@/shared/components/Chip";
+import Chip, { type BrandVariant } from "@/shared/components/Chip";
 import Input from "@/shared/components/Input";
 import Textarea from "@/shared/components/Textarea";
 import Button from "@/shared/components/Button";
@@ -45,6 +49,8 @@ import ProgressBar from "@/shared/components/ProgressBar";
 import TopNavbar from "@/shared/components/TopNavbar";
 import Navbar from "@/shared/components/Navbar";
 
+import { obtenerIconoServicio } from "@/shared/lib/servicio-icono";
+import { obtenerIconoTipoEvento } from "@/shared/lib/tipo-evento-icono";
 import { useCrearEvento } from "@/modules/cliente/anuncio/hooks/use-crear-evento";
 
 const TIPOS_EVENTO = [
@@ -71,9 +77,10 @@ const SERVICIOS_DISPONIBLES = [
 
 const TOTAL_PASOS = 4;
 
-/** Chip seleccionable (Chip real no soporta onClick/selected, así que se
- *  arma con Button en pill). */
-function ChipSeleccionable({
+/** Tarjeta seleccionable de tipo de evento — ícono + color por categoría
+ *  (tipo-evento-icono.ts), borde y fondo se tiñen del color propio del
+ *  tipo cuando está seleccionado. */
+function TipoEventoChip({
   label,
   selected,
   onClick,
@@ -82,19 +89,63 @@ function ChipSeleccionable({
   selected: boolean;
   onClick: () => void;
 }) {
+  const { Icon, color } = obtenerIconoTipoEvento(label);
   return (
-    <Button
+    <button
       type="button"
-      variant={selected ? "secondary" : "outline"}
-      shape="pill"
-      size="sm"
       onClick={onClick}
-      className="!h-9 !px-3.5 !text-[13px]"
+      className={`flex items-center gap-2 px-3.5 py-2.5 rounded-2xl border-2 text-[13px] font-bold transition-all ${
+        selected
+          ? `${color.bg} ${color.border} ${color.text}`
+          : "bg-white border-transparent text-festiva-midnight-blue/55 shadow-[0_1px_8px_rgba(38,30,78,0.05)]"
+      }`}
     >
-      {selected && <Check className="w-3.5 h-3.5" />}
+      <Icon size={16} className={selected ? color.text : "text-festiva-midnight-blue/30"} />
       {label}
-    </Button>
+    </button>
   );
+}
+
+/** Chip seleccionable de servicio — mismo sistema de ícono + color que
+ *  ya usan las categorías del inicio y las tarjetas de proveedor
+ *  (servicio-icono.ts), así el usuario asocia visualmente "Fotografía"
+ *  acá con "Fotografía" en el resto de la app. */
+function ServicioChip({
+  label,
+  selected,
+  onClick,
+}: {
+  label: string;
+  selected: boolean;
+  onClick: () => void;
+}) {
+  const { Icon, color } = obtenerIconoServicio(label);
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`flex items-center gap-2 px-3.5 py-2.5 rounded-2xl border text-[13px] font-bold transition-all ${
+        selected
+          ? `${color.bg} ${color.text} border-current`
+          : "bg-white border-[#EDEAF8] text-festiva-midnight-blue/50"
+      }`}
+    >
+      <Icon size={15} className={selected ? color.text : "text-festiva-midnight-blue/25"} />
+      {label}
+      {selected && <Check size={13} className={color.text} />}
+    </button>
+  );
+}
+
+/** Traduce las clases de color de servicio-icono.ts a la variante más
+ *  cercana de Chip, para reusar el componente real en el resumen del
+ *  paso 4 en vez de un <Chip variant="default"> genérico. */
+function varianteDesdeColorTexto(colorText: string): BrandVariant {
+  if (colorText.includes("euphoric-pink")) return "euphoric-pink";
+  if (colorText.includes("electric-violet")) return "electric-violet";
+  if (colorText.includes("mint-neon")) return "mint-neon";
+  if (colorText.includes("confetti-orange")) return "confetti-orange";
+  return "default";
 }
 
 function PasoLabel({ step, total, titulo }: { step: number; total: number; titulo: string }) {
@@ -210,9 +261,9 @@ export default function CrearEventoForm() {
 
               <div className="mt-2 px-3 py-2 rounded-lg bg-festiva-mint-neon/10 border border-festiva-mint-neon/20">
                 <p className="text-xs font-semibold text-festiva-midnight-blue m-0">
-                  Ejemplo: "Quiero una boda para 100 personas el 20 de
+                  Ejemplo: &ldquo;Quiero una boda para 100 personas el 20 de
                   diciembre en Tegucigalpa, presupuesto entre L. 60,000 y L.
-                  80,000, estilo clásico."
+                  80,000, estilo clásico.&rdquo;
                 </p>
               </div>
             </div>
@@ -347,9 +398,9 @@ export default function CrearEventoForm() {
                 <label className="text-[11px] font-bold text-festiva-midnight-blue/60 uppercase tracking-wide mb-1.5 block">
                   Tipo de evento
                 </label>
-                <div className="flex flex-wrap gap-2">
+                <div className="grid grid-cols-2 gap-2">
                   {TIPOS_EVENTO.map((t) => (
-                    <ChipSeleccionable
+                    <TipoEventoChip
                       key={t}
                       label={t}
                       selected={tipoEvento === t}
@@ -422,9 +473,9 @@ export default function CrearEventoForm() {
                 <label className="text-[11px] font-bold text-festiva-midnight-blue/60 uppercase tracking-wide mb-1.5 block">
                   Servicios requeridos
                 </label>
-                <div className="flex flex-wrap gap-2">
+                <div className="grid grid-cols-2 gap-2">
                   {SERVICIOS_DISPONIBLES.map((s) => (
-                    <ChipSeleccionable
+                    <ServicioChip
                       key={s}
                       label={s}
                       selected={servicios.includes(s)}
@@ -554,11 +605,14 @@ export default function CrearEventoForm() {
                 </label>
                 <div className="flex flex-wrap gap-2">
                   {servicios.length > 0 ? (
-                    servicios.map((s) => (
-                      <Chip key={s} variant="default">
-                        {s}
-                      </Chip>
-                    ))
+                    servicios.map((s) => {
+                      const { Icon, color } = obtenerIconoServicio(s);
+                      return (
+                        <Chip key={s} variant={varianteDesdeColorTexto(color.text)} icon={Icon}>
+                          {s}
+                        </Chip>
+                      );
+                    })
                   ) : (
                     <span className="text-sm text-festiva-midnight-blue/40">
                       No se seleccionaron servicios
@@ -570,7 +624,7 @@ export default function CrearEventoForm() {
               {descripcion && (
                 <div className="rounded-xl bg-[#F9F8FF] border border-festiva-electric-violet/10 px-3.5 py-3">
                   <p className="text-[13px] text-festiva-midnight-blue/70 italic leading-relaxed m-0">
-                    "{descripcion}"
+                    &ldquo;{descripcion}&rdquo;
                   </p>
                 </div>
               )}

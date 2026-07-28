@@ -53,7 +53,14 @@ export async function getNotificaciones(): Promise<NotificacionItem[]> {
     ? new Date(perfilCliente.notificaciones_vistas_en)
     : null;
 
-  return ofertasDb.map((o: any) => ({
+  interface OfertaNotifRow {
+    id_evento: string;
+    id_proveedor: string;
+    creada_en: string;
+    tbl_perfiles_proveedor: { nombre_comercial: string } | null;
+  }
+
+  return (ofertasDb as OfertaNotifRow[]).map((o) => ({
     id: `${o.id_evento}-${o.id_proveedor}`,
     tipo: "nueva_oferta" as const,
     titulo: "Nueva oferta recibida",

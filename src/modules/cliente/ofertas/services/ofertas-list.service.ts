@@ -75,9 +75,21 @@ export async function getOfertasRecibidas(): Promise<OfertasRecibidasData> {
 
   const eventoTituloPorId = new Map(eventosDb.map((e) => [e.id_evento, e.titulo]));
 
+  interface OfertaConProveedorRow {
+    id_evento: string;
+    id_proveedor: string;
+    precio_total: number;
+    descripcion_servicio: string | null;
+    estado: OfertaListado["estado"];
+    creada_en: string;
+    tbl_perfiles_proveedor: { nombre_comercial: string } | null;
+  }
+
+  const ofertasTipadas = (ofertasDb ?? []) as OfertaConProveedorRow[];
+
   // 3. Calificación promedio por proveedor (best-effort: si falla, seguimos sin ella)
   const idsProveedores = Array.from(
-    new Set((ofertasDb ?? []).map((o: any) => o.id_proveedor as string))
+    new Set(ofertasTipadas.map((o) => o.id_proveedor))
   );
   const calificacionPorProveedor = new Map<string, number>();
 
@@ -115,7 +127,7 @@ export async function getOfertasRecibidas(): Promise<OfertasRecibidasData> {
     }
   }
 
-  const ofertas: OfertaListado[] = (ofertasDb ?? []).map((o: any) => ({
+  const ofertas: OfertaListado[] = ofertasTipadas.map((o) => ({
     id_evento: o.id_evento,
     evento_titulo: eventoTituloPorId.get(o.id_evento) ?? "Evento",
     id_proveedor: o.id_proveedor,

@@ -1,7 +1,10 @@
 // src/shared/components/HeaderInicio.tsx
 //
-// ÚNICO CAMBIO respecto al original: el botón de notificaciones ahora
-// navega a /cliente/notificaciones (antes no tenía onClick).
+// Cambios respecto al original:
+// - Botón de notificaciones navega a /cliente/notificaciones y muestra
+//   punto rosa pulsante si tieneNotificacionesNuevas es true.
+// - user viene del contexto real de autenticación (avatar con iniciales
+//   reales en vez del mock).
 
 "use client";
 
@@ -14,18 +17,12 @@ import { UsuarioSesion } from "../types/auth.types";
 
 interface HeaderProps {
     onMenuClick: () => void;
-<<<<<<< HEAD
     tieneNotificacionesNuevas?: boolean;
+    user: UsuarioSesion | null;
 }
 
-export function Header({ onMenuClick, tieneNotificacionesNuevas = false }: HeaderProps) {
+export function Header({ onMenuClick, tieneNotificacionesNuevas = false, user }: HeaderProps) {
     const router = useRouter();
-=======
-    user: UsuarioSesion
-}
-
-export function Header({ onMenuClick, user }: HeaderProps) {
->>>>>>> upstream/main
 
     return (
         <header className="justify-between flex p-5">

@@ -18,6 +18,7 @@ import Navbar from "@/shared/components/Navbar";
 import Card from "@/shared/components/Card";
 import Chip from "@/shared/components/Chip";
 import Button from "@/shared/components/Button";
+import { useAuthContext } from "@/lib/context/auth-context";
 
 import type {
   OfertaListado,
@@ -71,6 +72,7 @@ export default function OfertasRecibidasView({
   tieneNotificacionesNuevas,
 }: OfertasRecibidasViewProps) {
   const router = useRouter();
+  const { user, signOut } = useAuthContext();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [eventoSeleccionado, setEventoSeleccionado] = useState<string>("todos");
   const [filtroEstado, setFiltroEstado] = useState<FiltroEstado>("todas");
@@ -94,8 +96,12 @@ export default function OfertasRecibidasView({
 
   return (
     <div className="relative min-h-dvh bg-[#F5F2FA] flex flex-col">
-      <Header onMenuClick={() => setSidebarOpen(true)} tieneNotificacionesNuevas={tieneNotificacionesNuevas} />
-      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <Header
+        onMenuClick={() => setSidebarOpen(true)}
+        tieneNotificacionesNuevas={tieneNotificacionesNuevas}
+        user={user}
+      />
+      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} user={user} signOut={signOut} />
 
       <section className="px-5 flex-1 pb-6">
         <div className="flex items-center justify-between flex-wrap gap-2 pt-1">

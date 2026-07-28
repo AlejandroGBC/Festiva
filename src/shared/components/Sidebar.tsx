@@ -1,11 +1,11 @@
 // src/shared/components/Sidebar.tsx
 //
-// ÚNICO CAMBIO respecto al original: subir el z-index del backdrop y del
-// aside. Button.tsx le pone "z-50" a TODOS los botones automáticamente
-// (vía buttonVariants), así que cualquier Button que aparezca después del
-// Sidebar en el DOM le gana el empate de z-index y se pinta encima.
-// Subiendo el Sidebar por encima de 50, siempre gana sin importar el
-// orden del DOM.
+// Cambios respecto al original:
+// - z-index del backdrop/aside subido (z-[55]/z-[60]) por encima de
+//   cualquier Button (que fuerza z-50 vía buttonVariants).
+// - "Configuración" usa la ruta real /cliente/configuracion en vez de
+//   href vacío.
+// - user/signOut vienen del contexto real de autenticación.
 
 "use client";
 
@@ -78,13 +78,8 @@ const sidebarSecondaryLinks = [
         icon: CreditCard,
     },
     {
-<<<<<<< HEAD
-        label: "Configuracion",
-        href: "/cliente/configuracion",
-=======
         label: "Configuración",
-        href: "",
->>>>>>> upstream/main
+        href: "/cliente/configuracion",
         icon: Settings,
     }
 ]
@@ -92,16 +87,11 @@ const sidebarSecondaryLinks = [
 interface SidebarProps {
     isOpen: boolean;
     onClose: () => void;
-    user: UsuarioSesion;
+    user: UsuarioSesion | null;
     signOut: () => void;
 }
 
-<<<<<<< HEAD
-export function Sidebar({ isOpen, onClose }: SidebarProps) {
-=======
-
 export function Sidebar({ isOpen, onClose, user, signOut }: SidebarProps) {
->>>>>>> upstream/main
     const pathname = usePathname();
     const router = useRouter();
 

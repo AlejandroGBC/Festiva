@@ -19,6 +19,7 @@ import Navbar from "@/shared/components/Navbar";
 import Card from "@/shared/components/Card";
 import Chip from "@/shared/components/Chip";
 import Button from "@/shared/components/Button";
+import { useAuthContext } from "@/lib/context/auth-context";
 
 import type { EventoListado } from "@/modules/cliente/anuncio/services/eventos-list.service";
 
@@ -55,6 +56,7 @@ interface MisEventosViewProps {
 
 export default function MisEventosView({ eventos, tieneNotificacionesNuevas }: MisEventosViewProps) {
   const router = useRouter();
+  const { user, signOut } = useAuthContext();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [filtro, setFiltro] = useState<FiltroId>("todos");
 
@@ -63,8 +65,12 @@ export default function MisEventosView({ eventos, tieneNotificacionesNuevas }: M
 
   return (
     <div className="relative min-h-dvh bg-[#F5F2FA] flex flex-col">
-      <Header onMenuClick={() => setSidebarOpen(true)} tieneNotificacionesNuevas={tieneNotificacionesNuevas} />
-      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <Header
+        onMenuClick={() => setSidebarOpen(true)}
+        tieneNotificacionesNuevas={tieneNotificacionesNuevas}
+        user={user}
+      />
+      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} user={user} signOut={signOut} />
 
       <section className="px-5 flex-1">
         <div className="flex items-center justify-between flex-wrap gap-2 pb-4">

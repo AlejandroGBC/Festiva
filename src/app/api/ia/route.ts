@@ -12,20 +12,12 @@ export const runtime = 'nodejs'
  * (por eso la IA fallaba "la primera vez" y funcionaba al reintentar).
  * Esta línea fuerza IPv4 primero para evitar ese fallo de entrada.
  */
-import dns from 'node:dns'
-dns.setDefaultResultOrder('ipv4first')
-
-// El connect timeout INTERNO de undici (el motor de fetch de Node) es de
-// 10s por defecto, y es independiente de nuestro AbortController de abajo.
-// Si la primera conexión hacia un host externo tarda más que eso (típico
-// en la primera request tras un cold start), falla antes de que nuestro
-// timeout de 20s siquiera entre en juego. Lo subimos a 30s acá.
-import { Agent, setGlobalDispatcher } from 'undici'
-setGlobalDispatcher(new Agent({ connect: { timeout: 30_000 } }))
+// El fix de DNS/timeout ahora es global (instrumentation.ts) — ya no
+// hace falta repetirlo acá.
 
 import { NextResponse } from 'next/server'
 
-function extraerJSON(texto: string): any | null {
+function extraerJSON(texto: string): unknown | null {
   if (!texto?.trim()) return null
 
   // Intento 1: JSON limpio directo
@@ -55,7 +47,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Descripción requerida' }, { status: 400 })
     }
 
-    // ✅ Logs de diagnóstico temporal
+    //  Logs de diagnóstico temporal
     console.log('GROQ_API_KEY existe:', !!process.env.GROQ_API_KEY)
     console.log('GROQ_API_KEY longitud:', process.env.GROQ_API_KEY?.length)
 
@@ -140,11 +132,13 @@ Extrae y devuelve solo este JSON:
 
     return NextResponse.json({ datos })
 
-  } catch (e: any) {
-    const mensaje = e?.name === 'AbortError'
+  } catch (e: unknown) {
+    const esAbort = e instanceof Error && e.name === 'AbortError'
+    const mensaje = esAbort
       ? 'La IA tardó demasiado, intenta de nuevo'
-      : (e?.message ?? 'Error desconocido')
-    console.error('Error general:', mensaje, 'Causa:', e?.cause)
+      : (e instanceof Error ? e.message : 'Error desconocido')
+    const causa = e instanceof Error ? (e.cause ?? e) : e
+    console.error('Error general:', mensaje, 'Causa:', causa)
     return NextResponse.json({ error: mensaje }, { status: 500 })
   }
 }
