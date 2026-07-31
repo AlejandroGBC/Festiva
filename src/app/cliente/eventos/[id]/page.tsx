@@ -4,7 +4,7 @@ import { TimelineItem } from "@/modules/cliente/eventos/components/TimelineItem"
 import { ChatRapidoCard } from "@/modules/cliente/eventos/components/ChatRapidoCard";
 import SectionHeader from "@/shared/components/SectionHeader";
 import Navbar from "@/shared/components/Navbar";
-import type { TimelinePaso, ProveedorContratado } from "@/modules/cliente/eventos/types/eventos.types";
+import type { TimelinePaso, ProveedorContratado } from "@/shared/types/eventos-cliente.types";
 
 // TODO: reemplazar por fetch real a eventos.service.ts cuando conectemos Supabase
 const proveedoresMock: ProveedorContratado[] = [

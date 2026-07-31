@@ -5,7 +5,7 @@ import { HeaderPropuestas } from "@/modules/proveedor/propuestas/components/Head
 import { TabsPropuestas } from "@/modules/proveedor/propuestas/components/TabsPropuestas";
 import { PropuestaCard } from "@/modules/proveedor/propuestas/components/PropuestaCard";
 import { Navbar } from "@/shared/components/Navbar";
-import type { Propuesta, TabPropuestas } from "@/modules/proveedor/propuestas/types/propuestas.types";
+import type { Propuesta, TabPropuestas } from "@/shared/types/propuestas-proveedor.types";
 
 // TODO: reemplazar por fetch real a TBL_OFERTAS (proveedor autenticado) cuando conectemos Supabase
 const propuestasMock: Propuesta[] = [

@@ -9,7 +9,7 @@ interface ButtonProps
 export default function Button({ variant, size, shape, className, ...props }: ButtonProps) {
   return (
     <button 
-      className={buttonVariants({ variant, size, shape, className: `${className || ""} relative z-50` })} 
+      className={buttonVariants({ variant, size, shape, className: `${className || ""} relative` })} 
       {...props} 
     />
   );

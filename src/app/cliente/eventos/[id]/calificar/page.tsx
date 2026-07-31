@@ -8,7 +8,7 @@ import Textarea from "@/shared/components/Textarea";
 import { ProveedorCalificacionCard } from "@/modules/cliente/calificaciones/components/ProveedorCalificacionCard";
 import { SelectorEstrellas } from "@/modules/cliente/calificaciones/components/SelectorEstrellas";
 import { ChipAtributo } from "@/modules/cliente/calificaciones/components/ChipAtributo";
-import type { ProveedorCalificado } from "@/modules/cliente/calificaciones/types/calificaciones.types";
+import type { ProveedorCalificado } from "@/shared/types/calificaciones-cliente.types";
 
 // TODO: reemplazar por fetch real a TBL_CONTRATACIONES / insert en TBL_CALIFICACIONES cuando conectemos Supabase
 const proveedorMock: ProveedorCalificado = {

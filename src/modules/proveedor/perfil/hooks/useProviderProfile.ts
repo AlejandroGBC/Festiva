@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ProviderProfile } from '../types/provider';
+import { ProviderProfile } from '@/shared/types/perfi-proveedor.types';
 import { providerService } from '../service/provider.service';
 
 export function useProviderProfile() {

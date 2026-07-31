@@ -1,4 +1,4 @@
-import { ProviderProfile } from '../types/provider';
+import { ProviderProfile } from '@/shared/types/perfi-proveedor.types';
 
 export const providerService = {
     getProfile: async (): Promise<ProviderProfile> => {

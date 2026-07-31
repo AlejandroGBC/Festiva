@@ -1,5 +1,5 @@
 import { Check, Calendar, Award } from "lucide-react";
-import type { TimelinePaso } from "../types/eventos.types";
+import type { TimelinePaso } from "../../../../shared/types/eventos-cliente.types";
 
 const circuloEstilo: Record<TimelinePaso["status"], string> = {
   completado: "bg-festiva-mint-neon text-white",

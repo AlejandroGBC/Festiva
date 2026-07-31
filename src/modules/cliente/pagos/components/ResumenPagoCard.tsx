@@ -1,5 +1,5 @@
 import Card from "@/shared/components/Card";
-import type { ItemResumenPago } from "../types/pagos.types";
+import type { ItemResumenPago } from "@/shared/types/pagos-cliente.types";
 
 export const ResumenPagoCard = ({ items }: { items: ItemResumenPago[] }) => {
   return (

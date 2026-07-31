@@ -7,7 +7,7 @@ import { BalanceHeader } from "@/modules/proveedor/historial/components/BalanceH
 import { IngresosChartCard } from "@/modules/proveedor/historial/components/IngresosChartCard";
 import { ResumenStatCard } from "@/modules/proveedor/historial/components/ResumenStatCard";
 import { HistorialItem } from "@/modules/proveedor/historial/components/HistorialItem";
-import type { PuntoIngresoMensual, TransaccionHistorial } from "@/modules/proveedor/historial/types/historial.types";
+import type { PuntoIngresoMensual, TransaccionHistorial } from "@/shared/types/historial-proveedor.types";
 
 // TODO: reemplazar por fetch real a TBL_PAGOS del proveedor autenticado cuando conectemos Supabase
 const ingresosMock: PuntoIngresoMensual[] = [

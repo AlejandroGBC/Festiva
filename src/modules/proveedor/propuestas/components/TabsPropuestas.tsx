@@ -1,4 +1,4 @@
-import type { TabPropuestas } from "../types/propuestas.types";
+import type { TabPropuestas } from "@/shared/types/propuestas-proveedor.types";
 
 interface TabsPropuestasProps {
   tabActivo: TabPropuestas;

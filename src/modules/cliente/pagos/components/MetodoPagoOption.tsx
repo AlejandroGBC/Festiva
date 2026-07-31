@@ -1,5 +1,5 @@
 import { Check } from "lucide-react";
-import type { MetodoPago } from "../types/pagos.types";
+import type { MetodoPago } from "@/shared/types/pagos-cliente.types";
 
 interface MetodoPagoOptionProps {
   metodo: MetodoPago;

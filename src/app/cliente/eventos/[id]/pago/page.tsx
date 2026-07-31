@@ -8,7 +8,7 @@ import SectionTitle from "@/shared/components/SectionTitle";
 import { ResumenPagoCard } from "@/modules/cliente/pagos/components/ResumenPagoCard";
 import { MetodoPagoOption } from "@/modules/cliente/pagos/components/MetodoPagoOption";
 import { AgregarTarjetaButton } from "@/modules/cliente/pagos/components/AgregarTarjetaButton";
-import type { ItemResumenPago, MetodoPago } from "@/modules/cliente/pagos/types/pagos.types";
+import type { ItemResumenPago, MetodoPago } from "@/shared/types/pagos-cliente.types";
 
 // TODO: reemplazar por fetch real (join TBL_CONTRATACIONES + TBL_PAGOS + TBL_OFERTAS) cuando conectemos Supabase
 const itemsResumenMock: ItemResumenPago[] = [

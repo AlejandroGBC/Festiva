@@ -6,7 +6,7 @@ export default function AuthRolLayout({ children }: { children: React.ReactNode 
     <div className="max-w-md mx-auto h-full flex flex-col">
       <RegisterBackButton />
       
-      <main className="mt-10">
+      <main className="flex-1 overflow-y-auto no-scrollbar">
         {children}
       </main>
     </div>

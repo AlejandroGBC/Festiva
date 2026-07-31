@@ -1,7 +1,7 @@
 import { Check, Clock } from "lucide-react";
 import Card from "@/shared/components/Card";
 import Chip from "@/shared/components/Chip";
-import { ProveedorContratado } from "../types/eventos.types";
+import { ProveedorContratado } from "@/shared/types/eventos-cliente.types";
 
 const estadoVariant: Record<ProveedorContratado["estado"], "mint-neon" | "confetti-orange"> = {
   confirmado: "mint-neon",
