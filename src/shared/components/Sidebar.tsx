@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { obtenerIniciales } from "../utils/obtenerIniciales";
 import { UsuarioSesion } from "../types/auth.types";
+import { useState } from "react";
 
 const sidebarMainLinks = [
     {
@@ -86,11 +87,19 @@ interface SidebarProps {
 export function Sidebar({ isOpen, onClose, user, signOut }: SidebarProps) {
     const pathname = usePathname();
     const router = useRouter();
+    const [isSigningOut, setIsSigningOut] = useState(false);
 
     async function handleLogout() {
-        await signOut();
-        router.push("/auth/login");
-        router.refresh(); // fuerza que el middleware/RSC vean que ya no hay sesión
+        setIsSigningOut(true);
+
+        try {
+            await signOut();
+            router.push("/auth/login");
+            router.refresh();
+        } catch (err) {
+            setIsSigningOut(false); // solo se resetea si algo falla
+            console.error("Error al cerrar sesión:", err);
+        }
     }
 
     return (
@@ -157,9 +166,13 @@ export function Sidebar({ isOpen, onClose, user, signOut }: SidebarProps) {
                 </div>
 
                 <div className="flex justify-center px-4 mt-auto pb-6">
-                    <button onClick={handleLogout} className="flex items-center justify-center gap-2 w-full bg-festiva-midnight-blue/10 text-festiva-midnight-blue font-bold py-2.5 px-[1.125rem] rounded-xl">
+                    <button
+                        onClick={handleLogout}
+                        disabled={isSigningOut}
+                        className="flex items-center justify-center gap-2 w-full bg-festiva-midnight-blue/10 text-festiva-midnight-blue font-bold py-2.5 px-[1.125rem] rounded-xl disabled:opacity-60"
+                    >
                         <LogOut size={20} />
-                        Cerrar sesión
+                        {isSigningOut ? "Cerrando sesión..." : "Cerrar sesión"}
                     </button>
                 </div>
             </aside>
