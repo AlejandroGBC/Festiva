@@ -1,4 +1,6 @@
-export type RolUsuario = "cliente" | "proveedor" | "admin";
+import { Enums } from "@/shared/types/supabase.types";
+
+export type RolUsuario = Enums<"tipo_usuario_enum">;
 
 export interface UsuarioSesion {
   id: string;
