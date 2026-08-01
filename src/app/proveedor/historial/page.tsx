@@ -2,12 +2,11 @@
 
 import Card from "@/shared/components/Card";
 import SectionHeader from "@/shared/components/SectionHeader";
-import { Navbar } from "@/shared/components/Navbar";
 import { BalanceHeader } from "@/modules/proveedor/historial/components/BalanceHeader";
 import { IngresosChartCard } from "@/modules/proveedor/historial/components/IngresosChartCard";
 import { ResumenStatCard } from "@/modules/proveedor/historial/components/ResumenStatCard";
 import { HistorialItem } from "@/modules/proveedor/historial/components/HistorialItem";
-import type { PuntoIngresoMensual, TransaccionHistorial } from "@/modules/proveedor/historial/types/historial.types";
+import type { PuntoIngresoMensual, TransaccionHistorial } from "@/shared/types/historial-proveedor.types";
 
 // TODO: reemplazar por fetch real a TBL_PAGOS del proveedor autenticado cuando conectemos Supabase
 const ingresosMock: PuntoIngresoMensual[] = [
@@ -28,7 +27,7 @@ const historialMock: TransaccionHistorial[] = [
 export default function DashboardProveedorPage() {
   return (
     <>
-      <div className="flex-1 overflow-y-auto no-scrollbar w-full pb-36">
+      <div className="flex-1 overflow-y-auto no-scrollbar w-full pb-10">
         <BalanceHeader montoDisponible={48500} cicloActual="junio 2026" actualizadoTexto="Actualizado hoy" />
 
         <div className="px-4 pt-6 flex flex-col gap-4">
@@ -52,7 +51,6 @@ export default function DashboardProveedorPage() {
         </div>
       </div>
 
-      <Navbar />
     </>
   );
 }

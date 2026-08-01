@@ -1,6 +1,6 @@
 import { TrendingUp } from "lucide-react";
 import Card from "@/shared/components/Card";
-import type { PuntoIngresoMensual } from "../types/historial.types";
+import type { PuntoIngresoMensual } from "@/shared/types/historial-proveedor.types";
 
 interface IngresosChartCardProps {
   puntos: PuntoIngresoMensual[];

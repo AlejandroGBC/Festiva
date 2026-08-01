@@ -1,7 +1,7 @@
 import { apiClient } from "@/lib/api/api-client";
-import { LoginPayload } from "../types/login.types";
+import { LoginFormData } from "../types/login.types";
 import { UsuarioSesion } from "@/shared/types/auth.types";
 
-export async function iniciarSesion(payload: LoginPayload) {
+export async function iniciarSesion(payload: LoginFormData) {
   return apiClient.post<UsuarioSesion>("/api/auth/login", payload);
 }

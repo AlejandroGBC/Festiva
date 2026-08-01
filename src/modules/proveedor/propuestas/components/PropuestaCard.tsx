@@ -3,7 +3,7 @@ import Card from "@/shared/components/Card";
 import Button from "@/shared/components/Button";
 import ProgressBar from "@/shared/components/ProgressBar";
 import { EstadoBadge } from "./EstadoBadge";
-import type { Propuesta } from "../types/propuestas.types";
+import type { Propuesta } from "@/shared/types/propuestas-proveedor.types";
 
 interface PropuestaCardProps {
   propuesta: Propuesta;

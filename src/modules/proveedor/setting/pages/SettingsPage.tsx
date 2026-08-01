@@ -11,7 +11,6 @@ import ConfigRow from '../components/ConfigRow';
 import Toggle from '@/shared/components/Toggle';
 import Chip from '@/shared/components/Chip';
 import { Check } from 'lucide-react';
-import { Navbar } from '@/shared/components/Navbar';
 import Loading from "@/shared/components/Loading";
 
 export default function SettingPage() {
@@ -24,7 +23,7 @@ export default function SettingPage() {
     return (
         <>
             <TopNavbar title="Configuración"/>
-            <div className="flex-1 overflow-y-auto no-scrollbar w-full px-5 pt-10 pb-36 flex flex-col gap-[18px]">
+            <div className="flex-1 overflow-y-auto no-scrollbar w-full px-5 pt-10 pb-5 flex flex-col gap-[18px]">
                 {/* Sección Cuenta */}
                 <ConfigSection label="Cuenta">
                     <ConfigRow
@@ -150,7 +149,6 @@ export default function SettingPage() {
                     Festiva v2.4.1 · © 2026 Festiva Technologies
                 </p>
             </div>
-            <Navbar />
         </>
     );
 }

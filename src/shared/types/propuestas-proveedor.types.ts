@@ -1,5 +1,6 @@
-export type EstadoPropuesta = "enviada" | "aceptada" | "rechazada" | "cancelada";
-export type TabPropuestas = "enviadas" | "aceptadas" | "rechazadas";
+import { Enums } from "@/shared/types/supabase.types";
+
+export type EstadoPropuesta = Enums<"estado_oferta_enum">;
 
 export interface Propuesta {
   id: string;

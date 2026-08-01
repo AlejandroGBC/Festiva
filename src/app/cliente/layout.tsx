@@ -5,8 +5,8 @@ export default function ClienteLayout({
 }) {
 
     return (
-        <div className="h-screen flex flex-col">
-            <main className="flex-1 overflow-y-auto">
+        <div className="h-full flex flex-col relative overflow-hidden">
+            <main className="flex-1 flex flex-col min-h-0 relative">
                 {children}
             </main>
         </div>

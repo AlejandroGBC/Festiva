@@ -1,5 +1,5 @@
 import { CheckCircle2, Percent } from "lucide-react";
-import type { TransaccionHistorial } from "../types/historial.types";
+import type { TransaccionHistorial } from "@/shared/types/historial-proveedor.types";
 
 interface HistorialItemProps extends TransaccionHistorial {
   esUltimo?: boolean;

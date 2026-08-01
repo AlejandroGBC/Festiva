@@ -1,4 +1,4 @@
-import { Tables } from "@/shared/types/supabase.types";
+import { Tables } from "./supabase.types";
 
 export type Servicio = Tables<"tbl_servicios">;
 

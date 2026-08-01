@@ -1,5 +1,5 @@
 import Card from "@/shared/components/Card";
-import type { ProveedorCalificado } from "../types/calificaciones.types";
+import type { ProveedorCalificado } from "../../../../shared/types/calificaciones-cliente.types";
 
 export const ProveedorCalificacionCard = ({ proveedor }: { proveedor: ProveedorCalificado }) => (
   <Card className="flex items-center gap-3">

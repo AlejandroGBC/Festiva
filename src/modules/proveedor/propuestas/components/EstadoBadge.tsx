@@ -1,6 +1,6 @@
 import { Clock, CheckCircle2, XCircle } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-import type { EstadoPropuesta } from "../types/propuestas.types";
+import type { EstadoPropuesta } from "@/shared/types/propuestas-proveedor.types";
 
 const config: Record<EstadoPropuesta, { label: string; className: string; Icon: LucideIcon }> = {
   enviada: { label: "En revisión", className: "bg-festiva-confetti-orange/10 text-festiva-confetti-orange", Icon: Clock },

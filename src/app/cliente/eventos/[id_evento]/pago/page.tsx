@@ -8,7 +8,7 @@ import SectionTitle from "@/shared/components/SectionTitle";
 import { ResumenPagoCard } from "@/modules/cliente/pagos/components/ResumenPagoCard";
 import { MetodoPagoOption } from "@/modules/cliente/pagos/components/MetodoPagoOption";
 import { AgregarTarjetaButton } from "@/modules/cliente/pagos/components/AgregarTarjetaButton";
-import type { ItemResumenPago, MetodoPago } from "@/modules/cliente/pagos/types/pagos.types";
+import type { ItemResumenPago, MetodoPago } from "@/shared/types/pagos-cliente.types";
 
 // TODO: reemplazar por fetch real (join TBL_CONTRATACIONES + TBL_PAGOS + TBL_OFERTAS) cuando conectemos Supabase
 const itemsResumenMock: ItemResumenPago[] = [
@@ -29,7 +29,7 @@ export default function ConfirmarPagoPage() {
   const [metodoSeleccionado, setMetodoSeleccionado] = useState(metodosMock[0].id);
 
   return (
-    <div>
+    <div className="flex flex-col flex-1 overflow-y-auto no-scrollbar w-full">
       <div className="flex items-center gap-4 px-5 pt-6 pb-2">
         <button
           type="button"
