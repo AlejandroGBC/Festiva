@@ -74,7 +74,7 @@ const sidebarSecondaryLinks = [
     },
     {
         label: "Pagos",
-        href: "/cliente/pagos",
+        href: "/cliente/eventos/[id_evento]/pago",
         icon: CreditCard,
     },
     {

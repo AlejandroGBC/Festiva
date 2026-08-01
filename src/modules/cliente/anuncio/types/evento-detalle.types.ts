@@ -18,6 +18,9 @@ export interface ProveedorContratado {
    * Cualquier otro estado (pendiente/fallido/reembolsado) o ausencia
    * de registro de pago se trata como no confirmado. */
   confirmado: boolean;
+  /** Teléfono del proveedor (tbl_usuarios.telefono) para el botón de
+   * WhatsApp. null si todavía no lo cargó. */
+  telefono: string | null;
 }
 
 export type EstadoHito = "completado" | "actual" | "pendiente";

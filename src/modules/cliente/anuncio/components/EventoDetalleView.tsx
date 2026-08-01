@@ -27,6 +27,8 @@ import Card from "@/shared/components/Card";
 import Chip from "@/shared/components/Chip";
 import Button from "@/shared/components/Button";
 
+import { useAuthContext } from "@/lib/context/auth-context";
+import { construirLinkWhatsApp, construirMensajeOferta } from "@/shared/lib/whatsapp";
 import {
   cancelarEvento,
   eliminarEvento,
@@ -49,6 +51,7 @@ interface EventoDetalleViewProps {
 
 export default function EventoDetalleView({ evento }: EventoDetalleViewProps) {
   const router = useRouter();
+  const { user } = useAuthContext();
   const [confirmando, setConfirmando] = useState<Confirmacion>(null);
   const [procesando, setProcesando] = useState(false);
   const [error, setError] = useState("");
@@ -138,32 +141,64 @@ export default function EventoDetalleView({ evento }: EventoDetalleViewProps) {
             </div>
 
             <div className="flex flex-col gap-2.5">
-              {evento.proveedores_contratados.map((p) => (
-                <Card key={p.id_contratacion} className="!p-3.5">
-                  <div className="flex items-center gap-3">
-                    <div className="w-11 h-11 rounded-2xl bg-festiva-euphoric-pink/10 border border-festiva-euphoric-pink/20 flex items-center justify-center shrink-0 text-sm font-bold text-festiva-euphoric-pink">
-                      {p.nombre_comercial
-                        .split(" ")
-                        .slice(0, 2)
-                        .map((w) => w.charAt(0))
-                        .join("")}
+              {evento.proveedores_contratados.map((p) => {
+                const linkWhatsApp = p.telefono
+                  ? construirLinkWhatsApp(
+                      p.telefono,
+                      construirMensajeOferta({
+                        nombreCliente: user?.nombre ?? "un cliente de Festiva",
+                        nombreProveedor: p.nombre_comercial,
+                        eventoTitulo: evento.titulo,
+                        servicio: p.categoria,
+                        precio: p.precio_total,
+                        yaAceptada: true,
+                      })
+                    )
+                  : null;
+
+                return (
+                  <Card key={p.id_contratacion} className="!p-3.5">
+                    <div className="flex items-center gap-3">
+                      <div className="w-11 h-11 rounded-2xl bg-festiva-euphoric-pink/10 border border-festiva-euphoric-pink/20 flex items-center justify-center shrink-0 text-sm font-bold text-festiva-euphoric-pink">
+                        {p.nombre_comercial
+                          .split(" ")
+                          .slice(0, 2)
+                          .map((w) => w.charAt(0))
+                          .join("")}
+                      </div>
+
+                      <div className="flex-1 min-w-0">
+                        <p className="font-bold text-[14px] text-festiva-midnight-blue m-0 truncate">
+                          {p.nombre_comercial}
+                        </p>
+                        <p className="text-[12px] text-festiva-midnight-blue/50 m-0 mt-0.5 truncate">
+                          {p.categoria} — L{p.precio_total.toLocaleString()} HN
+                        </p>
+                      </div>
+
+                      <Chip variant={p.confirmado ? "mint-neon" : "confetti-orange"}>
+                        {p.confirmado ? "Confirmado" : "Pendiente"}
+                      </Chip>
                     </div>
 
-                    <div className="flex-1 min-w-0">
-                      <p className="font-bold text-[14px] text-festiva-midnight-blue m-0 truncate">
-                        {p.nombre_comercial}
+                    {linkWhatsApp ? (
+                      <a
+                        href={linkWhatsApp}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center justify-center gap-2 mt-3 w-full bg-[#25D366]/10 text-[#1DA851] rounded-xl px-4 py-2.5 text-[13px] font-bold"
+                      >
+                        <MessageCircle size={15} />
+                        Chatear por WhatsApp
+                      </a>
+                    ) : (
+                      <p className="text-[11px] text-festiva-midnight-blue/40 text-center mt-3 m-0">
+                        Este proveedor todavía no cargó un teléfono de contacto.
                       </p>
-                      <p className="text-[12px] text-festiva-midnight-blue/50 m-0 mt-0.5 truncate">
-                        {p.categoria} — L{p.precio_total.toLocaleString()} HN
-                      </p>
-                    </div>
-
-                    <Chip variant={p.confirmado ? "mint-neon" : "confetti-orange"}>
-                      {p.confirmado ? "Confirmado" : "Pendiente"}
-                    </Chip>
-                  </div>
-                </Card>
-              ))}
+                    )}
+                  </Card>
+                );
+              })}
             </div>
           </div>
         )}
@@ -219,17 +254,6 @@ export default function EventoDetalleView({ evento }: EventoDetalleViewProps) {
                       <Calendar size={11} />
                       {hito.fecha ?? (hito.estado === "pendiente" ? "Próximo paso" : "—")}
                     </p>
-
-                    {/* Chat rápido: solo aparece bajo "Proveedores seleccionados" si ya hay al menos uno contratado */}
-                    {hito.id === "seleccionados" && evento.proveedores_contratados.length > 0 && (
-                      <button
-                        onClick={() => router.push("/cliente/ofertas")}
-                        className="flex items-center gap-2 mt-2.5 w-full bg-white rounded-2xl px-4 py-3 border border-[#EDEAF8] text-[13px] font-semibold text-festiva-electric-violet"
-                      >
-                        <MessageCircle size={15} />
-                        Chat rápido con proveedor
-                      </button>
-                    )}
                   </div>
                 </div>
               );

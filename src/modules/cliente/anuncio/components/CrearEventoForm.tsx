@@ -51,6 +51,7 @@ import Navbar from "@/shared/components/Navbar";
 
 import { obtenerIconoServicio } from "@/shared/lib/servicio-icono";
 import { obtenerIconoTipoEvento } from "@/shared/lib/tipo-evento-icono";
+import { useServicios } from "@/shared/hooks/useServicios";
 import { useCrearEvento } from "@/modules/cliente/anuncio/hooks/use-crear-evento";
 
 const TIPOS_EVENTO = [
@@ -62,17 +63,6 @@ const TIPOS_EVENTO = [
   "Corporativo",
   "Bautizo",
   "Aniversario",
-];
-
-const SERVICIOS_DISPONIBLES = [
-  "Decoración",
-  "Fotografía",
-  "Catering",
-  "Música",
-  "Maquillaje",
-  "Pastelería",
-  "Iluminación",
-  "Video",
 ];
 
 const TOTAL_PASOS = 4;
@@ -162,6 +152,7 @@ function PasoLabel({ step, total, titulo }: { step: number; total: number; titul
 export default function CrearEventoForm() {
   const router = useRouter();
   const [step, setStep] = useState(1);
+  const { servicios: serviciosDisponibles, isLoading: cargandoServicios, error: errorServicios, hayMasPaginas, cargarMas } = useServicios();
 
   const {
     // paso 1 - IA
@@ -473,16 +464,38 @@ export default function CrearEventoForm() {
                 <label className="text-[11px] font-bold text-festiva-midnight-blue/60 uppercase tracking-wide mb-1.5 block">
                   Servicios requeridos
                 </label>
-                <div className="grid grid-cols-2 gap-2">
-                  {SERVICIOS_DISPONIBLES.map((s) => (
-                    <ServicioChip
-                      key={s}
-                      label={s}
-                      selected={servicios.includes(s)}
-                      onClick={() => toggleServicio(s)}
-                    />
-                  ))}
-                </div>
+
+                {cargandoServicios && (
+                  <p className="text-sm text-festiva-midnight-blue/40">Cargando servicios...</p>
+                )}
+                {errorServicios && <p className="text-sm text-red-500">{errorServicios}</p>}
+
+                {!cargandoServicios && !errorServicios && (
+                  <>
+                    <div className="grid grid-cols-2 gap-2">
+                      {serviciosDisponibles.map((servicio) => (
+                        <ServicioChip
+                          key={servicio.id_servicio}
+                          label={servicio.nombre}
+                          selected={servicios.includes(servicio.nombre)}
+                          onClick={() => toggleServicio(servicio.nombre)}
+                        />
+                      ))}
+                    </div>
+
+                    {hayMasPaginas && (
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={cargarMas}
+                        className="self-center mt-2 w-full"
+                      >
+                        Ver más servicios
+                      </Button>
+                    )}
+                  </>
+                )}
               </div>
 
               <div>

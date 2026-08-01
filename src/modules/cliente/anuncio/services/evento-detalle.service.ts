@@ -145,7 +145,7 @@ export async function getEventoDetalle(idEvento: string): Promise<EventoDetalle 
     const idsProveedores = contrataciones.map((c) => c.id_proveedor);
     const idsContrataciones = contrataciones.map((c) => c.id_contratacion);
 
-    const [ofertasRes, proveedoresRes, serviciosProveedorRes, pagosRes] = await Promise.all([
+    const [ofertasRes, proveedoresRes, serviciosProveedorRes, pagosRes, telefonosRes] = await Promise.all([
       // Precio ofertado por cada uno de estos proveedores para este evento
       supabase
         .from("tbl_ofertas")
@@ -170,6 +170,12 @@ export async function getEventoDetalle(idEvento: string): Promise<EventoDetalle 
         .from("tbl_pagos")
         .select("id_pago, estado_pago")
         .in("id_pago", idsContrataciones),
+
+      // Teléfono — id_proveedor de tbl_perfiles_proveedor ES id_usuario de tbl_usuarios
+      supabase
+        .from("tbl_usuarios")
+        .select("id_usuario, telefono")
+        .in("id_usuario", idsProveedores),
     ]);
 
     const precioPorProveedor = new Map<string, number>(
@@ -197,6 +203,10 @@ export async function getEventoDetalle(idEvento: string): Promise<EventoDetalle 
       (pagosRes.data ?? []).map((p) => [p.id_pago as string, p.estado_pago as string])
     );
 
+    const telefonoPorProveedor = new Map<string, string | null>(
+      (telefonosRes.data ?? []).map((u) => [u.id_usuario as string, u.telefono as string | null])
+    );
+
     proveedoresContratados = contrataciones.map((c) => {
       const serviciosDelProveedor = serviciosPorProveedor.get(c.id_proveedor) ?? [];
       // Preferimos un servicio que coincida con lo que el evento pidió;
@@ -215,6 +225,7 @@ export async function getEventoDetalle(idEvento: string): Promise<EventoDetalle 
         categoria,
         precio_total: precioPorProveedor.get(c.id_proveedor) ?? 0,
         confirmado: estadoPago === "pagado",
+        telefono: telefonoPorProveedor.get(c.id_proveedor) ?? null,
       };
     });
   }

@@ -1,6 +1,6 @@
 "use client";
 
-import { User, Mail, Lock } from "lucide-react";
+import { User, Mail, Phone, Lock } from "lucide-react";
 import Input from "@/shared/components/Input";
 import Button from "@/shared/components/Button";
 import { useRegistroCliente } from "../hooks/useRegistroCliente";
@@ -33,6 +33,19 @@ export const FormCliente = () => {
           type="email"
           placeholder="correo@ejemplo.com"
           value={formData.correo}
+          onChange={handleChange}
+          required
+        />
+      </div>
+
+      <div className={baseInputContainerClass}>
+        <Input
+          label="Teléfono"
+          icon={<Phone />}
+          name="telefono"
+          type="tel"
+          placeholder="9999-9999"
+          value={formData.telefono}
           onChange={handleChange}
           required
         />

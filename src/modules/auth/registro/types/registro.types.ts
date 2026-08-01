@@ -1,6 +1,7 @@
 export interface RegistroProveedorFormData {
   nombreEmpresa: string;
   correo: string;
+  telefono: string;
   contrasena: string;
   rol: "proveedor";
   ciudad: string;
@@ -12,6 +13,7 @@ export interface RegistroProveedorFormData {
 export interface RegistroProveedorPayload {
   nombreCompleto: string;
   correo: string;
+  telefono: string;
   contrasena: string;
   rol: "proveedor";
   ciudad: string;
@@ -28,6 +30,7 @@ export interface ServicioOption {
 export interface RegistroClienteFormData {
   nombreCompleto: string;
   correo: string;
+  telefono: string;
   contrasena: string;
 }
 

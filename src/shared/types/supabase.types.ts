@@ -84,6 +84,42 @@ export type Database = {
           },
         ]
       }
+      tbl_conversaciones: {
+        Row: {
+          creado_en: string | null
+          id_conversacion: string
+          id_evento: string
+          id_proveedor: string
+        }
+        Insert: {
+          creado_en?: string | null
+          id_conversacion?: string
+          id_evento: string
+          id_proveedor: string
+        }
+        Update: {
+          creado_en?: string | null
+          id_conversacion?: string
+          id_evento?: string
+          id_proveedor?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tbl_conversaciones_id_evento_fkey"
+            columns: ["id_evento"]
+            isOneToOne: false
+            referencedRelation: "tbl_eventos"
+            referencedColumns: ["id_evento"]
+          },
+          {
+            foreignKeyName: "tbl_conversaciones_id_proveedor_fkey"
+            columns: ["id_proveedor"]
+            isOneToOne: false
+            referencedRelation: "tbl_perfiles_proveedor"
+            referencedColumns: ["id_proveedor"]
+          },
+        ]
+      }
       tbl_evento_servicios: {
         Row: {
           id_evento: string
@@ -174,6 +210,48 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "tbl_tipo_evento"
             referencedColumns: ["id_tipo_evento"]
+          },
+        ]
+      }
+      tbl_mensajes: {
+        Row: {
+          contenido: string
+          creado_en: string | null
+          id_conversacion: string
+          id_mensaje: string
+          id_remitente: string
+          leido_en: string | null
+        }
+        Insert: {
+          contenido: string
+          creado_en?: string | null
+          id_conversacion: string
+          id_mensaje?: string
+          id_remitente: string
+          leido_en?: string | null
+        }
+        Update: {
+          contenido?: string
+          creado_en?: string | null
+          id_conversacion?: string
+          id_mensaje?: string
+          id_remitente?: string
+          leido_en?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tbl_mensajes_id_conversacion_fkey"
+            columns: ["id_conversacion"]
+            isOneToOne: false
+            referencedRelation: "tbl_conversaciones"
+            referencedColumns: ["id_conversacion"]
+          },
+          {
+            foreignKeyName: "tbl_mensajes_id_remitente_fkey"
+            columns: ["id_remitente"]
+            isOneToOne: false
+            referencedRelation: "tbl_usuarios"
+            referencedColumns: ["id_usuario"]
           },
         ]
       }
@@ -560,7 +638,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      fn_conversacion_cerrada: {
+        Args: { p_id_evento: string }
+        Returns: boolean
+      }
     }
     Enums: {
       estado_evento_enum:
