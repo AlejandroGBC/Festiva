@@ -3,7 +3,6 @@ import { ProveedorContratadoCard } from "@/modules/cliente/eventos/components/Pr
 import { TimelineItem } from "@/modules/cliente/eventos/components/TimelineItem";
 import { ChatRapidoCard } from "@/modules/cliente/eventos/components/ChatRapidoCard";
 import SectionHeader from "@/shared/components/SectionHeader";
-import Navbar from "@/shared/components/Navbar";
 import type { TimelinePaso, ProveedorContratado } from "@/shared/types/eventos-cliente.types";
 
 // TODO: reemplazar por fetch real a eventos.service.ts cuando conectemos Supabase
@@ -21,8 +20,9 @@ const pasosMock: TimelinePaso[] = [
 ];
 
 export default function DetalleEventoPage({ params }: { params: { id: string } }) {
+  console.log("ID del evento:", params.id);
   return (
-    <div>
+    <div className="flex flex-col flex-1 overflow-y-auto no-scrollbar w-full">
       <DetalleEventoHeader
         titulo="Cumpleaños Carlos 40"
         fecha="10 julio, 2026"
@@ -30,7 +30,7 @@ export default function DetalleEventoPage({ params }: { params: { id: string } }
         progreso={65}
       />
 
-      <div className="px-5 pt-6 pb-8 flex flex-col gap-8">
+      <div className="px-5 pt-6 pb-10 flex flex-col gap-8">
         <div>
           <SectionHeader title="Proveedores contratados" accion="Ver todos" />
           <div className="flex flex-col gap-3">
@@ -52,7 +52,6 @@ export default function DetalleEventoPage({ params }: { params: { id: string } }
         </div>
       </div>
 
-      <Navbar />
     </div>
   );
 }

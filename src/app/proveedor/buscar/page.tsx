@@ -2,14 +2,13 @@
 
 import { useState } from "react";
 import Sidebar from "@/shared/components/Sidebar";
-import Navbar from "@/shared/components/Navbar";
 import Loading from "@/shared/components/Loading";
-import BuscarHeader from "@/modules/proveedor/buscar/components/BuscarHeader";
 import BuscarInput from "@/modules/proveedor/buscar/components/BuscarInput";
 import FiltrosRapidos from "@/modules/proveedor/buscar/components/FiltrosRapidos";
 import EventosDisponiblesList from "@/modules/proveedor/buscar/components/EventosDisponiblesList";
 import { EventoDisponible } from "@/shared/types/buscar-proveedor.types";
 import { useAuthContext } from "@/lib/context/auth-context";
+import HeaderSeccion from "@/shared/components/HeaderSeccion";
 
 // TODO: reemplazar por datos reales de /api/proveedor/eventos-disponibles
 const eventosDisponibles: EventoDisponible[] = [
@@ -53,23 +52,27 @@ export default function BuscarProveedorPage() {
   if (isLoading) return <Loading fullScreen label="Cargando..." />;
 
   return (
-    <div className="flex-1 flex flex-col h-full relative">
-      <BuscarHeader onMenuClick={() => setSidebarOpen(true)} />
+    <div className="flex flex-col flex-1 overflow-y-auto no-scrollbar w-full">
+      <section>
+        <HeaderSeccion
+          titulo="Explorar eventos"
+          onMenuClick={() => setSidebarOpen(true)}
+        />
 
-      <Sidebar
-        isOpen={sidebarOpen}
-        onClose={() => setSidebarOpen(false)}
-        user={user!}
-        signOut={signOut}
-      />
+        <Sidebar
+          isOpen={sidebarOpen}
+          onClose={() => setSidebarOpen(false)}
+          user={user!}
+          signOut={signOut}
+        />
 
-      <section className="px-5 flex flex-col gap-4 flex-1 min-h-0">
-        <BuscarInput value={busqueda} onChange={setBusqueda} />
-        <FiltrosRapidos filtroActivo={filtroActivo} onFiltroChange={setFiltroActivo} />
-        <EventosDisponiblesList eventos={eventosDisponibles} />
+        <section className="px-5 flex flex-col gap-4 flex-1 min-h-0">
+          <BuscarInput value={busqueda} onChange={setBusqueda} />
+          <FiltrosRapidos filtroActivo={filtroActivo} onFiltroChange={setFiltroActivo} />
+          <EventosDisponiblesList eventos={eventosDisponibles} />
+        </section>
       </section>
 
-      <Navbar />
     </div>
   );
 }

@@ -67,12 +67,13 @@ const sidebarSecondaryLinks = [
 const ROL_LABEL: Record<UsuarioSesion["rol"], string> = {
     cliente: "Cliente verificado",
     proveedor: "Proveedor verificado",
+    admin: "Administrador",
 };
 
 interface SidebarProps {
     isOpen: boolean;
     onClose: () => void;
-    user: UsuarioSesion;
+    user?: UsuarioSesion;
     signOut: () => void;
 }
 
@@ -81,7 +82,7 @@ export function Sidebar({ isOpen, onClose, user, signOut }: SidebarProps) {
     const router = useRouter();
     const [isSigningOut, setIsSigningOut] = useState(false);
 
-    const basePath = `/${user.rol}`;
+    const basePath = `/${user?.rol}`;
 
     async function handleLogout() {
         setIsSigningOut(true);
@@ -117,7 +118,7 @@ export function Sidebar({ isOpen, onClose, user, signOut }: SidebarProps) {
                 <p className="text-white/55 text-xs mb-3">{user?.correo}</p>
                 <span className="flex items-center bg-festiva-euphoric-pink/10 text-festiva-euphoric-pink text-xs px-3 py-2 w-fit gap-1 rounded-[999px]">
                     <User size={12} strokeWidth={1.5} />
-                    {ROL_LABEL[user.rol]}
+                    {user?.rol && ROL_LABEL[user.rol]}
                 </span>
                 </div>
 

@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { Gift, PartyPopper, Award } from "lucide-react";
 import Sidebar from "@/shared/components/Sidebar";
-import Navbar from "@/shared/components/Navbar";
 import Loading from "@/shared/components/Loading";
 import StatsGrid from "@/modules/proveedor/inicio/components/StatsGrid";
 import EventosRecomendados from "@/modules/proveedor/inicio/components/EventosRecomendados";
@@ -84,7 +83,6 @@ export default function InicioProveedorPage() {
         <EventosRecomendados eventos={eventosRecomendados} />
       </section>
 
-      <Navbar />
     </div>
   );
 }

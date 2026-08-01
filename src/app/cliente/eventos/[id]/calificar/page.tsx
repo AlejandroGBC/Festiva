@@ -44,7 +44,7 @@ export default function CalificarServicioPage() {
   };
 
   return (
-    <div className="px-5 pt-6 pb-10">
+    <div className="overflow-y-auto no-scrollbar w-full pb-36 gap-3 px-5 pt-6">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-xl font-bold text-festiva-midnight-blue">Califica el servicio</h1>
         <button

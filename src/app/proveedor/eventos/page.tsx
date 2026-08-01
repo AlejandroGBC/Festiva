@@ -1,11 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { HeaderPropuestas } from "@/modules/proveedor/propuestas/components/HeaderPropuestas";
 import { TabsPropuestas } from "@/modules/proveedor/propuestas/components/TabsPropuestas";
 import { PropuestaCard } from "@/modules/proveedor/propuestas/components/PropuestaCard";
-import { Navbar } from "@/shared/components/Navbar";
 import type { Propuesta, TabPropuestas } from "@/shared/types/propuestas-proveedor.types";
+import HeaderSeccion from "@/shared/components/HeaderSeccion";
+import Sidebar from "@/shared/components/Sidebar";
+import Loading from "@/shared/components/Loading";
+import { useAuthContext } from "@/lib/context/auth-context";
 
 // TODO: reemplazar por fetch real a TBL_OFERTAS (proveedor autenticado) cuando conectemos Supabase
 const propuestasMock: Propuesta[] = [
@@ -45,6 +47,10 @@ const propuestasMock: Propuesta[] = [
 
 export default function MisPropuestasPage() {
   const [tabActivo, setTabActivo] = useState<TabPropuestas>("enviadas");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { user, isLoading, signOut } = useAuthContext();
+  
+  if (isLoading) return <Loading fullScreen label="Cargando..." />;
 
   const propuestasFiltradas = propuestasMock.filter((p) => {
     if (tabActivo === "enviadas") return p.estado === "enviada";
@@ -55,9 +61,19 @@ export default function MisPropuestasPage() {
   return (
     <>
       <div className="shrink-0 bg-white">
-        <HeaderPropuestas />
+      <HeaderSeccion
+        titulo="Mis propuestas"
+        onMenuClick={() => setSidebarOpen(true)}
+      />
         <TabsPropuestas tabActivo={tabActivo} onCambiarTab={setTabActivo} />
       </div>
+
+      <Sidebar
+        isOpen={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+        user={user!}
+        signOut={signOut}
+      />
 
       <div className="flex-1 overflow-y-auto no-scrollbar w-full px-4 pt-4 pb-36 flex flex-col gap-4">
         {propuestasFiltradas.length > 0 ? (
@@ -71,7 +87,6 @@ export default function MisPropuestasPage() {
         )}
       </div>
 
-      <Navbar />
     </>
   );
 }

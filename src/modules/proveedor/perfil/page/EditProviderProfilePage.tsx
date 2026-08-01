@@ -11,7 +11,6 @@ import PortfolioSection from '../components/PortfolioSection';
 import AvailabilitySection from '../components/AvailabilitySection';
 import SaveProfileButton from '../components/SaveProfileButton';
 import Loading from "@/shared/components/Loading";
-import { Navbar } from '@/shared/components/Navbar';
 
 export default function EditProviderProfilePage() {
     const { profile, loading, updateField, handleSave } = useProviderProfile();
@@ -49,7 +48,7 @@ export default function EditProviderProfilePage() {
     return (
         <>
             <ProfileBanner />
-            <div className="flex-1 overflow-y-auto no-scrollbar w-full pb-32">
+            <div className="flex-1 overflow-y-auto no-scrollbar w-full pb-5">
                 <div style={{ padding: '42px 20px 24px', display: 'flex', flexDirection: 'column', gap: '18px' }}>
                     
                     <ProfileHeader 
@@ -89,7 +88,6 @@ export default function EditProviderProfilePage() {
                     <SaveProfileButton onClick={onSaveTrigger} isSaving={isSaving} />
                 </div>
             </div>
-            <Navbar/>
         </>
     );
 }

@@ -29,7 +29,7 @@ export default function ConfirmarPagoPage() {
   const [metodoSeleccionado, setMetodoSeleccionado] = useState(metodosMock[0].id);
 
   return (
-    <div>
+    <div className="flex flex-col flex-1 overflow-y-auto no-scrollbar w-full">
       <div className="flex items-center gap-4 px-5 pt-6 pb-2">
         <button
           type="button"

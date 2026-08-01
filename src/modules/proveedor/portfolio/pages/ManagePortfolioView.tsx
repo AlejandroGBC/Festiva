@@ -13,7 +13,6 @@ import SectionTitle from '@/shared/components/SectionTitle';
 import Button from '@/shared/components/Button'
 import { usePortfolio } from '../hooks/usePortfolio';
 import Loading from "@/shared/components/Loading";
-import { Navbar } from '@/shared/components/Navbar';
 
 interface PortfolioForm {
     title: string;
@@ -65,7 +64,7 @@ export default function ManagePortfolioView() {
         <>
             <TopNavbar title="Gestionar Portafolio"/>
 
-            <div className="flex-1 overflow-y-auto no-scrollbar w-full px-3 pt-6 pb-36 flex flex-col gap-[18px]">
+            <div className="flex-1 overflow-y-auto no-scrollbar w-full px-3 pt-6 pb-5 flex flex-col gap-[18px]">
 
                     <div className="bg-white p-1 rounded-[16px] shadow-[0_4px_20px_rgba(0,0,0,0.05)] grid grid-cols-2 text-center text-sm font-bold text-slate-400">
                         <button
@@ -180,7 +179,6 @@ export default function ManagePortfolioView() {
                         )}
                     </Card>
             </div>
-            <Navbar/>
         </>
     );
 }
