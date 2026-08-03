@@ -31,11 +31,7 @@ const sidebarMainLinks = [
     },
     {
         label: "Mis Eventos",
-<<<<<<< HEAD
-        href: "/cliente/eventos",
-=======
         href: "eventos",
->>>>>>> upstream/main
         icon: Calendar,
         color: {
         text: "text-festiva-confetti-orange",
@@ -47,11 +43,7 @@ const sidebarMainLinks = [
     },
     {
         label: "Ofertas recibidas",
-<<<<<<< HEAD
-        href: "/cliente/ofertas",
-=======
         href: "ofertas",
->>>>>>> upstream/main
         icon: Briefcase,
         color: {
         text: "text-festiva-euphoric-pink",
@@ -63,11 +55,7 @@ const sidebarMainLinks = [
     },
     {
         label: "Chat",
-<<<<<<< HEAD
-        href: "/cliente/chat",
-=======
         href: "chat",
->>>>>>> upstream/main
         icon: MessageSquare,
         color: {
         text: "text-festiva-mint-neon",
@@ -80,24 +68,6 @@ const sidebarMainLinks = [
 ];
 
 const sidebarSecondaryLinks = [
-<<<<<<< HEAD
-    {
-        label: "Perfil",
-        href: "/cliente/perfil",
-        icon: User,
-    },
-    {
-        label: "Pagos",
-        href: "/cliente/eventos/[id_evento]/pago",
-        icon: CreditCard,
-    },
-    {
-        label: "Configuración",
-        href: "/cliente/configuracion",
-        icon: Settings,
-    }
-]
-=======
     { label: "Perfil", href: "perfil", icon: User },
     { label: "Pagos", href: "pagos", icon: CreditCard },
     { label: "Configuración", href: "configuracion", icon: Settings },
@@ -108,16 +78,11 @@ const ROL_LABEL: Record<UsuarioSesion["rol"], string> = {
     proveedor: "Proveedor verificado",
     admin: "Administrador",
 };
->>>>>>> upstream/main
 
 interface SidebarProps {
     isOpen: boolean;
     onClose: () => void;
-<<<<<<< HEAD
-    user: UsuarioSesion | null;
-=======
     user?: UsuarioSesion;
->>>>>>> upstream/main
     signOut: () => void;
 }
 
@@ -143,12 +108,6 @@ export function Sidebar({ isOpen, onClose, user, signOut }: SidebarProps) {
 
     return (
         <div>
-<<<<<<< HEAD
-            {/* z-40 → z-[55]: por encima de cualquier Button (z-50 fijo) */}
-            <div onClick={onClose} className={`absolute inset-0 z-[55] bg-black/30 transition-opacity duration-300 ${ isOpen ? "opacity-100 visible" : "opacity-0 invisible" }`}/>
-            {/* z-50 → z-[60]: por encima de cualquier Button (z-50 fijo) */}
-            <aside className={`absolute top-0 left-0 z-[60] w-72 h-full flex flex-col bg-white shadow-xl transition-transform duration-300 ease-in-out ${ isOpen ? "translate-x-0" : "-translate-x-full" }`}>
-=======
             <div
                 onClick={onClose}
                 className={`absolute inset-0 z-40 bg-black/30 transition-opacity duration-300 ${
@@ -160,7 +119,6 @@ export function Sidebar({ isOpen, onClose, user, signOut }: SidebarProps) {
                 isOpen ? "translate-x-0" : "-translate-x-full"
                 }`}
             >
->>>>>>> upstream/main
                 <div className="bg-festiva-midnight-blue px-4 pt-9 pb-4">
                 <span className="bg-festiva-euphoric-pink text-white rounded-full w-12 h-12 flex items-center justify-center text-lg font-bold">
                     {obtenerIniciales(user?.nombre)}

@@ -74,7 +74,7 @@ export default function InicioPage() {
                     </HeroBanner>
 
                     <article className="my-6">
-                        <SectionHeader title="Categorias" accion="Ver todos" />
+                        <SectionHeader title="Categorias" accion="Ver todos" href="/cliente/categorias" />
                         <div className="flex justify-between text-center items-center">
                             {servicios.slice(0, 5).map((servicio) => (
                                 <IconTile
