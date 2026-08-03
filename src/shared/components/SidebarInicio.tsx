@@ -10,7 +10,7 @@ import { UsuarioSesion } from "../types/auth.types";
 const sidebarMainLinks = [
     {
         label: "Inicio",
-        href: "index",
+        href: "inicio",
         icon: Home,
         color: {
         text: "text-festiva-electric-violet",
@@ -77,7 +77,7 @@ interface SidebarProps {
     signOut: () => void;
 }
 
-export function Sidebar({ isOpen, onClose, user, signOut }: SidebarProps) {
+export function SidebarInicio({ isOpen, onClose, user, signOut }: SidebarProps) {
     const pathname = usePathname();
     const router = useRouter();
     const [isSigningOut, setIsSigningOut] = useState(false);
@@ -188,5 +188,3 @@ export function Sidebar({ isOpen, onClose, user, signOut }: SidebarProps) {
         </div>
     );
 }
-
-export default Sidebar;

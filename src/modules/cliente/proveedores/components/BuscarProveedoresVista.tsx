@@ -2,7 +2,7 @@
 
 /**
  * Ubicación sugerida:
- *   src/modules/cliente/proveedores/components/BuscarProveedoresView.tsx
+ *   src/modules/cliente/proveedores/components/BuscarProveedoresVista.tsx
  *
  * La búsqueda es interactiva: debounce de 350ms antes de consultar,
  * para no disparar una query por cada letra que tipea el usuario.
@@ -21,20 +21,20 @@ import { useAuthContext } from "@/lib/context/auth-context";
 
 import { buscarProveedores } from "@/modules/cliente/proveedores/services/proveedores-busqueda.service";
 import ProveedorListItem from "@/modules/cliente/proveedores/components/ProveedorListItem";
-import type { ProveedorTarjeta } from "@/modules/cliente/proveedores/types/proveedor.types";
-import type { CategoriaInicio } from "@/modules/cliente/inicio/types/inicio.types";
+import { CategoriaInicio } from "../../inicio/types/inicio.types";
+import { ProveedorTarjeta } from "../types/proveedor.types";
 
-interface BuscarProveedoresViewProps {
+interface BuscarProveedoresVistaProps {
   categorias: CategoriaInicio[];
   resultadosIniciales: ProveedorTarjeta[];
   tieneNotificacionesNuevas?: boolean;
 }
 
-export default function BuscarProveedoresView({
+export default function BuscarProveedoresVista({
   categorias,
   resultadosIniciales,
   tieneNotificacionesNuevas,
-}: BuscarProveedoresViewProps) {
+}: BuscarProveedoresVistaProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { user, signOut } = useAuthContext();
@@ -75,7 +75,7 @@ export default function BuscarProveedoresView({
   }, [busqueda, categoriaActiva]);
 
   return (
-    <div className="relative min-h-dvh bg-[#F5F2FA] flex flex-col">
+    <div className="relative min-h-dvh bg-[#F5F2FA] flex flex-col overflow-y-scroll no-scrollbar">
       <Header
         user={user!}
         onMenuClick={() => setSidebarOpen(true)}

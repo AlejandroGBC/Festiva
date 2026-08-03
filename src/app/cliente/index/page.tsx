@@ -2,13 +2,8 @@
  * Ubicación:
  *   src/app/cliente/inicio/page.tsx
  */
+"use client"
 
-<<<<<<< HEAD
-import { getCategoriasInicio } from "@/modules/cliente/inicio/services/inicio.service";
-import { getProveedoresDestacados } from "@/modules/cliente/proveedores/services/proveedores-destacados.service";
-import { contarNotificacionesNuevas } from "@/modules/cliente/notificaciones/services/notificaciones-list.service";
-import InicioView from "@/modules/cliente/inicio/components/InicioView";
-=======
 import SearchBar from "@/shared/components/SearchBar";
 import HeroBanner from "@/shared/components/HeroBanner";
 import { Plus } from "lucide-react"
@@ -18,29 +13,12 @@ import SectionHeader from "@/shared/components/SectionHeader";
 import { proveedoresDestacados } from "@/shared/mocks/proveedoresDestacados";
 import { ProviderCard } from "@/shared/components/ProviderCard";
 import Header from "@/shared/components/HeaderInicio";
-import Sidebar from "@/shared/components/Sidebar";
 import { useState } from "react";
 import { useAuthContext } from "@/lib/context/auth-context";
 import Loading from "@/shared/components/Loading";
->>>>>>> upstream/main
+import Sidebar from "@/shared/components/Sidebar";
 
-export default async function InicioPage() {
-  const [categorias, proveedoresDestacados, notificacionesNuevas] = await Promise.all([
-    getCategoriasInicio(5),
-    getProveedoresDestacados(2),
-    contarNotificacionesNuevas(),
-  ]);
 
-<<<<<<< HEAD
-  return (
-    <InicioView
-      categorias={categorias}
-      proveedoresDestacados={proveedoresDestacados}
-      tieneNotificacionesNuevas={notificacionesNuevas > 0}
-    />
-  );
-}
-=======
 export default function InicioPage() {
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const {user, isLoading, signOut} = useAuthContext()
@@ -104,4 +82,3 @@ export default function InicioPage() {
         
     );
 }
->>>>>>> upstream/main
