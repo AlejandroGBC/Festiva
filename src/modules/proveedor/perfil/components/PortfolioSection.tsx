@@ -1,10 +1,13 @@
+'use client';
+
 import React from 'react';
 import { Image, Flower, PartyPopper, Award, Images, Plus } from 'lucide-react';
 import Card from '@/shared/components/Card';
-import SectionTitle from '../../../../shared/components/SectionTitle';
+import SectionTitle from '@/shared/components/SectionTitle';
 
 interface PortfolioSectionProps {
     images: string[];
+    onManageClick?: () => void;
 }
 
 const brandStyles: Record<string, { bg: string; text: string; icon: React.ComponentType<{ className?: string }> }> = {
@@ -15,14 +18,15 @@ const brandStyles: Record<string, { bg: string; text: string; icon: React.Compon
   'navy': { bg: 'bg-festiva-midnight-blue/10', text: 'text-festiva-midnight-blue', icon: Images },
 };
 
-export default function PortfolioSection({ images }: PortfolioSectionProps) {
+export default function PortfolioSection({ images, onManageClick }: PortfolioSectionProps) {
     return (
         <Card>
             <SectionTitle
                 title="Portafolio"
                 actionLabel="Gestionar"
-                onActionClick={() => console.log('Gestionar portafolio')}
+                onActionClick={onManageClick}
             />
+            
             <div className="grid grid-cols-3 gap-3 mt-2">
                 {images.map((colorKey, index) => {
                     const config = brandStyles[colorKey] || { bg: 'bg-slate-100', text: 'text-slate-400', icon: Image };
@@ -30,14 +34,17 @@ export default function PortfolioSection({ images }: PortfolioSectionProps) {
                     return (
                         <div
                             key={index}
+                            onClick={() => onManageClick?.()}
                             className={`aspect-square flex items-center justify-center rounded-[20px] transition-transform hover:scale-[1.02] cursor-pointer ${config.bg}`}
                         >
                             <IconComponent className={`w-7 h-7 stroke-[1.5] ${config.text}`} />
                         </div>
                     );
                 })}
+                
                 <button
                     type="button"
+                    onClick={() => onManageClick?.()}
                     className="aspect-square flex flex-col items-center justify-center rounded-[20px] border-2 border-dashed border-slate-200 text-slate-400 bg-transparent hover:bg-slate-50 hover:border-slate-300 transition-all gap-1 cursor-pointer"
                 >
                     <Plus className="w-6 h-6 stroke-[2]" />

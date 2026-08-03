@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useProviderProfile } from '../hooks/useProviderProfile';
 import ProfileBanner from '../components/ProfileBanner';
 import ProfileHeader from '../components/ProfileHeader';
@@ -13,6 +14,7 @@ import SaveProfileButton from '../components/SaveProfileButton';
 import Loading from "@/shared/components/Loading";
 
 export default function EditProviderProfilePage() {
+    const router = useRouter();
     const { profile, loading, updateField, handleSave } = useProviderProfile();
     const [isSaving, setIsSaving] = useState(false);
 
@@ -26,13 +28,10 @@ export default function EditProviderProfilePage() {
         updateField('availability', updated);
     };
 
-    // const handleSpecialtiesChange = (updatedSpecs: string[]) => {
-    //     updateField('initialSpecialties', updatedSpecs);
-    // };
-
-    // const handlePortfolioChange = (updatedImages: string[]) => {
-    //     updateField('portfolioImages', updatedImages);
-    // };
+    const handleNavigateToPortfolio = () => {
+        console.log("Navegando a /proveedor/portfolio...");
+        router.push('/proveedor/portfolio');
+    };
 
     const onSaveTrigger = async () => {
         setIsSaving(true);
@@ -77,7 +76,7 @@ export default function EditProviderProfilePage() {
                     
                     <PortfolioSection 
                         images={profile.portfolioImages || []}
-                        // onChange={handlePortfolioChange}
+                        onManageClick={handleNavigateToPortfolio}
                     />
                     
                     <AvailabilitySection 
