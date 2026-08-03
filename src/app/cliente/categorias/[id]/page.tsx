@@ -4,7 +4,6 @@ import { useState } from "react";
 import { ProveedoresHeader } from "@/modules/cliente/categorias/components/ProveedoresHeader";
 import { OrdenToggle } from "@/modules/cliente/categorias/components/OrdenToggle";
 import { ProveedorListingCard } from "@/modules/cliente/categorias/components/ProveedorListingCard";
-import { Navbar } from "@/shared/components/Navbar";
 import type { ProveedorListado, OrdenProveedores } from "@/shared/types/proveedores-cliente.types";
 
 // TODO: reemplazar por fetch real a TBL_PERFILES_PROVEEDOR filtrando por categoria (params.id)
@@ -74,6 +73,8 @@ const proveedoresMock: ProveedorListado[] = [
 export default function ProveedoresPorCategoriaPage({ params }: { params: { id: string } }) {
   const [orden, setOrden] = useState<OrdenProveedores>("recomendados");
 
+  console.log("ID de categoria:", params.id);
+
   const proveedoresOrdenados =
     orden === "mejor_calificados"
       ? [...proveedoresMock].sort((a, b) => b.calificacion - a.calificacion)
@@ -95,7 +96,6 @@ export default function ProveedoresPorCategoriaPage({ params }: { params: { id: 
         ))}
       </div>
 
-      <Navbar />
     </>
   );
 }

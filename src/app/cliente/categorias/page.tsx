@@ -4,7 +4,6 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import TopNavbar from "@/shared/components/TopNavbar";
 import SearchBar from "@/shared/components/SearchBar";
-import { Navbar } from "@/shared/components/Navbar";
 import { CategoriaCard } from "@/modules/cliente/categorias/components/CategoriaCard";
 import { servicios } from "@/shared/mocks/servicios";
 
@@ -49,7 +48,6 @@ export default function CategoriasPage() {
         </div>
       </div>
 
-      <Navbar />
     </>
   );
 }
