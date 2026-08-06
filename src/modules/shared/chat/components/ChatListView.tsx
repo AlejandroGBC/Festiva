@@ -1,37 +1,32 @@
+// modules/shared/chat/components/ChatListView.tsx
 "use client";
-
-/**
- * Ubicación sugerida:
- *   src/modules/cliente/chat/components/ChatListView.tsx
- */
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { MessageSquareText } from "lucide-react";
-
+import { useAuthContext } from "@/lib/context/auth-context";
+import type { ConversacionListado } from "../types/chat.types";
 import Header from "@/shared/components/HeaderInicio";
 import Sidebar from "@/shared/components/Sidebar";
 import Card from "@/shared/components/Card";
-import { useAuthContext } from "@/lib/context/auth-context";
-import type { ConversacionListado } from "@/modules/cliente/chat/types/chat.types";
-
-function tiempoRelativo(fechaISO: string): string {
-  const diffMs = Date.now() - new Date(fechaISO).getTime();
-  const minutos = Math.floor(diffMs / (1000 * 60));
-  if (minutos < 1) return "ahora";
-  if (minutos < 60) return `${minutos}m`;
-  const horas = Math.floor(minutos / 60);
-  if (horas < 24) return `${horas}h`;
-  const dias = Math.floor(horas / 24);
-  return `${dias}d`;
-}
 
 interface ChatListViewProps {
   conversaciones: ConversacionListado[];
-  tieneNotificacionesNuevas?: boolean;
+  tieneNotificacionesNuevas: boolean;
+  basePath: string; // "/cliente/chat" o "/proveedor/chat"
 }
 
-export default function ChatListView({ conversaciones, tieneNotificacionesNuevas }: ChatListViewProps) {
+
+function tiempoRelativo(fechaISO: string): string {
+  const diffMs = Date.now() - new Date(fechaISO).getTime();
+  const horas = Math.floor(diffMs / (1000 * 60 * 60));
+  if (horas < 1) return "hace un momento";
+  if (horas < 24) return `hace ${horas}h`;
+  const dias = Math.floor(horas / 24);
+  return `hace ${dias}d`;
+}
+
+export default function ChatListView({ conversaciones, tieneNotificacionesNuevas, basePath }: ChatListViewProps) {
   const router = useRouter();
   const { user, signOut } = useAuthContext();
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -57,7 +52,7 @@ export default function ChatListView({ conversaciones, tieneNotificacionesNuevas
               Todavía no tenés conversaciones
             </h3>
             <p className="text-[13px] text-festiva-midnight-blue/50">
-              Cuando contactes a un proveedor desde uno de tus eventos, va a aparecer acá.
+              Cuando contactes a alguien desde uno de tus eventos, va a aparecer acá.
             </p>
           </Card>
         ) : (
@@ -65,19 +60,19 @@ export default function ChatListView({ conversaciones, tieneNotificacionesNuevas
             {conversaciones.map((c) => (
               <div
                 key={c.id_conversacion}
-                onClick={() => router.push(`/cliente/chat/${c.id_conversacion}`)}
+                onClick={() => router.push(`${basePath}/${c.id_conversacion}`)}
                 className="cursor-pointer"
               >
                 <Card className="hover:shadow-md transition-shadow !p-3.5">
                   <div className="flex items-center gap-3">
                     <div className="w-11 h-11 rounded-2xl bg-festiva-electric-violet/10 border border-festiva-electric-violet/20 flex items-center justify-center shrink-0 text-sm font-bold text-festiva-electric-violet">
-                      {c.proveedor_nombre.charAt(0)}
+                      {c.nombre_otro.charAt(0)}
                     </div>
 
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between gap-2">
                         <span className="font-bold text-[14px] text-festiva-midnight-blue truncate">
-                          {c.proveedor_nombre}
+                          {c.nombre_otro}
                         </span>
                         {c.ultimo_mensaje_en && (
                           <span className="text-[11px] text-festiva-midnight-blue/40 shrink-0">
@@ -102,7 +97,6 @@ export default function ChatListView({ conversaciones, tieneNotificacionesNuevas
           </div>
         )}
       </section>
-
     </div>
   );
 }

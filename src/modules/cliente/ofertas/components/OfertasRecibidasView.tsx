@@ -23,6 +23,7 @@ import type {
   OfertaListado,
   EventoFiltro,
 } from "@/modules/cliente/ofertas/types/ofertas.types";
+import { tiempoRelativo } from "@/shared/utils/tiempo";
 
 const ESTADO_LABEL: Record<OfertaListado["estado"], string> = {
   enviada: "Nueva",
@@ -49,15 +50,6 @@ const FILTROS_ESTADO = [
 ] as const;
 
 type FiltroEstado = (typeof FILTROS_ESTADO)[number]["key"];
-
-function tiempoRelativo(fechaISO: string): string {
-  const diffMs = Date.now() - new Date(fechaISO).getTime();
-  const horas = Math.floor(diffMs / (1000 * 60 * 60));
-  if (horas < 1) return "hace un momento";
-  if (horas < 24) return `hace ${horas}h`;
-  const dias = Math.floor(horas / 24);
-  return `hace ${dias}d`;
-}
 
 interface OfertasRecibidasViewProps {
   eventos: EventoFiltro[];

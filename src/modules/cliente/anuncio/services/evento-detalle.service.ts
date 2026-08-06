@@ -11,17 +11,8 @@ import type {
   ProveedorContratado,
   TimelineHito,
 } from "@/modules/cliente/anuncio/types/evento-detalle.types";
+import { formatFecha } from "@/shared/utils/tiempo";
 
-// ── Helpers de formato de fecha (es-HN) ──
-
-function formatFecha(iso: string | null | undefined): string | null {
-  if (!iso) return null;
-  return new Intl.DateTimeFormat("es-HN", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  }).format(new Date(iso));
-}
 
 /** "15 mayo, 2026" o, si hay rango real, "18-25 mayo, 2026" (mismo mes/año)
  *  o "28 mayo, 2026 - 2 junio, 2026" (meses distintos). */
@@ -252,7 +243,7 @@ export async function getEventoDetalle(idEvento: string): Promise<EventoDetalle 
       id: "publicado",
       titulo: "Evento publicado",
       descripcion: "Evento visible para proveedores",
-      fecha: formatFecha(ev.creado_en),
+      fecha: formatFecha(ev.creado_en!),
     },
     {
       id: "ofertas",
@@ -266,7 +257,7 @@ export async function getEventoDetalle(idEvento: string): Promise<EventoDetalle 
       descripcion: `${serviciosUnicosCubiertos} de ${totalServiciosSolicitados} servicios confirmados`,
       fecha:
         contrataciones.length > 0
-          ? formatFecha(contrataciones[contrataciones.length - 1].creado_en)
+          ? formatFecha(contrataciones[contrataciones.length - 1].creado_en!)
           : null,
     },
     {

@@ -1,4 +1,3 @@
-// app/cliente/chat/[id_conversacion]/page.tsx
 import { notFound } from "next/navigation";
 import ConversacionView from "@/modules/shared/chat/components/ConversacionView";
 import { getConversacionDetalle } from "@/modules/shared/chat/services/chat.service";

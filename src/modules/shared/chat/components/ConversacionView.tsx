@@ -1,18 +1,13 @@
 "use client";
 
-/**
- * Ubicación sugerida:
- *   src/modules/cliente/chat/components/ConversacionView.tsx
- */
-
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, Send } from "lucide-react";
 
 import { useAuthContext } from "@/lib/context/auth-context";
 import { createClient } from "@/lib/supabase/client";
-import { enviarMensaje } from "@/modules/cliente/chat/services/mensajes.service";
-import type { ConversacionDetalle, Mensaje } from "@/modules/cliente/chat/types/chat.types";
+import { enviarMensaje } from "../services/mensajes.service";
+import { ConversacionDetalle, Mensaje } from "../types/chat.types";
 
 function formatHora(iso: string): string {
   return new Intl.DateTimeFormat("es-HN", { hour: "numeric", minute: "2-digit" }).format(new Date(iso));
@@ -30,10 +25,7 @@ export default function ConversacionView({ conversacion }: ConversacionViewProps
   const [enviando, setEnviando] = useState(false);
   const finRef = useRef<HTMLDivElement>(null);
 
-  // Suscripción en vivo: cualquier mensaje nuevo insertado en esta
-  // conversación (mío o del proveedor) llega acá — por eso NO agregamos
-  // el mensaje "a mano" al enviar, esperamos a que Realtime lo traiga,
-  // así evitamos duplicados y el código queda con una sola fuente de verdad.
+  // Suscripción en vivo
   useEffect(() => {
     const supabase = createClient();
 

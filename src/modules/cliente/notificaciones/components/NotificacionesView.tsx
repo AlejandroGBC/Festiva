@@ -1,10 +1,5 @@
 "use client";
 
-/**
- * Ubicación sugerida:
- *   src/modules/cliente/notificaciones/components/NotificacionesView.tsx
- */
-
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Bell, Inbox } from "lucide-react";
@@ -15,15 +10,7 @@ import Chip from "@/shared/components/Chip";
 
 import { marcarNotificacionesVistas } from "@/modules/cliente/notificaciones/services/notificaciones.service";
 import type { NotificacionItem } from "@/modules/cliente/notificaciones/types/notificaciones.types";
-
-function tiempoRelativo(fechaISO: string): string {
-  const diffMs = Date.now() - new Date(fechaISO).getTime();
-  const horas = Math.floor(diffMs / (1000 * 60 * 60));
-  if (horas < 1) return "hace un momento";
-  if (horas < 24) return `hace ${horas}h`;
-  const dias = Math.floor(horas / 24);
-  return `hace ${dias}d`;
-}
+import { tiempoRelativo } from "@/shared/utils/tiempo";
 
 interface NotificacionesViewProps {
   notificaciones: NotificacionItem[];

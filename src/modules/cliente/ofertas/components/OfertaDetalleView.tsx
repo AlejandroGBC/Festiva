@@ -9,6 +9,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { aceptarOferta } from "@/modules/cliente/ofertas/services/aceptar-oferta.service";
 import Button from "@/shared/components/Button";
+import { formatFecha } from "@/shared/utils/tiempo";
 
 const ESTADO_LABEL: Record<OfertaDetalle["estado"], string> = {
   enviada: "Nueva",
@@ -27,11 +28,6 @@ const ESTADO_VARIANT: Record<
   cancelada: "default",
 };
 
-function formatFecha(iso: string): string {
-  return new Intl.DateTimeFormat("es-HN", { day: "numeric", month: "long", year: "numeric" }).format(
-    new Date(iso)
-  );
-}
 
 interface OfertaDetalleViewProps {
   oferta: OfertaDetalle;

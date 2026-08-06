@@ -11,6 +11,7 @@ import { ArrowLeft, MapPin, Star, Image as ImageIcon, MessageSquareText } from "
 import Card from "@/shared/components/Card";
 import { obtenerIconoServicio } from "@/shared/lib/servicio-icono";
 import type { ProveedorDetalle } from "@/modules/cliente/proveedores/types/proveedor-detalle.types";
+import { formatFecha } from "@/shared/utils/tiempo";
 
 interface ProveedorDetalleViewProps {
   proveedor: ProveedorDetalle;
@@ -22,12 +23,6 @@ const COLORES_PORTAFOLIO = [
   { bg: "bg-festiva-confetti-orange/10", text: "text-festiva-confetti-orange" },
   { bg: "bg-festiva-mint-neon/10", text: "text-festiva-mint-neon" },
 ];
-
-function formatFecha(iso: string): string {
-  return new Intl.DateTimeFormat("es-HN", { day: "numeric", month: "long", year: "numeric" }).format(
-    new Date(iso)
-  );
-}
 
 export default function ProveedorDetalleView({ proveedor }: ProveedorDetalleViewProps) {
   const router = useRouter();

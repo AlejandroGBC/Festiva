@@ -1,8 +1,19 @@
-import { getConversaciones } from "@/modules/cliente/chat/services/conversaciones-list.service";
-import ChatListView from "@/modules/cliente/chat/components/ChatListView";
+// app/cliente/chat/page.tsx
+import { contarNotificacionesNuevas } from "@/modules/cliente/notificaciones/services/notificaciones-list.service";
+import ChatListView from "@/modules/shared/chat/components/ChatListView";
+import { getConversaciones } from "@/modules/shared/chat/services/chat.service";
 
 export default async function ChatPage() {
-  const conversaciones = await getConversaciones();
+  const [conversaciones, notificacionesNuevas] = await Promise.all([
+    getConversaciones("cliente"),
+    contarNotificacionesNuevas(),
+  ]);
 
-  return <ChatListView conversaciones={conversaciones} />;
+  return (
+    <ChatListView
+      conversaciones={conversaciones}
+      tieneNotificacionesNuevas={notificacionesNuevas > 0}
+      basePath="/cliente/chat"
+    />
+  );
 }

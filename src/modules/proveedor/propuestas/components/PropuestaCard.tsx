@@ -11,7 +11,6 @@ interface PropuestaCardProps {
   onVer?: () => void;
   onContactarCliente?: () => void;
 }
-
 export const PropuestaCard = ({ propuesta, onChat, onVer, onContactarCliente }: PropuestaCardProps) => {
   const tieneChips = !!propuesta.servicios?.length;
   const esAceptada = propuesta.estado === "aceptada";
@@ -66,10 +65,15 @@ export const PropuestaCard = ({ propuesta, onChat, onVer, onContactarCliente }: 
         </span>
 
         {esAceptada ? (
-          <Button variant="success" size="sm" onClick={onContactarCliente} className="text-white">
-            <MessageSquare size={16} />
-            Contactar cliente
-          </Button>
+          <div className="flex gap-2">
+            <Button variant="outline" size="sm" onClick={onVer}>
+              Ver
+            </Button>
+            <Button variant="success" size="sm" onClick={onContactarCliente} className="text-white">
+              <MessageSquare size={16} />
+              Contactar cliente
+            </Button>
+          </div>
         ) : tieneChips ? (
           <div className="flex gap-2">
             <Button variant="light" size="sm" onClick={onChat}>
