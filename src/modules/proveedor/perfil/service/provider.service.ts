@@ -2,26 +2,19 @@ import { ProviderProfile } from '@/shared/types/perfi-proveedor.types';
 
 export const providerService = {
     getProfile: async (): Promise<ProviderProfile> => {
-      // Simulación de data
-      return {
-        businessName: 'Decos Magicos',
-        description: '5 años de experiencia en decoración para eventos especiales. Especialistas en bodas, xv años y corporativos. Trabajamos con flores naturales de temporada.',
-        city: 'Tegucigalpa, Francisco Morazán',
-        phone: '+504 33345678',
-        completionPercentage: 92,
-        specialist: 'Decoración',
-        initialSpecialties: ['Decoracion floral', 'Iluminacion', 'Montajes', 'Bodas', 'XV Años'],
-        portfolioImages: ['pink', 'purple', 'orange', 'teal', 'navy'],
-        availability: [
-          { dayRange: 'Lunes – Viernes', hours: '9:00 – 19:00', available: true },
-          { dayRange: 'Sabado', hours: '8:00 – 22:00', available: true },
-          { dayRange: 'Domingo', hours: 'No disponible', available: false },
-        ]
-      };
+      const res = await fetch('/api/proveedor/perfil', { method: 'GET' });
+      if (!res.ok) {
+        throw new Error('Error al cargar perfil');
+      }
+      return res.json();
     },
 
     updateProfile: async (profile: ProviderProfile): Promise<boolean> => {
-      console.log('Guardando perfil en el servidor...', profile);
-      return true;
+      const res = await fetch('/api/proveedor/perfil', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(profile),
+      });
+      return res.ok;
     }
 };

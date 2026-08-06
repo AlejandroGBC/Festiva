@@ -11,6 +11,7 @@ import PortfolioSection from '../components/PortfolioSection';
 import AvailabilitySection from '../components/AvailabilitySection';
 import SaveProfileButton from '../components/SaveProfileButton';
 import Loading from "@/shared/components/Loading";
+import { obtenerIniciales } from '@/shared/utils/obtenerIniciales';
 
 export default function EditProviderProfilePage() {
     const { profile, loading, updateField, handleSave } = useProviderProfile();
@@ -26,13 +27,9 @@ export default function EditProviderProfilePage() {
         updateField('availability', updated);
     };
 
-    // const handleSpecialtiesChange = (updatedSpecs: string[]) => {
-    //     updateField('initialSpecialties', updatedSpecs);
-    // };
-
-    // const handlePortfolioChange = (updatedImages: string[]) => {
-    //     updateField('portfolioImages', updatedImages);
-    // };
+    const handleSpecialtiesChange = (specialties: string[]) => {
+        updateField('initialSpecialties', specialties);
+    };
 
     const onSaveTrigger = async () => {
         setIsSaving(true);
@@ -45,9 +42,14 @@ export default function EditProviderProfilePage() {
         }
     };
 
+    const initials = obtenerIniciales(profile.businessName);
+
     return (
         <>
-            <ProfileBanner />
+            <ProfileBanner 
+                initials={initials} 
+            />
+            
             <div className="flex-1 overflow-y-auto no-scrollbar w-full pb-5">
                 <div style={{ padding: '42px 20px 24px', display: 'flex', flexDirection: 'column', gap: '18px' }}>
                     
@@ -72,12 +74,11 @@ export default function EditProviderProfilePage() {
                 
                     <SpecialtiesSection 
                         initialSpecialties={profile.initialSpecialties || []}
-                        // onChange={handleSpecialtiesChange} 
+                        onChange={handleSpecialtiesChange} 
                     />
                     
                     <PortfolioSection 
                         images={profile.portfolioImages || []}
-                        // onChange={handlePortfolioChange}
                     />
                     
                     <AvailabilitySection 

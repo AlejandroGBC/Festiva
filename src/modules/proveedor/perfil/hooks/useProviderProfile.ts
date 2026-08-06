@@ -5,10 +5,15 @@ import { providerService } from '../service/provider.service';
 export function useProviderProfile() {
     const [profile, setProfile] = useState<ProviderProfile | null>(null);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         providerService.getProfile().then((data) => {
             setProfile(data);
+            setLoading(false);
+        })
+        .catch((err) => {
+            setError(err.message);
             setLoading(false);
         });
     }, []);
@@ -20,8 +25,13 @@ export function useProviderProfile() {
 
     const handleSave = async () => {
         if (!profile) return;
-        await providerService.updateProfile(profile);
+
+        const ok = await providerService.updateProfile(profile);
+        
+        if (!ok) {
+            throw new Error("No se pudieron guardar los cambios");
+        }
     };
 
-    return { profile, loading, updateField, handleSave };
+    return { profile, loading, error, updateField, handleSave };
 }

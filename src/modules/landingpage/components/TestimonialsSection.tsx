@@ -17,7 +17,7 @@ export default function TestimonialsSection({ testimonials }: { testimonials?: T
                 {testimonials?.map((item) => (
                     <Card
                         key={item.id}
-                        className="p-6 bg-[#2D2A6B] rounded-[28px] border-none shadow-xl flex flex-col gap-4 text-white"
+                        className="p-6 bg-[#2D2A6C] rounded-[28px] border-none shadow-xl flex flex-col gap-4 text-white"
                     >
                         <div className="flex items-center gap-4">
                             
