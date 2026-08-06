@@ -11,7 +11,6 @@ import { MessageSquareText } from "lucide-react";
 
 import Header from "@/shared/components/HeaderInicio";
 import Sidebar from "@/shared/components/Sidebar";
-import Navbar from "@/shared/components/Navbar";
 import Card from "@/shared/components/Card";
 import { useAuthContext } from "@/lib/context/auth-context";
 import type { ConversacionListado } from "@/modules/cliente/chat/types/chat.types";
@@ -104,7 +103,6 @@ export default function ChatListView({ conversaciones, tieneNotificacionesNuevas
         )}
       </section>
 
-      <Navbar />
     </div>
   );
 }

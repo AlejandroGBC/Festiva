@@ -10,7 +10,6 @@ import { useRouter } from "next/navigation";
 import { Bell, Inbox } from "lucide-react";
 
 import TopNavbar from "@/shared/components/TopNavbar";
-import Navbar from "@/shared/components/Navbar";
 import Card from "@/shared/components/Card";
 import Chip from "@/shared/components/Chip";
 
@@ -86,7 +85,6 @@ export default function NotificacionesView({ notificaciones }: NotificacionesVie
         )}
       </section>
 
-      <Navbar />
     </div>
   );
 }

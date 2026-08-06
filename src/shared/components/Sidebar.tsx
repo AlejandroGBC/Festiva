@@ -10,7 +10,7 @@ import { UsuarioSesion } from "../types/auth.types";
 const sidebarMainLinks = [
     {
         label: "Inicio",
-        href: "index",
+        href: "inicio",
         icon: Home,
         color: {
         text: "text-festiva-electric-violet",

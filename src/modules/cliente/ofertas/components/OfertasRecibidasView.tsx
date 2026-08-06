@@ -14,7 +14,6 @@ import { Plus, Clock, Star, ChevronRight, Inbox } from "lucide-react";
 
 import Header from "@/shared/components/HeaderInicio";
 import Sidebar from "@/shared/components/Sidebar";
-import Navbar from "@/shared/components/Navbar";
 import Card from "@/shared/components/Card";
 import Chip from "@/shared/components/Chip";
 import Button from "@/shared/components/Button";
@@ -101,9 +100,9 @@ export default function OfertasRecibidasView({
         tieneNotificacionesNuevas={tieneNotificacionesNuevas}
         user={user}
       />
-      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} user={user} signOut={signOut} />
+      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} user={user!} signOut={signOut} />
 
-      <section className="px-5 flex-1 pb-6">
+      <section className="px-5 flex-1 pb-6 overflow-y-auto no-scrollbar">
         <div className="flex items-center justify-between flex-wrap gap-2 pt-1">
           <div>
             <h1 className="text-festiva-midnight-blue font-bold text-xl m-0">
@@ -253,7 +252,6 @@ export default function OfertasRecibidasView({
         )}
       </section>
 
-      <Navbar />
     </div>
   );
 }

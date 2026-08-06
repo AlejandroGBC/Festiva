@@ -20,7 +20,6 @@ import {
 
 import Header from "@/shared/components/HeaderInicio";
 import Sidebar from "@/shared/components/Sidebar";
-import Navbar from "@/shared/components/Navbar";
 import Card from "@/shared/components/Card";
 import Chip from "@/shared/components/Chip";
 import { useAuthContext } from "@/lib/context/auth-context";
@@ -200,7 +199,6 @@ export default function PerfilClienteView({ perfil, tieneNotificacionesNuevas }:
         </button>
       </section>
 
-      <Navbar />
     </div>
   );
 }

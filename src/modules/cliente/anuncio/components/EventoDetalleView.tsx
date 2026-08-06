@@ -83,7 +83,7 @@ export default function EventoDetalleView({ evento }: EventoDetalleViewProps) {
   }
 
   return (
-    <div className="min-h-dvh bg-[#F5F2FA] flex flex-col">
+    <div className="min-h-dvh bg-[#F5F2FA] flex flex-col overflow-y-auto no-scrollbar w-full">
       {/* Header oscuro con progreso — reemplaza al TopNavbar simple */}
       <header className="bg-festiva-midnight-blue px-5 pt-14 pb-6 rounded-b-[28px]">
         <button

@@ -39,8 +39,7 @@ export default function ProveedorDetalleView({ proveedor }: ProveedorDetalleView
     .join("");
 
   return (
-    <div className="min-h-dvh bg-[#F5F2FA] flex flex-col">
-      {/* Header oscuro — mismo patrón que EventoDetalleView */}
+    <div className="min-h-dvh bg-[#F5F2FA] flex flex-col overflow-y-auto no-scrollbar">
       <header className="bg-festiva-midnight-blue px-5 pt-14 pb-7 rounded-b-[28px]">
         <button
           onClick={() => router.back()}

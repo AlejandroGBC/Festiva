@@ -15,7 +15,6 @@ import { Plus, MapPin, Clock, Calendar } from "lucide-react";
 
 import Header from "@/shared/components/HeaderInicio";
 import Sidebar from "@/shared/components/Sidebar";
-import Navbar from "@/shared/components/Navbar";
 import Card from "@/shared/components/Card";
 import Chip from "@/shared/components/Chip";
 import Button from "@/shared/components/Button";
@@ -184,7 +183,6 @@ export default function MisEventosView({ eventos, tieneNotificacionesNuevas }: M
         </div>
       )}
 
-      <Navbar />
     </div>
   );
 }

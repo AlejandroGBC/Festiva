@@ -14,7 +14,6 @@ import { Search, X, SlidersHorizontal } from "lucide-react";
 
 import Header from "@/shared/components/HeaderInicio";
 import Sidebar from "@/shared/components/Sidebar";
-import Navbar from "@/shared/components/Navbar";
 import Card from "@/shared/components/Card";
 import Button from "@/shared/components/Button";
 import { useAuthContext } from "@/lib/context/auth-context";
@@ -175,7 +174,6 @@ export default function BuscarProveedoresVista({
         )}
       </section>
 
-      <Navbar />
     </div>
   );
 }

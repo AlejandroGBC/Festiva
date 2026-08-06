@@ -15,7 +15,6 @@ import { IconTile } from "@/shared/components/IconTile";
 import SectionHeader from "@/shared/components/SectionHeader";
 import Header from "@/shared/components/HeaderInicio";
 import Sidebar from "@/shared/components/Sidebar";
-import Navbar from "@/shared/components/Navbar";
 import Loading from "@/shared/components/Loading";
 import { useAuthContext } from "@/lib/context/auth-context";
 import { obtenerIconoServicio } from "@/shared/lib/servicio-icono";
@@ -42,7 +41,7 @@ export default function InicioView({
   if (isLoading) return <Loading fullScreen label="Cargando..." />;
 
   return (
-    <div>
+    <div className="flex-1 h-full overflow-y-auto no-scrollbar">
       <Header
         user={user!}
         onMenuClick={() => setSidebarOpen(true)}
@@ -56,7 +55,7 @@ export default function InicioView({
         signOut={signOut}
       />
 
-      <section className="px-5">
+      <section className="px-5 h-full flex flex-col flex-1 w-full">
         <div className="pb-7">
           <p className="text-festiva-midnight-blue/45 text-sm pb-2">Buenos días</p>
           <h1 className="text-festiva-midnight-blue font-bold text-3xl">{user?.nombre}</h1>
@@ -119,7 +118,6 @@ export default function InicioView({
         )}
       </section>
 
-      <Navbar />
     </div>
   );
 }

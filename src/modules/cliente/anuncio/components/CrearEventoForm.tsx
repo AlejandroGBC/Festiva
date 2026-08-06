@@ -47,7 +47,6 @@ import Textarea from "@/shared/components/Textarea";
 import Button from "@/shared/components/Button";
 import ProgressBar from "@/shared/components/ProgressBar";
 import TopNavbar from "@/shared/components/TopNavbar";
-import Navbar from "@/shared/components/Navbar";
 
 import { obtenerIconoServicio } from "@/shared/lib/servicio-icono";
 import { obtenerIconoTipoEvento } from "@/shared/lib/tipo-evento-icono";
@@ -209,7 +208,7 @@ export default function CrearEventoForm() {
     <div className="min-h-dvh bg-[#F5F2FA] flex flex-col">
       <TopNavbar title="Crear evento" />
 
-      <main className="flex-1 px-5 pb-28 lg:max-w-2xl lg:mx-auto lg:w-full">
+      <main className="flex-1 px-5 pb-28 lg:max-w-2xl lg:mx-auto lg:w-full overflow-y-auto no-scrollbar">
         <PasoLabel
           step={step}
           total={TOTAL_PASOS}
@@ -682,7 +681,6 @@ export default function CrearEventoForm() {
         )}
       </main>
 
-      <Navbar />
     </div>
   );
 }
