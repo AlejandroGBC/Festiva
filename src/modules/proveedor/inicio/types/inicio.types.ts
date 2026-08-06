@@ -17,3 +17,7 @@ export interface EventoRecomendado{
     categorias: string[]
     rangoPrecio: string;
 }
+
+export interface InicioViewProps {
+    stats: StatsInicio;
+}

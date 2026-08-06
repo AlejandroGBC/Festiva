@@ -8,7 +8,7 @@ import EventosRecomendados from "@/modules/proveedor/inicio/components/EventosRe
 import { EventoRecomendado } from "@/shared/types/inicio-proveedor.types";
 import Header from "@/shared/components/HeaderInicio";
 import { useAuthContext } from "@/lib/context/auth-context";
-import { StatsInicio } from "@/modules/proveedor/inicio/types/inicio.types";
+import { InicioViewProps } from "@/modules/proveedor/inicio/types/inicio.types";
 import Loading from "@/shared/components/Loading";
 
 const eventosRecomendados: EventoRecomendado[] = [
@@ -46,10 +46,6 @@ const eventosRecomendados: EventoRecomendado[] = [
         iconBg: "bg-festiva-confetti-orange/10",
     },
 ];
-
-interface InicioViewProps {
-    stats: StatsInicio;
-}
 
 export default function InicioView({ stats }: InicioViewProps) {
     const [sidebarOpen, setSidebarOpen] = useState(false);
