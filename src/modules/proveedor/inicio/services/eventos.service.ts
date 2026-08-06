@@ -5,80 +5,108 @@ import { EventoRecomendado } from "../types/inicio.types";
 export async function getEventosRecomendados(providerId: string): Promise<EventoRecomendado[]> {
     const supabase = await createServerSupabaseClient();
 
-    // 1. Obtener perfil del proveedor (ubicación base)
-    const { data: proveedor, error: errProv } = await supabase
-        .from('tbl_perfiles_proveedor')
-        .select('ubicacion_base')
-        .eq('id_proveedor', providerId)
-        .single();
+    // 1-4. Todas las queries iniciales son independientes entre sí (ninguna depende
+    // del resultado de otra), así que se disparan en paralelo en vez de esperarlas
+    // una por una.
+    const [
+        { data: proveedor, error: errProv },
+        { data: serviciosProveedor, error: errServ },
+        { data: eventos, error: errEventos },
+        { data: contratos, error: errCont },
+        { data: catalogoServicios },
+    ] = await Promise.all([
+        // 1. Perfil del proveedor (ubicación base)
+        supabase
+            .from('tbl_perfiles_proveedor')
+            .select('ubicacion_base')
+            .eq('id_proveedor', providerId)
+            .single(),
+
+        // 2. Servicios que ofrece el proveedor
+        supabase
+            .from('tbl_proveedor_servicios')
+            .select('id_servicio')
+            .eq('id_proveedor', providerId),
+
+        // 3. Eventos activos
+        supabase
+            .from('tbl_eventos')
+            .select(`
+        id_evento,
+        titulo,
+        fecha_evento,
+        ubicacion,
+        cantidad_invitados,
+        presupuesto_min,
+        presupuesto_max,
+        tbl_evento_servicios!inner ( id_servicio )
+      `)
+            .eq('estado', 'recibiendo_ofertas')
+            .gte('fecha_evento', new Date().toISOString().split('T')[0]), // solo futuros
+
+        // 4. Contrataciones finalizadas del proveedor (solo id_evento; no hay FK
+        // directo tbl_contrataciones -> tbl_eventos, así que no se puede embeber)
+        supabase
+            .from('tbl_contrataciones')
+            .select('id_evento')
+            .eq('id_proveedor', providerId)
+            .eq('estado_servicio', 'finalizado'),
+
+        // 5. Catálogo de servicios (para mapear id_servicio -> nombre)
+        supabase
+            .from('tbl_servicios')
+            .select('id_servicio, nombre'),
+    ]);
 
     if (errProv || !proveedor) {
         console.error('Error al obtener proveedor:', errProv);
         return [];
     }
 
-    // 2. Obtener servicios que ofrece el proveedor
-    const { data: serviciosProveedor, error: errServ } = await supabase
-        .from('tbl_proveedor_servicios')
-        .select('id_servicio')
-        .eq('id_proveedor', providerId);
-
     if (errServ || !serviciosProveedor || serviciosProveedor.length === 0) {
         // Si el proveedor no tiene servicios registrados, no puede recomendar nada
         return [];
     }
-
-    const idsServiciosProveedor = serviciosProveedor.map(s => s.id_servicio);
-
-    // 3. Obtener eventos activos
-    const { data: eventos, error: errEventos } = await supabase
-        .from('tbl_eventos')
-        .select(`
-      id_evento,
-      titulo,
-      fecha_evento,
-      ubicacion,
-      cantidad_invitados,
-      presupuesto_min,
-      presupuesto_max,
-      tbl_evento_servicios ( id_servicio )
-    `)
-        .eq('estado', 'recibiendo_ofertas')
-        .gte('fecha_evento', new Date().toISOString().split('T')[0]) // solo futuros
-        .not('tbl_evento_servicios', 'is', null); // que tengan servicios asociados
 
     if (errEventos || !eventos) {
         console.error('Error al obtener eventos:', errEventos);
         return [];
     }
 
-    // 4. (Opcional) Obtener historial de capacidad y presupuesto del proveedor desde contrataciones (En revision porque no se si funcionara)
+    const idsServiciosProveedor = serviciosProveedor.map(s => s.id_servicio);
+
+    // tbl_contrataciones no tiene FK directo a tbl_eventos (va por tbl_ofertas),
+    // así que se resuelve con una segunda query filtrando por los id_evento
+    // de las contrataciones finalizadas del proveedor.
     let promedioCapacidad = 0;
     let promedioPresupuesto = 0;
-    const { data: contratos, error: errCont } = await supabase
-        .from('tbl_contrataciones')
-        .select(`
-      id_evento,
-      tbl_eventos ( cantidad_invitados, presupuesto_min, presupuesto_max )
-    `)
-        .eq('id_proveedor', providerId)
-        .eq('estado_servicio', 'finalizado'); // solo eventos ya realizados
 
     if (!errCont && contratos && contratos.length > 0) {
-        const capacidades = contratos.map(c => c.tbl_eventos?.[0]?.cantidad_invitados).filter(Boolean);
-        const presupuestos = contratos.map(c => {
-            const ev = c.tbl_eventos[0];
-            if (ev && ev.presupuesto_min && ev.presupuesto_max) {
-                return (Number(ev.presupuesto_min) + Number(ev.presupuesto_max)) / 2;
-            }
-            return null;
-        }).filter(Boolean) as number[];
+        const idsEventosContratados = contratos.map(c => c.id_evento);
 
-        if (capacidades.length > 0) {
-            promedioCapacidad = capacidades.reduce((a, b) => a + b, 0) / capacidades.length;
-        }
-        if (presupuestos.length > 0) {
-            promedioPresupuesto = presupuestos.reduce((a, b) => a + b, 0) / presupuestos.length;
+        const { data: eventosHistoricos, error: errHist } = await supabase
+            .from('tbl_eventos')
+            .select('cantidad_invitados, presupuesto_min, presupuesto_max')
+            .in('id_evento', idsEventosContratados);
+
+        if (!errHist && eventosHistoricos && eventosHistoricos.length > 0) {
+            const capacidades = eventosHistoricos
+                .map(e => e.cantidad_invitados)
+                .filter(Boolean) as number[];
+
+            const presupuestos = eventosHistoricos.map(e => {
+                if (e.presupuesto_min && e.presupuesto_max) {
+                    return (Number(e.presupuesto_min) + Number(e.presupuesto_max)) / 2;
+                }
+                return null;
+            }).filter(Boolean) as number[];
+
+            if (capacidades.length > 0) {
+                promedioCapacidad = capacidades.reduce((a, b) => a + b, 0) / capacidades.length;
+            }
+            if (presupuestos.length > 0) {
+                promedioPresupuesto = presupuestos.reduce((a, b) => a + b, 0) / presupuestos.length;
+            }
         }
     }
 
@@ -136,11 +164,7 @@ export async function getEventosRecomendados(providerId: string): Promise<Evento
         .sort((a, b) => b.puntuacion - a.puntuacion)
         .slice(0, 4); // top 4 
 
-    // 7. Obtener catálogo de servicios para mapear nombres
-    const { data: catalogoServicios } = await supabase
-        .from('tbl_servicios')
-        .select('id_servicio, nombre');
-
+    // Mapear id_servicio -> nombre usando el catálogo ya obtenido arriba
     const mapServicios = Object.fromEntries(
         catalogoServicios?.map(s => [s.id_servicio, s.nombre]) || []
     );
