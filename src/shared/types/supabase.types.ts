@@ -1,4 +1,4 @@
-export type Json =
+﻿export type Json =
   | string
   | number
   | boolean
@@ -652,7 +652,6 @@ export type Database = {
       estado_oferta_enum: "enviada" | "aceptada" | "rechazada" | "cancelada"
       estado_pago_enum: "pendiente" | "pagado" | "fallido" | "reembolsado"
       tipo_usuario_enum: "cliente" | "proveedor" | "admin"
-      tipo_usuario_enum_new: "cliente" | "proveedor" | "admin"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -789,7 +788,6 @@ export const Constants = {
       estado_oferta_enum: ["enviada", "aceptada", "rechazada", "cancelada"],
       estado_pago_enum: ["pendiente", "pagado", "fallido", "reembolsado"],
       tipo_usuario_enum: ["cliente", "proveedor", "admin"],
-      tipo_usuario_enum_new: ["cliente", "proveedor", "admin"],
     },
   },
 } as const

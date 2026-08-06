@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { UsuarioSesion } from "@/shared/types/auth.types";
+import { UsuarioSesion, RolUsuario } from "@/shared/types/auth.types";
 
 interface AuthContextValue {
   user: UsuarioSesion | null;
@@ -40,7 +40,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         id: perfil.id_usuario,
         correo: perfil.correo,
         nombre: perfil.nombre_completo,
-        rol: perfil.rol,
+        // El enum real de la DB incluye 'admin', pero RolUsuario lo excluye
+        // a propósito (esta app no maneja sesiones de admin). Si algún día
+        // se necesita, hay que agregar 'admin' a RolUsuario en vez de
+        // sacar este cast.
+        rol: perfil.rol as RolUsuario,
       });
     } else {
       setUser(null);

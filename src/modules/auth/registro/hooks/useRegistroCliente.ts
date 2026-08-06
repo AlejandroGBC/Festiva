@@ -9,6 +9,7 @@ import { routeGeneratorOverLogin } from "@/shared/utils/routeGeneratosOverLogin"
 const initialState: RegistroClienteFormData = {
   nombreCompleto: "",
   correo: "",
+  telefono: "",
   contrasena: "",
 };
 
@@ -35,6 +36,7 @@ export function useRegistroCliente() {
     registrarCliente({
         nombreCompleto: formData.nombreCompleto,
         correo: formData.correo,
+        telefono: formData.telefono,
         contrasena: formData.contrasena,
         rol: "cliente",
     })

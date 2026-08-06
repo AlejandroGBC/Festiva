@@ -2,14 +2,13 @@ import { ChevronRight, type LucideIcon } from "lucide-react";
 
 interface CategoriaCardProps {
   nombre: string;
-  proveedores: number;
   Icon: LucideIcon;
   iconColor: string;
   bgColor: string;
   onClick?: () => void;
 }
 
-export const CategoriaCard = ({ nombre, proveedores, Icon, iconColor, bgColor, onClick }: CategoriaCardProps) => (
+export const CategoriaCard = ({ nombre, Icon, iconColor, bgColor, onClick }: CategoriaCardProps) => (
   <button
     type="button"
     onClick={onClick}
@@ -21,7 +20,6 @@ export const CategoriaCard = ({ nombre, proveedores, Icon, iconColor, bgColor, o
 
     <div>
       <p className="font-bold text-festiva-midnight-blue">{nombre}</p>
-      <p className="text-sm text-gray-400">{proveedores} proveedores</p>
     </div>
 
     <div className="flex justify-end">

@@ -13,9 +13,14 @@ export function SectionHeader({ title = "", accion = "", href = "" }: SectionHea
                 {title}
             </h2>
 
+            <span className="text-sm text-festiva-euphoric-pink font-semibold cursor-pointer">
+                {accion}
+            </span>
+            {/** 
             <Link href={href} className="text-sm text-festiva-euphoric-pink font-semibold">
                 {accion}
             </Link>
+            */}
         </div>
     );
 }
