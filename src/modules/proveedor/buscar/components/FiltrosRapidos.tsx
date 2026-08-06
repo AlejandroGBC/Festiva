@@ -1,17 +1,16 @@
-"use client";
+import { Calendar, Clock } from "lucide-react";
 
-import { MapPin, Calendar, ListFilter } from "lucide-react";
+export type FiltroRapido = "todos" | "vence_pronto" | "este_mes";
 
 interface FiltrosRapidosProps {
-  filtroActivo: string;
-  onFiltroChange: (filtro: string) => void;
+  filtroActivo: FiltroRapido;
+  onFiltroChange: (filtro: FiltroRapido) => void;
 }
 
-const FILTROS = [
+const FILTROS: { id: FiltroRapido; label: string; icon: typeof Calendar | null }[] = [
   { id: "todos", label: "Todos", icon: null },
-  { id: "ciudad", label: "DC", icon: MapPin },
-  { id: "mes", label: "Este mes", icon: Calendar },
-  { id: "categoria", label: "Decoracion", icon: ListFilter },
+  { id: "vence_pronto", label: "Vence pronto", icon: Clock },
+  { id: "este_mes", label: "Este mes", icon: Calendar },
 ];
 
 export default function FiltrosRapidos({ filtroActivo, onFiltroChange }: FiltrosRapidosProps) {

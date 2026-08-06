@@ -1,4 +1,12 @@
-export type EstadoUrgencia = "nuevo" | "vence_pronto" | null;
+export interface CategoriaChip {
+  label: string;
+  variant: "pink" | "violet" | "orange" | "mint";
+}
+
+export interface EstadoEventoDisponible {
+  tipo: "nuevo" | "vence_pronto";
+  label: string;
+}
 
 export interface EventoDisponible {
   id: string;
@@ -6,8 +14,8 @@ export interface EventoDisponible {
   fecha: string;
   ubicacion: string;
   cantidadPersonas: number;
-  categorias: { label: string; variant: "pink" | "violet" | "orange" | "mint" }[];
+  categorias: CategoriaChip[];
   descripcion: string;
   presupuesto: string;
-  estado?: { tipo: EstadoUrgencia; label: string };
+  estado?: EstadoEventoDisponible;
 }
