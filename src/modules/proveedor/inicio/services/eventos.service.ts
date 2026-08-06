@@ -147,11 +147,11 @@ export async function getEventosRecomendados(providerId: string): Promise<Evento
 
 
     const resultado: EventoRecomendado[] = eventosConPuntuacion.map(e => {
-        const idsServicios = e.tbl_evento_servicios.map((es: any) => es.id_servicio);
+        const idsServicios = e.tbl_evento_servicios?.map((es: any) => es.id_servicio) ?? [];
         const nombresCategorias = idsServicios.map((id: number) => mapServicios[id] || 'Servicio');
 
         return {
-            id_evento: e.id_evento,
+            id_evento: e.id_evento,                       
             titulo: e.titulo,
             fecha: new Date(e.fecha_evento).toLocaleDateString('es-ES', {
                 day: 'numeric',
@@ -162,12 +162,12 @@ export async function getEventosRecomendados(providerId: string): Promise<Evento
             cantidadPersonas: e.cantidad_invitados,
             categorias_evento: nombresCategorias.map(nombre => ({
                 label: nombre,
-                variant: 'gray' 
+                variant: 'gray'
             })),
             rangoPrecio: e.presupuesto_min && e.presupuesto_max
                 ? `L${Number(e.presupuesto_min).toFixed(0)}k-L${Number(e.presupuesto_max).toFixed(0)}k`
                 : 'Precio a convenir',
-            puntuacion: e.puntuacion,
+            puntuacion: e.puntuacion,                  
         };
     });
 

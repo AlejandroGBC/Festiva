@@ -1,6 +1,6 @@
 import Link from "next/link";
 import EventoRecomendadoCard from "./EventoRecomendadoCard";
-import { EventoRecomendado } from "@/shared/types/inicio-proveedor.types";
+import { EventoRecomendado } from "../types/inicio.types";
 
 interface EventosRecomendadosProps {
   eventos: EventoRecomendado[];
@@ -18,7 +18,7 @@ export default function EventosRecomendados({ eventos }: EventosRecomendadosProp
 
       <div className="flex flex-col gap-3">
         {eventos.map((evento) => (
-          <EventoRecomendadoCard key={evento.id} evento={evento} />
+          <EventoRecomendadoCard key={evento.id_evento} evento={evento} />
         ))}
       </div>
     </article>
