@@ -16,6 +16,9 @@ const config: Config = {
           'confetti-orange': "#FF9C2E",
           'mint-neon': "#2EC4B6",
           'monochromatic': "#f5f2fa",
+          'berry-punch': '#E83A6B',
+          'sunset-gold': '#F5A623',
+          'gray': '#9CA3AF'
         },
       },
       fontFamily: {

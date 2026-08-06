@@ -1,15 +1,7 @@
-import { TrendingUp, Briefcase, Star, CheckCircle2 } from "lucide-react";
+import { Briefcase, Star, } from "lucide-react";
 import StatCard from "./StatCard";
-
-interface StatsGridProps {
-  ingresosMes: string;
-  ingresosVariacion: string;
-  eventosActivos: number;
-  eventosEnNegociacion: number;
-  calificacion: number;
-  cantidadResenas: number;
-  tasaRespuesta: string;
-}
+import { getTasaRespuestaDetalle, getVariacionDetalle } from "../util/inicio.util";
+import { StatsGridProps } from "../types/inicio.types";
 
 export default function StatsGrid({
   ingresosMes,
@@ -20,15 +12,19 @@ export default function StatsGrid({
   cantidadResenas,
   tasaRespuesta,
 }: StatsGridProps) {
+  const tasaDetalle = getTasaRespuestaDetalle(tasaRespuesta);
+  const variacionDetalle = getVariacionDetalle(ingresosVariacion);
+
   return (
     <div className="grid grid-cols-2 gap-3">
       <StatCard
         valor={ingresosMes}
         label="Ingresos del mes"
-        detalle={`${ingresosVariacion} vs anterior`}
-        detalleColor="text-festiva-mint-neon"
-        detalleIcon={<TrendingUp className="h-3.5 w-3.5" />}
+        detalle={variacionDetalle.detalle}
+        detalleColor={variacionDetalle.detalleColor}
+        detalleIcon={variacionDetalle.detalleIcon}
       />
+
       <StatCard
         valor={String(eventosActivos)}
         label="Eventos activos"
@@ -36,6 +32,7 @@ export default function StatsGrid({
         detalleColor="text-festiva-electric-violet"
         detalleIcon={<Briefcase className="h-3.5 w-3.5" />}
       />
+
       <StatCard
         valor={calificacion.toFixed(1)}
         label="Calificacion"
@@ -43,12 +40,13 @@ export default function StatsGrid({
         detalleColor="text-festiva-confetti-orange"
         detalleIcon={<Star className="h-3.5 w-3.5 fill-current" />}
       />
+
       <StatCard
         valor={tasaRespuesta}
         label="Tasa respuesta"
-        detalle="Excelente"
-        detalleColor="text-festiva-mint-neon"
-        detalleIcon={<CheckCircle2 className="h-3.5 w-3.5" />}
+        detalle={tasaDetalle.detalle}
+        detalleColor={tasaDetalle.detalleColor}
+        detalleIcon={tasaDetalle.detalleIcon}
       />
     </div>
   );
