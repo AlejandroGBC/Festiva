@@ -134,7 +134,7 @@ export async function getEventosRecomendados(providerId: string): Promise<Evento
         }))
         .filter(e => e.puntuacion > 0)
         .sort((a, b) => b.puntuacion - a.puntuacion)
-        .slice(0, 10); // top 10
+        .slice(0, 4); // top 4 
 
     // 7. Obtener catálogo de servicios para mapear nombres
     const { data: catalogoServicios } = await supabase
@@ -149,9 +149,12 @@ export async function getEventosRecomendados(providerId: string): Promise<Evento
     const resultado: EventoRecomendado[] = eventosConPuntuacion.map(e => {
         const idsServicios = e.tbl_evento_servicios?.map((es: any) => es.id_servicio) ?? [];
         const nombresCategorias = idsServicios.map((id: number) => mapServicios[id] || 'Servicio');
+        const COLORES = ['midnight-blue', 'euphoric-pink', 'electric-violet', 'confetti-orange', 'mint-neon'];
+        const coloresMezclados = [...COLORES].sort(() => Math.random() - 0.5);
+
 
         return {
-            id_evento: e.id_evento,                       
+            id_evento: e.id_evento,
             titulo: e.titulo,
             fecha: new Date(e.fecha_evento).toLocaleDateString('es-ES', {
                 day: 'numeric',
@@ -160,14 +163,14 @@ export async function getEventosRecomendados(providerId: string): Promise<Evento
             }),
             ubicacion: e.ubicacion,
             cantidadPersonas: e.cantidad_invitados,
-            categorias_evento: nombresCategorias.map(nombre => ({
+            categorias_evento: nombresCategorias.map((nombre, index) => ({
                 label: nombre,
-                variant: 'gray'
+                variant: coloresMezclados[index % coloresMezclados.length]
             })),
             rangoPrecio: e.presupuesto_min && e.presupuesto_max
                 ? `L${Number(e.presupuesto_min).toFixed(0)}k-L${Number(e.presupuesto_max).toFixed(0)}k`
                 : 'Precio a convenir',
-            puntuacion: e.puntuacion,                  
+            puntuacion: e.puntuacion,
         };
     });
 
