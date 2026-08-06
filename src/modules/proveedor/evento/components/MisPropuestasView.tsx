@@ -1,4 +1,3 @@
-// app/proveedor/propuestas/MisPropuestasView.tsx
 "use client";
 
 import { useState } from "react";

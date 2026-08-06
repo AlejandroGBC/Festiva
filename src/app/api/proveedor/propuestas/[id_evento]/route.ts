@@ -1,4 +1,3 @@
-// app/api/proveedor/propuestas/[id_evento]/route.ts
 import { NextRequest } from "next/server";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { apiError, apiSuccess } from "@/lib/api/api-response";

@@ -70,7 +70,7 @@ export default function EventoDisponibleCard({ evento }: { evento: EventoDisponi
           size="md"
           shape="pill"
           className="gap-2"
-          onClick={() => router.push(`/proveedor/buscar/${evento.id}/propuesta`)}
+          onClick={() => router.push(`/proveedor/buscar/${evento.id}/enviar`)}
         >
           <Send className="h-4 w-4" />
           Enviar oferta

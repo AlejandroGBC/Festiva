@@ -1,7 +1,7 @@
 import { Sparkles } from "lucide-react";
-import type { EventoDisponible } from "@/shared/types/buscar-proveedor.types";
+import type { EventoParaPropuesta } from "@/shared/types/enviar-propuesta-proveedor.types";
 
-export const ResumenEventoCard = ({ evento }: { evento: EventoDisponible }) => (
+export const ResumenEventoCard = ({ evento }: { evento: EventoParaPropuesta }) => (
   <div className="bg-festiva-midnight-blue rounded-3xl p-5 text-white">
     <h2 className="text-lg font-extrabold mb-1">{evento.titulo}</h2>
     <p className="text-sm text-white/60 mb-4">

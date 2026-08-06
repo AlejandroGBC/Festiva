@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Clock, Send, Save } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Clock, Send } from "lucide-react";
 import Button from "@/shared/components/Button";
 import Input from "@/shared/components/Input";
 import Textarea from "@/shared/components/Textarea";
@@ -9,38 +10,66 @@ import { EnviarPropuestaHeader } from "@/modules/proveedor/buscar/components/Env
 import { ResumenEventoCard } from "@/modules/proveedor/buscar/components/ResumenEventoCard";
 import { PrecioPropuestaInput } from "@/modules/proveedor/buscar/components/PrecioPropuestaInput";
 import { ServicioIncluidoItem } from "@/modules/proveedor/buscar/components/ServicioIncluidoItem";
-import type { EventoDisponible } from "@/shared/types/buscar-proveedor.types";
+import type { EventoParaPropuesta } from "@/shared/types/enviar-propuesta-proveedor.types";
 import type { ServicioIncluido } from "@/shared/types/enviar-propuesta-proveedor.types";
+import { enviarPropuesta } from "../service/enviar-propuesta.service";
 
-// TODO: reemplazar por fetch real del evento (params.id) a TBL_EVENTOS
-const eventoMock: EventoDisponible = {
-  id: "1",
-  titulo: "Boda de Ana y Luis",
-  fecha: "24 agosto, 2025",
-  ubicacion: "Tegucigalpa",
-  cantidadPersonas: 200,
-  categorias: [{ label: "Decoración", variant: "violet" }],
-  descripcion: "",
-  presupuesto: "L15k-L25k HN",
-};
+interface EnviarPropuestaViewProps {
+  evento: EventoParaPropuesta;
+}
 
-const serviciosIniciales: ServicioIncluido[] = [
-  { id: "1", titulo: "Decoración floral completa", descripcion: "Centro de mesas y arco principal", incluido: true },
-  { id: "2", titulo: "Iluminación LED", descripcion: "Ambiente, pista y proyecciones", incluido: true },
-  { id: "3", titulo: "Montaje y desmontaje", descripcion: "Incluido sin costo adicional", incluido: true },
-  { id: "4", titulo: "Mobiliario adicional", descripcion: "Sillas y mesas extra", incluido: false },
-];
+export default function EnviarPropuestaView({ evento }: EnviarPropuestaViewProps) {
+  const router = useRouter();
 
-export default function EnviarPropuestaPage({ params }: { params: { id: string } }) {
-  const [precio, setPrecio] = useState(18500);
-  const [servicios, setServicios] = useState(serviciosIniciales);
-  const [montajeHoras, setMontajeHoras] = useState(4);
-  const [servicioHoras, setServicioHoras] = useState(8);
+  const [precio, setPrecio] = useState(0);
+  const [servicios, setServicios] = useState<ServicioIncluido[]>(
+    evento.serviciosDisponibles.map((s) => ({
+      id: String(s.id_servicio),
+      titulo: s.nombre,
+      descripcion: "",
+      incluido: true, // por defecto, todo lo que el evento pidió y el proveedor ofrece va marcado
+    }))
+  );
+  const [montajeHoras, setMontajeHoras] = useState(0);
+  const [servicioHoras, setServicioHoras] = useState(0);
   const [mensaje, setMensaje] = useState("");
+  const [enviando, setEnviando] = useState(false);
+  const [error, setError] = useState("");
 
   const toggleServicio = (id: string) => {
     setServicios((prev) => prev.map((s) => (s.id === id ? { ...s, incluido: !s.incluido } : s)));
   };
+
+  async function handleEnviar() {
+    const serviciosSeleccionados = servicios.filter((s) => s.incluido).map((s) => Number(s.id));
+
+    if (serviciosSeleccionados.length === 0) {
+      setError("Seleccioná al menos un servicio para incluir en la propuesta");
+      return;
+    }
+    if (precio <= 0) {
+      setError("El precio debe ser mayor a cero");
+      return;
+    }
+
+    setEnviando(true);
+    setError("");
+    try {
+      await enviarPropuesta({
+        id_evento: evento.id_evento,
+        precio_total: precio,
+        mensaje,
+        servicios_incluidos: serviciosSeleccionados,
+        horas_montaje: montajeHoras,
+        horas_servicio: servicioHoras,
+      });
+      router.push("/proveedor/propuestas");
+      router.refresh();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "No se pudo enviar la propuesta");
+      setEnviando(false);
+    }
+  }
 
   return (
     <>
@@ -49,7 +78,7 @@ export default function EnviarPropuestaPage({ params }: { params: { id: string }
       </div>
 
       <div className="flex-1 overflow-y-auto no-scrollbar w-full px-5 pt-2 pb-10 flex flex-col gap-5">
-        <ResumenEventoCard evento={eventoMock} />
+        <ResumenEventoCard evento={evento} />
 
         <PrecioPropuestaInput precio={precio} onChange={setPrecio} comisionPorcentaje={8} />
 
@@ -96,14 +125,19 @@ export default function EnviarPropuestaPage({ params }: { params: { id: string }
           onChange={(e) => setMensaje(e.target.value)}
         />
 
+        {error && <p className="text-sm text-red-500 text-center">{error}</p>}
+
         <div className="flex flex-col gap-3 mt-2">
-          <Button variant="secondary" size="lg" shape="pill" className="w-full">
+          <Button
+            variant="secondary"
+            size="lg"
+            shape="pill"
+            className="w-full"
+            disabled={enviando}
+            onClick={handleEnviar}
+          >
             <Send size={18} />
-            Enviar propuesta
-          </Button>
-          <Button variant="light" size="lg" shape="pill" className="w-full">
-            <Save size={18} />
-            Guardar como borrador
+            {enviando ? "Enviando..." : "Enviar propuesta"}
           </Button>
         </div>
       </div>
