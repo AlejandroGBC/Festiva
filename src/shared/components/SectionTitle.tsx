@@ -20,6 +20,7 @@ export default function SectionTitle({
             </p>
             {actionLabel && (
                 <button 
+                    type="button"
                     onClick={onActionClick}
                     className={`text-[13px] font-bold transition-all ${actionClassName}`}
                 >

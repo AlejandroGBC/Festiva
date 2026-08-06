@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
-import { UsuarioSesion } from "@/shared/types/auth.types";
+import { UsuarioSesion, RolUsuario } from "@/shared/types/auth.types";
 import { apiError, apiSuccess } from "@/lib/api/api-response";
 
 export async function POST(request: NextRequest) {
@@ -34,7 +34,9 @@ export async function POST(request: NextRequest) {
   const data: UsuarioSesion = {
     id: authData.user.id,
     correo: authData.user.email!,
-    rol: perfil.rol,
+    // El enum real de la DB incluye 'admin', pero RolUsuario lo excluye
+    // a propósito (esta app no maneja sesiones de admin vía este login).
+    rol: perfil.rol as RolUsuario,
     nombre: perfil.nombre_completo,
   };
 

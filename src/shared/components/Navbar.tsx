@@ -1,3 +1,10 @@
+// src/shared/components/Navbar.tsx
+//
+// ÚNICO CAMBIO respecto al original: todas las rutas ahora llevan el
+// prefijo /cliente/, consistente con que "cliente" es una carpeta real
+// en tu app/ (no un route group). Antes solo "Inicio" lo tenía, por eso
+// los otros 4 links no redirigían a ningún lado real.
+
 "use client";
 
 import { Home, Calendar, MessageSquare, User, Search} from "lucide-react";
@@ -12,22 +19,22 @@ const navLinks = [
   },
   {
     label: "Buscar",
-    href: "/buscar",
+    href: "/cliente/buscar",
     icon: Search,
   },
   {
     label: "Eventos",
-    href: "/eventos",
+    href: "/cliente/eventos",
     icon: Calendar,
   },
   {
     label: "Chat",
-    href: "/mensajes",
+    href: "/cliente/chat",
     icon: MessageSquare,
   },
   {
     label: "Perfil",
-    href: "/perfil",
+    href: "/cliente/perfil",
     icon: User,
   },
 ];
@@ -35,7 +42,7 @@ const navLinks = [
 export function Navbar() {
   const pathname = usePathname();
   return (
-    <nav className="flex w-full items-center justify-between border-t border-[#C9C4D0] bg-white p-2">
+    <nav className="sticky bottom-0 z-[52] flex w-full items-center justify-between border-t border-[#C9C4D0] bg-white p-2">
       {navLinks.map((link) => {
         const Icon = link.icon;
         const isActive = pathname === link.href;

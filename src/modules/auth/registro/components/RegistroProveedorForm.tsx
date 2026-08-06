@@ -1,6 +1,6 @@
 "use client";
 
-import { Briefcase, Mail, MapPin, Lock } from "lucide-react";
+import { Briefcase, Mail, Phone, MapPin, Lock } from "lucide-react";
 import Input from "@/shared/components/Input";
 import Textarea from "@/shared/components/Textarea";
 import Button from "@/shared/components/Button";
@@ -36,6 +36,17 @@ export default function RegistroProveedorForm() {
         name="correo"
         placeholder="correo@empresa.com"
         value={formData.correo}
+        onChange={handleChange}
+        required={true}
+      />
+
+      <Input
+        label="Telefono"
+        icon={<Phone className="h-[18px] w-[18px]" />}
+        type="tel"
+        name="telefono"
+        placeholder="9999-9999"
+        value={formData.telefono}
         onChange={handleChange}
         required={true}
       />

@@ -1,3 +1,4 @@
+  
 import LandingPage from "@/modules/landingpage/page/LandingPage";
 
 export const metadata = {

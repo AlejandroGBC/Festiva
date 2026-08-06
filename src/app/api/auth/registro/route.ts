@@ -7,6 +7,7 @@ import { apiError, apiSuccess } from "@/lib/api/api-response";
 interface RegistroBody {
   nombreCompleto: string;
   correo: string;
+  telefono?: string;
   contrasena: string;
   rol: "cliente" | "proveedor";
   ciudad?: string;
@@ -16,7 +17,7 @@ interface RegistroBody {
 
 export async function POST(request: NextRequest) {
   const body: RegistroBody = await request.json();
-  const { nombreCompleto, correo, contrasena, rol } = body;
+  const { nombreCompleto, correo, telefono, contrasena, rol } = body;
 
   if (!nombreCompleto || !correo || !contrasena || !rol) {
     return apiError("Faltan campos obligatorios", 400);
@@ -41,6 +42,7 @@ export async function POST(request: NextRequest) {
     id_usuario: userId,
     nombre_completo: nombreCompleto,
     correo,
+    telefono: telefono ?? null,
     rol,
   });
 

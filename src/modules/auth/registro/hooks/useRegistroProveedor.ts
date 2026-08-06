@@ -9,6 +9,7 @@ import { routeGeneratorOverLogin } from "@/shared/utils/routeGeneratosOverLogin"
 const initialState: RegistroProveedorFormData = {
   nombreEmpresa: "",
   correo: "",
+  telefono: "",
   especialidad: "",
   serviciosAdicionales: [],
   ciudad: "",
@@ -47,6 +48,7 @@ export function useRegistroProveedor() {
     registrarProveedor({
       nombreCompleto: formData.nombreEmpresa,
       correo: formData.correo,
+      telefono: formData.telefono,
       contrasena: formData.contrasena,
       rol: "proveedor",
       ciudad: formData.ciudad,

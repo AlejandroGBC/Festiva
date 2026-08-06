@@ -2,6 +2,8 @@ import { Enums } from "@/shared/types/supabase.types";
 
 export type EstadoPropuesta = Enums<"estado_oferta_enum">;
 
+export type TabPropuestas = "enviadas" | "aceptadas" | "rechazadas";
+
 export interface Propuesta {
   id: string;
   tituloEvento: string;
