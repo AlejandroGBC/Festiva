@@ -8,16 +8,6 @@ export interface StatsInicio{
     tasaRespuesta : string;
 }
 
-export interface EventoRecomendado{
-    id: number;
-    titulo: string;
-    fecha: string;
-    ubicacion: string;
-    cantidadPersonas: number;
-    categorias: string[]
-    rangoPrecio: string;
-}
-
 export interface InicioViewProps {
     stats: StatsInicio;
 }
@@ -30,4 +20,16 @@ export interface StatsGridProps {
   calificacion: number;
   cantidadResenas: number;
   tasaRespuesta: string;
+}
+
+
+export interface EventoRecomendado {
+  id_evento: string;
+  titulo: string;
+  fecha: string;
+  ubicacion: string;
+  cantidadPersonas: number;
+  categorias_evento: { label: string; variant: string }[];
+  rangoPrecio: string;
+  puntuacion: number;
 }
