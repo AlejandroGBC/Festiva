@@ -1,8 +1,3 @@
-/**
- * Ubicación:
- *   src/app/cliente/perfil/page.tsx
- */
-
 import { redirect } from "next/navigation";
 import { getPerfilCliente } from "@/modules/cliente/perfil/services/perfil.service";
 import { contarNotificacionesNuevas } from "@/modules/cliente/notificaciones/services/notificaciones-list.service";

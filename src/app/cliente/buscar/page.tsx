@@ -1,15 +1,3 @@
-/**
- * Ubicación:
- *   src/app/cliente/buscar/page.tsx
- *
- * Precarga categorías completas (para los chips de filtro) y una lista
- * inicial de proveedores (reusa getProveedoresDestacados con un límite
- * más alto) para que la pantalla no arranque vacía antes de que el
- * usuario escriba algo.
- */
-
-
-
 import { getCategoriasInicio } from "@/modules/cliente/inicio/services/inicio.service";
 import { getProveedoresDestacados } from "@/modules/cliente/proveedores/services/proveedores-destacados.service";
 import { contarNotificacionesNuevas } from "@/modules/cliente/notificaciones/services/notificaciones-list.service";

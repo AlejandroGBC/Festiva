@@ -1,8 +1,3 @@
-/**
- * Ubicación real:
- *   src/app/cliente/chat/page.tsx
- */
-
 import { getConversaciones } from "@/modules/cliente/chat/services/conversaciones-list.service";
 import ChatListView from "@/modules/cliente/chat/components/ChatListView";
 

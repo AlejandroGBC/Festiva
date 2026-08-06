@@ -1,8 +1,3 @@
-/**
- * Ubicación real:
- *   src/app/cliente/proveedores/[id]/page.tsx
- */
-
 import { notFound } from "next/navigation";
 
 import { getProveedorDetalle } from "@/modules/cliente/proveedores/services/proveedor-detalle.service";

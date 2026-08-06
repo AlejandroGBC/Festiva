@@ -89,7 +89,7 @@ export default function ConfiguracionView() {
     <div className="min-h-dvh bg-[#F5F2FA] flex flex-col">
       <TopNavbar title="Configuración" />
 
-      <main className="flex-1 px-5 pb-8 lg:max-w-2xl lg:mx-auto lg:w-full">
+      <main className="flex-1 px-5 pb-8 lg:max-w-2xl lg:mx-auto lg:w-full overflow-y-auto no-scrollbar">
         <p className="text-[11px] font-bold text-festiva-midnight-blue/40 uppercase tracking-wide mb-2 mt-4 px-1">
           Cuenta
         </p>

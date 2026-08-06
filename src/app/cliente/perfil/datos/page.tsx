@@ -1,8 +1,3 @@
-/**
- * Ubicación:
- *   src/app/cliente/perfil/datos/page.tsx
- */
-
 import { redirect } from "next/navigation";
 import { getPerfilCliente } from "@/modules/cliente/perfil/services/perfil.service";
 import DatosPersonalesView from "@/modules/cliente/perfil/components/DatosPersonalesView";

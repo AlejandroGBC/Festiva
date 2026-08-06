@@ -1,7 +1,3 @@
-/**
- * Ubicación:
- *   src/app/cliente/notificaciones/page.tsx
- */
 
 import { getNotificaciones } from "@/modules/cliente/notificaciones/services/notificaciones-list.service";
 import NotificacionesView from "@/modules/cliente/notificaciones/components/NotificacionesView";
