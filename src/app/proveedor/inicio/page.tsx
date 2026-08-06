@@ -1,6 +1,6 @@
 // app/(proveedor)/inicio/page.tsx
 import { createServerSupabaseClient } from "@/lib/supabase/server";
-import { getStatsInicio } from "@/modules/proveedor/inicio/services/inicio.service";
+import { getStatsInicio } from "@/modules/proveedor/inicio/services/stats.service";
 import InicioView from "@/modules/proveedor/inicio/components/InicioView";
 
 export default async function InicioProveedorPage() {
