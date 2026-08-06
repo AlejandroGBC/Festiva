@@ -1,3 +1,6 @@
+"use client";
+
+import { useRouter } from "next/navigation";
 import { Calendar, MapPin, Users, Send } from "lucide-react";
 import Card from "@/shared/components/Card";
 import Button from "@/shared/components/Button";
@@ -16,6 +19,8 @@ const ESTADO_VARIANTS: Record<string, string> = {
 };
 
 export default function EventoDisponibleCard({ evento }: { evento: EventoDisponible }) {
+  const router = useRouter();
+
   return (
     <Card className="flex flex-col gap-3">
       <div className="flex items-start justify-between gap-2">
@@ -60,7 +65,13 @@ export default function EventoDisponibleCard({ evento }: { evento: EventoDisponi
           <p className="text-sm font-bold text-festiva-midnight-blue">{evento.presupuesto}</p>
         </div>
 
-        <Button variant="secondary" size="md" shape="pill" className="gap-2">
+        <Button
+          variant="secondary"
+          size="md"
+          shape="pill"
+          className="gap-2"
+          onClick={() => router.push(`/proveedor/buscar/${evento.id}/propuesta`)}
+        >
           <Send className="h-4 w-4" />
           Enviar oferta
         </Button>
