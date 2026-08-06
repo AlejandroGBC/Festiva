@@ -17,7 +17,7 @@ const eventoMock: EventoDisponible = {
   id: "1",
   titulo: "Boda de Ana y Luis",
   fecha: "24 agosto, 2025",
-  ubicacion: "Tegucigalpa",
+  ubicacion: "Tegucigalpa, Honduras",
   cantidadPersonas: 200,
   categorias: [{ label: "Decoración", variant: "violet" }],
   descripcion: "",
