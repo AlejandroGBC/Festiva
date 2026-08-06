@@ -1,18 +1,14 @@
 "use client";
 
-/**
- * Ubicación sugerida:
- *   src/modules/cliente/ofertas/components/OfertaDetalleView.tsx
- */
-
 import { useRouter } from "next/navigation";
-import { ArrowLeft, MapPin, Star, Clock, MessageCircle, CheckCircle2 } from "lucide-react";
-
+import { ArrowLeft, MapPin, Star, Clock, MessageCircle, CheckCircle2, AlertCircle } from "lucide-react";
 import Card from "@/shared/components/Card";
 import Chip from "@/shared/components/Chip";
-import { useAuthContext } from "@/lib/context/auth-context";
-import { construirLinkWhatsApp, construirMensajeOferta } from "@/shared/lib/whatsapp";
 import type { OfertaDetalle } from "@/modules/cliente/ofertas/types/oferta-detalle.types";
+import Link from "next/link";
+import { useState } from "react";
+import { aceptarOferta } from "@/modules/cliente/ofertas/services/aceptar-oferta.service";
+import Button from "@/shared/components/Button";
 
 const ESTADO_LABEL: Record<OfertaDetalle["estado"], string> = {
   enviada: "Nueva",
@@ -41,28 +37,32 @@ interface OfertaDetalleViewProps {
   oferta: OfertaDetalle;
 }
 
+
 export default function OfertaDetalleView({ oferta }: OfertaDetalleViewProps) {
   const router = useRouter();
-  const { user } = useAuthContext();
+  const [confirmandoAceptar, setConfirmandoAceptar] = useState(false);
+  const [procesando, setProcesando] = useState(false);
+  const [error, setError] = useState("");
 
-  const linkWhatsApp = oferta.proveedor_telefono
-    ? construirLinkWhatsApp(
-        oferta.proveedor_telefono,
-        construirMensajeOferta({
-          nombreCliente: user?.nombre ?? "un cliente de Festiva",
-          nombreProveedor: oferta.proveedor_nombre,
-          eventoTitulo: oferta.evento_titulo,
-          servicio: oferta.proveedor_categoria,
-          precio: oferta.precio_total,
-          yaAceptada: oferta.estado === "aceptada",
-        })
-      )
-    : null;
-
+  const puedeAceptar = oferta.estado === "enviada";
   const inicial = oferta.proveedor_nombre.charAt(0);
 
+  async function handleAceptar() {
+    setProcesando(true);
+    setError("");
+    try {
+      await aceptarOferta(oferta.id_evento, oferta.id_proveedor);
+      router.refresh();
+      setConfirmandoAceptar(false);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "No se pudo aceptar la oferta");
+    } finally {
+      setProcesando(false);
+    }
+  }
+
   return (
-    <div className="min-h-dvh bg-[#F5F2FA] flex flex-col">
+    <div className="min-h-dvh bg-[#F5F2FA] flex flex-col overflow-y-auto no-scrollbar">
       <header className="bg-festiva-midnight-blue px-5 pt-14 pb-7 rounded-b-[28px]">
         <button
           onClick={() => router.back()}
@@ -115,6 +115,16 @@ export default function OfertaDetalleView({ oferta }: OfertaDetalleViewProps) {
             L. {oferta.precio_total.toLocaleString()}
           </p>
 
+          {oferta.servicios_cubiertos.length > 0 && (
+            <div className="flex flex-wrap gap-1.5 mt-3">
+              {oferta.servicios_cubiertos.map((servicio) => (
+                <Chip key={servicio} variant="electric-violet">
+                  {servicio}
+                </Chip>
+              ))}
+            </div>
+          )}
+
           {oferta.descripcion_servicio && (
             <p className="text-[13px] text-festiva-midnight-blue/70 leading-relaxed mt-3 mb-0">
               {oferta.descripcion_servicio}
@@ -143,20 +153,61 @@ export default function OfertaDetalleView({ oferta }: OfertaDetalleViewProps) {
           </Card>
         )}
 
-        {linkWhatsApp ? (
-          <a
-            href={linkWhatsApp}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center justify-center gap-2 mt-5 w-full bg-[#25D366] text-white rounded-2xl px-4 py-3.5 text-[14px] font-bold shadow-[0_6px_20px_rgba(37,211,102,0.3)]"
+        <div className="flex flex-col gap-2.5 mt-5">
+          <Link
+            href={`/cliente/chat/iniciar/${oferta.id_evento}/${oferta.id_proveedor}`}
+            className="flex items-center justify-center gap-2 w-full bg-festiva-electric-violet text-white rounded-2xl px-4 py-3.5 text-[14px] font-bold shadow-[0_6px_20px_rgba(124,58,237,0.3)]"
           >
             <MessageCircle size={18} />
-            Chatear por WhatsApp
-          </a>
-        ) : (
-          <p className="text-[12px] text-festiva-midnight-blue/40 text-center mt-5">
-            Este proveedor todavía no cargó un teléfono de contacto.
-          </p>
+            Chatear con {oferta.proveedor_nombre}
+          </Link>
+
+          {puedeAceptar && (
+            <Button
+              variant="primary"
+              className="w-full"
+              onClick={() => setConfirmandoAceptar(true)}
+            >
+              <CheckCircle2 size={16} />
+              Aceptar oferta
+            </Button>
+          )}
+        </div>
+
+        {confirmandoAceptar && (
+          <div className="mt-4 rounded-2xl bg-white border border-festiva-mint-neon/20 p-4">
+            <div className="flex items-start gap-2 mb-3">
+              <AlertCircle size={16} className="text-festiva-mint-neon shrink-0 mt-0.5" />
+              <p className="text-sm text-festiva-midnight-blue m-0">
+                ¿Confirmás que querés aceptar esta oferta de {oferta.proveedor_nombre} por L.{" "}
+                {oferta.precio_total.toLocaleString()}?
+              </p>
+            </div>
+
+            {error && <p className="text-xs text-red-500 mb-3">{error}</p>}
+
+            <div className="flex gap-2">
+              <Button
+                variant="ghost"
+                className="flex-1"
+                disabled={procesando}
+                onClick={() => {
+                  setConfirmandoAceptar(false);
+                  setError("");
+                }}
+              >
+                No, volver
+              </Button>
+              <Button
+                variant="primary"
+                className="flex-1"
+                disabled={procesando}
+                onClick={handleAceptar}
+              >
+                {procesando ? "Procesando..." : "Sí, aceptar"}
+              </Button>
+            </div>
+          </div>
         )}
       </main>
     </div>

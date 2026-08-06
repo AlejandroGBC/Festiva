@@ -14,6 +14,7 @@ export interface ProveedorContratado {
    * primer servicio del proveedor, y si tampoco hay, a un texto genérico. */
   categoria: string;
   precio_total: number;
+  servicios: string[];
   /** true = tbl_pagos.estado_pago === "pagado" para esta contratación.
    * Cualquier otro estado (pendiente/fallido/reembolsado) o ausencia
    * de registro de pago se trata como no confirmado. */

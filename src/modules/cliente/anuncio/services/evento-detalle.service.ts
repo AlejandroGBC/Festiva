@@ -140,12 +140,16 @@ export async function getEventoDetalle(idEvento: string): Promise<EventoDetalle 
   const contrataciones = (contratacionesDb ?? []) as ContratacionRow[];
 
   let proveedoresContratados: ProveedorContratado[] = [];
+  // Cantidad de servicios ÚNICOS del evento que ya quedan cubiertos entre
+  // todos los proveedores contratados (un proveedor puede cubrir más de uno).
+  // Se declara acá afuera para que sobreviva al bloque del if de abajo.
+  let serviciosUnicosCubiertos = 0;
 
   if (contrataciones.length > 0) {
     const idsProveedores = contrataciones.map((c) => c.id_proveedor);
     const idsContrataciones = contrataciones.map((c) => c.id_contratacion);
 
-    const [ofertasRes, proveedoresRes, serviciosProveedorRes, pagosRes, telefonosRes] = await Promise.all([
+    const [ofertasRes, proveedoresRes, coberturaRes, pagosRes, telefonosRes] = await Promise.all([
       // Precio ofertado por cada uno de estos proveedores para este evento
       supabase
         .from("tbl_ofertas")
@@ -159,10 +163,11 @@ export async function getEventoDetalle(idEvento: string): Promise<EventoDetalle 
         .select("id_proveedor, nombre_comercial")
         .in("id_proveedor", idsProveedores),
 
-      // Servicios que ofrece cada proveedor, para inferir la categoría a mostrar
+      // Servicios que esta oferta específica cubre (tbl_oferta_servicios)
       supabase
-        .from("tbl_proveedor_servicios")
+        .from("tbl_oferta_servicios")
         .select("id_proveedor, tbl_servicios ( nombre )")
+        .eq("id_evento", idEvento)
         .in("id_proveedor", idsProveedores),
 
       // Estado del pago de cada contratación
@@ -185,18 +190,26 @@ export async function getEventoDetalle(idEvento: string): Promise<EventoDetalle 
       (proveedoresRes.data ?? []).map((p) => [p.id_proveedor as string, p.nombre_comercial as string])
     );
 
-    interface ServicioProveedorRow {
+    interface CoberturaRow {
       id_proveedor: string;
       tbl_servicios: { nombre: string } | null;
     }
     const serviciosPorProveedor = new Map<string, string[]>();
-    for (const row of (serviciosProveedorRes.data ?? []) as ServicioProveedorRow[]) {
+    for (const row of (coberturaRes.data ?? []) as CoberturaRow[]) {
       const nombre = row.tbl_servicios?.nombre;
       if (!nombre) continue;
       const lista = serviciosPorProveedor.get(row.id_proveedor) ?? [];
       lista.push(nombre);
       serviciosPorProveedor.set(row.id_proveedor, lista);
     }
+
+    // Servicios únicos cubiertos en TOTAL por todos los proveedores contratados
+    // (si dos proveedores cubren "Catering", solo cuenta una vez).
+    const nombresServiciosCubiertos = new Set<string>();
+    for (const lista of serviciosPorProveedor.values()) {
+      lista.forEach((nombre) => nombresServiciosCubiertos.add(nombre));
+    }
+    serviciosUnicosCubiertos = nombresServiciosCubiertos.size;
 
     // id_pago === id_contratacion (1:1), así que mapeamos directo
     const pagoPorContratacion = new Map<string, string>(
@@ -209,12 +222,10 @@ export async function getEventoDetalle(idEvento: string): Promise<EventoDetalle 
 
     proveedoresContratados = contrataciones.map((c) => {
       const serviciosDelProveedor = serviciosPorProveedor.get(c.id_proveedor) ?? [];
-      // Preferimos un servicio que coincida con lo que el evento pidió;
-      // si no hay match, el primero del proveedor; si no tiene ninguno, genérico.
       const categoria =
-        serviciosDelProveedor.find((s) => servicios.includes(s)) ??
-        serviciosDelProveedor[0] ??
-        "Servicio contratado";
+        serviciosDelProveedor.length > 0
+          ? serviciosDelProveedor.join(" + ")
+          : "Servicio contratado";
 
       const estadoPago = pagoPorContratacion.get(c.id_contratacion);
 
@@ -224,6 +235,7 @@ export async function getEventoDetalle(idEvento: string): Promise<EventoDetalle 
         nombre_comercial: nombrePorProveedor.get(c.id_proveedor) ?? "Proveedor",
         categoria,
         precio_total: precioPorProveedor.get(c.id_proveedor) ?? 0,
+        servicios: serviciosDelProveedor,
         confirmado: estadoPago === "pagado",
         telefono: telefonoPorProveedor.get(c.id_proveedor) ?? null,
       };
@@ -251,7 +263,7 @@ export async function getEventoDetalle(idEvento: string): Promise<EventoDetalle 
     {
       id: "seleccionados",
       titulo: "Proveedores seleccionados",
-      descripcion: `${proveedoresContratados.length} de ${totalServiciosSolicitados} servicios confirmados`,
+      descripcion: `${serviciosUnicosCubiertos} de ${totalServiciosSolicitados} servicios confirmados`,
       fecha:
         contrataciones.length > 0
           ? formatFecha(contrataciones[contrataciones.length - 1].creado_en)
@@ -277,7 +289,7 @@ export async function getEventoDetalle(idEvento: string): Promise<EventoDetalle 
   const completitud = [
     true, // publicado: siempre, por existir el evento
     (cantidadOfertas ?? 0) > 0,
-    proveedoresContratados.length > 0 && proveedoresContratados.length >= totalServiciosSolicitados,
+    serviciosUnicosCubiertos > 0 && serviciosUnicosCubiertos >= totalServiciosSolicitados,
     todosLosPagosConfirmados,
     ev.estado === "finalizado",
   ];
@@ -296,7 +308,7 @@ export async function getEventoDetalle(idEvento: string): Promise<EventoDetalle 
 
   if (indiceActual === 2) {
     // "Proveedores seleccionados" en curso
-    progreso += PESO_POR_HITO * (proveedoresContratados.length / totalServiciosSolicitados);
+    progreso += PESO_POR_HITO * (serviciosUnicosCubiertos / totalServiciosSolicitados);
   } else if (indiceActual === 3 && proveedoresContratados.length > 0) {
     // "Pago y confirmación" en curso
     const confirmados = proveedoresContratados.filter((p) => p.confirmado).length;

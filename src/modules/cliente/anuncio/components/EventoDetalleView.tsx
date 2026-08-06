@@ -26,15 +26,13 @@ import {
 import Card from "@/shared/components/Card";
 import Chip from "@/shared/components/Chip";
 import Button from "@/shared/components/Button";
-
-import { useAuthContext } from "@/lib/context/auth-context";
-import { construirLinkWhatsApp, construirMensajeOferta } from "@/shared/lib/whatsapp";
 import {
   cancelarEvento,
   eliminarEvento,
   finalizarEvento,
 } from "@/modules/cliente/anuncio/services/evento-gestion.service";
 import type { EventoDetalle } from "@/modules/cliente/anuncio/types/evento-detalle.types";
+import Link from "next/link";
 
 const ESTADO_LABEL: Record<EventoDetalle["estado"], string> = {
   recibiendo_ofertas: "Recibiendo ofertas",
@@ -51,7 +49,6 @@ interface EventoDetalleViewProps {
 
 export default function EventoDetalleView({ evento }: EventoDetalleViewProps) {
   const router = useRouter();
-  const { user } = useAuthContext();
   const [confirmando, setConfirmando] = useState<Confirmacion>(null);
   const [procesando, setProcesando] = useState(false);
   const [error, setError] = useState("");
@@ -142,20 +139,6 @@ export default function EventoDetalleView({ evento }: EventoDetalleViewProps) {
 
             <div className="flex flex-col gap-2.5">
               {evento.proveedores_contratados.map((p) => {
-                const linkWhatsApp = p.telefono
-                  ? construirLinkWhatsApp(
-                      p.telefono,
-                      construirMensajeOferta({
-                        nombreCliente: user?.nombre ?? "un cliente de Festiva",
-                        nombreProveedor: p.nombre_comercial,
-                        eventoTitulo: evento.titulo,
-                        servicio: p.categoria,
-                        precio: p.precio_total,
-                        yaAceptada: true,
-                      })
-                    )
-                  : null;
-
                 return (
                   <Card key={p.id_contratacion} className="!p-3.5">
                     <div className="flex items-center gap-3">
@@ -171,8 +154,11 @@ export default function EventoDetalleView({ evento }: EventoDetalleViewProps) {
                         <p className="font-bold text-[14px] text-festiva-midnight-blue m-0 truncate">
                           {p.nombre_comercial}
                         </p>
-                        <p className="text-[12px] text-festiva-midnight-blue/50 m-0 mt-0.5 truncate">
-                          {p.categoria} — L{p.precio_total.toLocaleString()} HN
+                        <p className="text-[12px] text-festiva-midnight-blue/50 m-0 mt-0.5">
+                          {p.servicios.join(" + ")}
+                        </p>
+                        <p className="text-[12px] font-semibold text-festiva-midnight-blue/70 m-0 mt-0.5">
+                          L{p.precio_total.toLocaleString()} HN
                         </p>
                       </div>
 
@@ -181,21 +167,13 @@ export default function EventoDetalleView({ evento }: EventoDetalleViewProps) {
                       </Chip>
                     </div>
 
-                    {linkWhatsApp ? (
-                      <a
-                        href={linkWhatsApp}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center justify-center gap-2 mt-3 w-full bg-[#25D366]/10 text-[#1DA851] rounded-xl px-4 py-2.5 text-[13px] font-bold"
-                      >
-                        <MessageCircle size={15} />
-                        Chatear por WhatsApp
-                      </a>
-                    ) : (
-                      <p className="text-[11px] text-festiva-midnight-blue/40 text-center mt-3 m-0">
-                        Este proveedor todavía no cargó un teléfono de contacto.
-                      </p>
-                    )}
+                    <Link
+                      href={`/cliente/chat/iniciar/${evento.id_evento}/${p.id_proveedor}`}
+                      className="flex items-center justify-center gap-2 mt-3 w-full bg-festiva-electric-violet/10 text-festiva-electric-violet rounded-xl px-4 py-2.5 text-[13px] font-bold"
+                    >
+                      <MessageCircle size={15} />
+                      Chatear con {p.nombre_comercial}
+                    </Link>
                   </Card>
                 );
               })}

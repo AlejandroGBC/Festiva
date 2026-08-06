@@ -55,7 +55,7 @@ export default function InicioView({
         signOut={signOut}
       />
 
-      <section className="px-5 h-full flex flex-col flex-1 w-full">
+      <section className="px-5 flex flex-col flex-1 w-full">
         <div className="pb-7">
           <p className="text-festiva-midnight-blue/45 text-sm pb-2">Buenos días</p>
           <h1 className="text-festiva-midnight-blue font-bold text-3xl">{user?.nombre}</h1>

@@ -14,6 +14,7 @@ export interface OfertaDetalle {
   proveedor_telefono: string | null;
   proveedor_calificacion: number | null;
   precio_total: number;
+  servicios_cubiertos: string[];
   descripcion_servicio: string | null;
   estado: "enviada" | "aceptada" | "rechazada" | "cancelada";
   creada_en: string;

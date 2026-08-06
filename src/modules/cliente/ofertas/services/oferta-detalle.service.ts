@@ -74,8 +74,8 @@ export async function getOfertaDetalle(
       .eq("id_proveedor", idProveedor),
 
     supabase
-      .from("tbl_oferta_items_incluidos")
-      .select("descripcion_item")
+      .from("tbl_oferta_servicios")
+      .select("tbl_servicios ( nombre )")
       .eq("id_evento", idEvento)
       .eq("id_proveedor", idProveedor),
 
@@ -89,12 +89,15 @@ export async function getOfertaDetalle(
   interface ServicioRow {
     tbl_servicios: { nombre: string } | null;
   }
-  const categoria =
-    ((serviciosRes.data ?? []) as ServicioRow[])
-      .map((s) => s.tbl_servicios?.nombre)
-      .filter((n): n is string => Boolean(n))[0] ?? "Servicio";
+  const serviciosCubiertos = ((serviciosRes.data ?? []) as ServicioRow[])
+    .map((s) => s.tbl_servicios?.nombre)
+    .filter((n): n is string => Boolean(n));
 
-  const itemsIncluidos = (itemsRes.data ?? []).map((i) => i.descripcion_item as string);
+  const categoria = serviciosCubiertos.length > 0
+    ? serviciosCubiertos.join(" + ")
+    : "Servicio";
+
+  const itemsIncluidos = (itemsRes.data ?? []).map((i) => i.tbl_servicios?.nombre ?? "Servicio");
 
   let calificacionPromedio: number | null = null;
   const idsContrataciones = (calificacionesRes.data ?? []).map((c) => c.id_contratacion as string);
@@ -118,6 +121,7 @@ export async function getOfertaDetalle(
     evento_fecha: of.tbl_eventos?.fecha_evento ?? "",
     proveedor_nombre: perfilRes.data?.nombre_comercial ?? "Proveedor",
     proveedor_categoria: categoria,
+    servicios_cubiertos: serviciosCubiertos,
     proveedor_ubicacion: perfilRes.data?.ubicacion_base ?? "",
     proveedor_telefono: telefonoRes.data?.telefono ?? null,
     proveedor_calificacion: calificacionPromedio,
