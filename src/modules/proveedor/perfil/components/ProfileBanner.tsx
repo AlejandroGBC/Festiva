@@ -10,7 +10,7 @@ interface ProfileBannerProps {
     initials?: string;
 }
 
-export default function ProfileBanner({ isEditable = true, showShare = true, initials = "DM" }: ProfileBannerProps) {
+export default function ProfileBanner({ isEditable = true, showShare = true, initials = "FP" }: ProfileBannerProps) {
     const router = useRouter();    
     return (
         <div className="edit-banner relative">

@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { useProviderProfile } from '../hooks/useProviderProfile';
 import ProfileBanner from '../components/ProfileBanner';
 import ProfileHeader from '../components/ProfileHeader';
@@ -12,9 +11,9 @@ import PortfolioSection from '../components/PortfolioSection';
 import AvailabilitySection from '../components/AvailabilitySection';
 import SaveProfileButton from '../components/SaveProfileButton';
 import Loading from "@/shared/components/Loading";
+import { obtenerIniciales } from '@/shared/utils/obtenerIniciales';
 
 export default function EditProviderProfilePage() {
-    const router = useRouter();
     const { profile, loading, updateField, handleSave } = useProviderProfile();
     const [isSaving, setIsSaving] = useState(false);
 
@@ -28,9 +27,8 @@ export default function EditProviderProfilePage() {
         updateField('availability', updated);
     };
 
-    const handleNavigateToPortfolio = () => {
-        console.log("Navegando a /proveedor/portfolio...");
-        router.push('/proveedor/portfolio');
+    const handleSpecialtiesChange = (specialties: string[]) => {
+        updateField('initialSpecialties', specialties);
     };
 
     const onSaveTrigger = async () => {
@@ -44,9 +42,14 @@ export default function EditProviderProfilePage() {
         }
     };
 
+    const initials = obtenerIniciales(profile.businessName);
+
     return (
         <>
-            <ProfileBanner />
+            <ProfileBanner 
+                initials={initials} 
+            />
+            
             <div className="flex-1 overflow-y-auto no-scrollbar w-full pb-5">
                 <div style={{ padding: '42px 20px 24px', display: 'flex', flexDirection: 'column', gap: '18px' }}>
                     
@@ -71,12 +74,11 @@ export default function EditProviderProfilePage() {
                 
                     <SpecialtiesSection 
                         initialSpecialties={profile.initialSpecialties || []}
-                        // onChange={handleSpecialtiesChange} 
+                        onChange={handleSpecialtiesChange} 
                     />
                     
                     <PortfolioSection 
                         images={profile.portfolioImages || []}
-                        onManageClick={handleNavigateToPortfolio}
                     />
                     
                     <AvailabilitySection 
