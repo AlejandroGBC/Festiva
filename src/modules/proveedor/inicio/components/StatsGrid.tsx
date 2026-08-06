@@ -1,4 +1,4 @@
-import { TrendingUp, Briefcase, Star, HelpCircle, CircleX, MinusCircle, CircleCheckBig } from "lucide-react";
+import { TrendingUp, Briefcase, Star, HelpCircle, CircleX, MinusCircle, CircleCheckBig, TrendingDown } from "lucide-react";
 import StatCard from "./StatCard";
 
 interface StatsGridProps {
@@ -11,13 +11,39 @@ interface StatsGridProps {
   tasaRespuesta: string;
 }
 
+export const getVariacionDetalle = (variacion: string) => {
+  const clean = variacion.replace("%", "").trim();
+  const num = parseFloat(clean);
+
+  if (isNaN(num) || num === 0) {
+    return {
+      detalle: `0% vs anterior`,
+      detalleColor: "text-festiva-monochromatic",
+      detalleIcon: <TrendingUp className="h-3.5 w-3.5" />,
+    };
+  }
+
+  if (num > 0) {
+    return {
+      detalle: `${variacion} vs anterior`,
+      detalleColor: "text-festiva-mint-neon",
+      detalleIcon: <TrendingUp className="h-3.5 w-3.5" />,
+    };
+  }
+  return {
+    detalle: `${variacion} vs anterior`,
+    detalleColor: "text-festiva-berry-punch",
+    detalleIcon: <TrendingDown className="h-3.5 w-3.5" />,
+  };
+};
+
 const getTasaRespuestaDetalle = (tasa: string | number) => {
   const tasaStr = String(tasa).trim();
 
   if (!tasaStr || tasaStr === '' || tasaStr === 'N/A' || tasaStr === '-') {
     return {
       detalle: "Sin datos",
-      detalleColor: "text-festiva-gray", 
+      detalleColor: "text-festiva-gray",
       detalleIcon: <HelpCircle className="h-3.5 w-3.5" />,
     };
   }
@@ -36,7 +62,7 @@ const getTasaRespuestaDetalle = (tasa: string | number) => {
   if (tasaNum < 30) {
     return {
       detalle: "Malo",
-      detalleColor: "text-festiva-berry-punch", 
+      detalleColor: "text-festiva-berry-punch",
       detalleIcon: <CircleX className="h-3.5 w-3.5" />,
     };
   }
@@ -51,7 +77,7 @@ const getTasaRespuestaDetalle = (tasa: string | number) => {
 
   return {
     detalle: "Excelente",
-    detalleColor: "text-festiva-mint-neon", 
+    detalleColor: "text-festiva-mint-neon",
     detalleIcon: <CircleCheckBig className="h-3.5 w-3.5" />,
   };
 };
@@ -66,16 +92,18 @@ export default function StatsGrid({
   tasaRespuesta,
 }: StatsGridProps) {
   const tasaDetalle = getTasaRespuestaDetalle(tasaRespuesta);
+  const variacionDetalle = getVariacionDetalle(ingresosVariacion);
 
   return (
     <div className="grid grid-cols-2 gap-3">
       <StatCard
         valor={ingresosMes}
         label="Ingresos del mes"
-        detalle={`${ingresosVariacion}`}
-        detalleColor="text-festiva-mint-neon"
-        detalleIcon={<TrendingUp className="h-3.5 w-3.5" />}
+        detalle={variacionDetalle.detalle}
+        detalleColor={variacionDetalle.detalleColor}
+        detalleIcon={variacionDetalle.detalleIcon}
       />
+
       <StatCard
         valor={String(eventosActivos)}
         label="Eventos activos"
@@ -83,6 +111,7 @@ export default function StatsGrid({
         detalleColor="text-festiva-electric-violet"
         detalleIcon={<Briefcase className="h-3.5 w-3.5" />}
       />
+
       <StatCard
         valor={calificacion.toFixed(1)}
         label="Calificacion"
@@ -90,6 +119,7 @@ export default function StatsGrid({
         detalleColor="text-festiva-confetti-orange"
         detalleIcon={<Star className="h-3.5 w-3.5 fill-current" />}
       />
+
       <StatCard
         valor={tasaRespuesta}
         label="Tasa respuesta"
@@ -97,7 +127,6 @@ export default function StatsGrid({
         detalleColor={tasaDetalle.detalleColor}
         detalleIcon={tasaDetalle.detalleIcon}
       />
-
     </div>
   );
 }
