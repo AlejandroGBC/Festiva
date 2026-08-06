@@ -21,3 +21,13 @@ export interface EventoRecomendado{
 export interface InicioViewProps {
     stats: StatsInicio;
 }
+
+export interface StatsGridProps {
+  ingresosMes: string;
+  ingresosVariacion: string;
+  eventosActivos: number;
+  eventosEnNegociacion: number;
+  calificacion: number;
+  cantidadResenas: number;
+  tasaRespuesta: string;
+}
