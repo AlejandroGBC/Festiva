@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useProviderProfile } from '../hooks/useProviderProfile';
 import ProfileBanner from '../components/ProfileBanner';
 import ProfileHeader from '../components/ProfileHeader';
@@ -12,10 +12,25 @@ import AvailabilitySection from '../components/AvailabilitySection';
 import SaveProfileButton from '../components/SaveProfileButton';
 import Loading from "@/shared/components/Loading";
 import { obtenerIniciales } from '@/shared/utils/obtenerIniciales';
+import { portfolioService } from '../../portfolio/services/portfolio.service';
+import { PortfolioItem } from '@/shared/types/portfolio.types';
 
 export default function EditProviderProfilePage() {
     const { profile, loading, updateField, handleSave } = useProviderProfile();
     const [isSaving, setIsSaving] = useState(false);
+    const [portfolioItems, setPortfolioItems] = useState<PortfolioItem[]>([]);
+
+    useEffect(() => {
+        const fetchPortfolio = async () => {
+            try {
+                const data = await portfolioService.getProviderPortfolio();
+                setPortfolioItems(data.items || []);
+            } catch (error) {
+                console.error("Error al obtener ítems del portafolio:", error);
+            }
+        };
+        fetchPortfolio();
+    }, []);    
 
     if (loading || !profile) {
         return <Loading fullScreen label="Cargando perfil de Festiva..." />;
@@ -78,7 +93,7 @@ export default function EditProviderProfilePage() {
                     />
                     
                     <PortfolioSection 
-                        images={profile.portfolioImages || []}
+                        items={portfolioItems}
                     />
                     
                     <AvailabilitySection 

@@ -1,17 +1,10 @@
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
 
-interface ServicioData {
+interface ProveedorServicioJoin {
     tbl_servicios: {
         nombre: string;
     } | null;
-}
-
-interface TrabajoPortafolio {
-    id_portafolio: string;
-    tbl_portafolio_imagenes: {
-        imagen_url: string;
-    }[];
 }
 
 export async function GET() {
@@ -42,33 +35,25 @@ export async function GET() {
         .from("tbl_proveedor_servicios")
         .select("tbl_servicios(nombre)")
         .eq("id_proveedor", user.id);
+    
+    const typedServicios = serviciosData as unknown as ProveedorServicioJoin[] | null;
 
-    const specialties = (serviciosData as unknown as ServicioData[])
+    const specialties = typedServicios
         ?.map((s) => s.tbl_servicios?.nombre)
         .filter((nombre): nombre is string => Boolean(nombre)) || [];
-    
-    const { data: trabajos } = await supabase
+
+    const { count: portfolioCount } = await supabase
         .from("tbl_trabajos_portafolio")
-        .select("id_portafolio, tbl_portafolio_imagenes(imagen_url)")
+        .select("*", { count: 'exact', head: true })
         .eq("id_proveedor", user.id);
-
-    const portfolioImages: string[] = [];
-
-    const trabajosList = trabajos as unknown as TrabajoPortafolio[];
-    
-    trabajosList?.forEach((t) => {
-        t.tbl_portafolio_imagenes?.forEach((img) => {
-            if (img.imagen_url) portfolioImages.push(img.imagen_url);
-        });
-    });
 
     let completed = 0;
     if (perfil.nombre_comercial) completed += 20;
     if (perfil.descripcion) completed += 20;
-    if (perfil.ubicacion_base) completed += 20;
+    if (perfil.ubicacion_base) completed += 15;
     if (usuario.telefono) completed += 15;
     if (specialties.length > 0) completed += 15;
-    if (portfolioImages.length > 0) completed += 10;
+    if ((portfolioCount || 0) > 0) completed += 15;
 
     return NextResponse.json({
         id_proveedor: user.id,
@@ -80,7 +65,6 @@ export async function GET() {
         specialist: specialties[0] || "Proveedor General",
         completionPercentage: completed,
         initialSpecialties: specialties,
-        portfolioImages: portfolioImages,
         availability: [
             { dayRange: "Lunes – Viernes", hours: "9:00 – 19:00", available: true },
             { dayRange: "Sábado", hours: "8:00 – 22:00", available: true },
