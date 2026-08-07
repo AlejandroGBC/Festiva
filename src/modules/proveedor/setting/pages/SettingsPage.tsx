@@ -64,7 +64,7 @@ export default function SettingPage() {
                         iconBg="bg-slate-100" 
                         iconColor="text-festiva-midnight-blue"
                         title="Comisiones Festiva" 
-                        subtitle="6% por transacción completada"
+                        subtitle="7% por transacción completada"
                     />
                     <ConfigRow
                         icon={BarChart3} 

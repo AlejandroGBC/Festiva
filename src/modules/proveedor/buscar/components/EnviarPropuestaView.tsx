@@ -63,7 +63,7 @@ export default function EnviarPropuestaView({ evento }: EnviarPropuestaViewProps
         horas_montaje: montajeHoras,
         horas_servicio: servicioHoras,
       });
-      router.push("/proveedor/propuestas");
+      router.push("/proveedor/eventos"); //seria este, para mostrar las propuestas enviadas
       router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : "No se pudo enviar la propuesta");
