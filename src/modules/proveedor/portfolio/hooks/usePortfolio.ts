@@ -1,19 +1,19 @@
 import { useState, useEffect } from 'react';
-import { portfolioService, PortfolioData } from '../services/portfolio.service';
+import { portfolioService } from '../services/portfolio.service';
+import { PortfolioItem, PortfolioData } from '@/shared/types/portfolio.types';
 
 export function usePortfolio() {
     const [data, setData] = useState<PortfolioData | null>(null);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
     const [updating, setUpdating] = useState(false);
 
     async function loadPortfolio() {
         try {
             setLoading(true);
-            const portfolioData = await portfolioService.getProviderPortfolio();
-            setData(portfolioData);
+            const res = await portfolioService.getProviderPortfolio();
+            setData(res);
         } catch {
-            setError('No se pudo cargar el portafolio.');
+            console.error('Error cargando el portafolio');
         } finally {
             setLoading(false);
         }
@@ -23,27 +23,10 @@ export function usePortfolio() {
         loadPortfolio();
     }, []);
 
-    const handleAddGalleryItem = async (url: string) => {
+    const saveItem = async (item: Omit<PortfolioItem, 'id'> & { id?: string }) => {
         try {
             setUpdating(true);
-            const updated = await portfolioService.addGalleryItem(url);
-            setData(updated);
-        } catch {
-            console.error('Error añadiendo imagen al mosaico');
-        } finally {
-            setUpdating(false);
-        }
-    };
-
-    const handleDeleteGalleryItem = async (id: string) => {
-        const updated = await portfolioService.deleteGalleryItem(id);
-        setData(updated);
-    };
-
-    const handleCreateSuccessCase = async (caseData: { title: string; description: string; location: string; externalUrl?: string }) => {
-        try {
-            setUpdating(true);
-            const updated = await portfolioService.createSuccessCase(caseData);
+            const updated = await portfolioService.savePortfolioItem(item);
             setData(updated);
             return true;
         } catch {
@@ -53,19 +36,23 @@ export function usePortfolio() {
         }
     };
 
-    const handleDeleteSuccessCase = async (id: string) => {
-        const updated = await portfolioService.deleteSuccessCase(id);
-        setData(updated);
+    const deleteItem = async (id: string) => {
+        try {
+            setUpdating(true);
+            const updated = await portfolioService.deletePortfolioItem(id);
+            setData(updated);
+        } catch {
+            console.error('Error al borrar el trabajo de portafolio');
+        } finally {
+            setUpdating(false);
+        }
     };
 
     return { 
         data, 
         loading, 
-        error, 
         updating,
-        addGalleryItem: handleAddGalleryItem,
-        deleteGalleryItem: handleDeleteGalleryItem,
-        createSuccessCase: handleCreateSuccessCase,
-        deleteSuccessCase: handleDeleteSuccessCase
+        saveItem,
+        deleteItem
     };
 }

@@ -1,24 +1,20 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { Image, Flower, PartyPopper, Award, Images, Plus } from 'lucide-react';
+import { Plus, FolderHeart, Sparkles, Image as ImageIcon, Briefcase } from 'lucide-react';
 import Card from '@/shared/components/Card';
 import SectionTitle from '@/shared/components/SectionTitle';
+import { PortfolioItem } from '@/shared/types/portfolio.types';
 
 interface PortfolioSectionProps {
-    images: string[];
+    items?: PortfolioItem[];
 }
 
-const brandStyles: Record<string, { bg: string; text: string; icon: React.ComponentType<{ className?: string }> }> = {
-  'pink': { bg: 'bg-festiva-euphoric-pink/10', text: 'text-festiva-euphoric-pink', icon: Image },
-  'purple': { bg: 'bg-festiva-electric-violet/10', text: 'text-festiva-electric-violet', icon: Flower },
-  'orange': { bg: 'bg-festiva-confetti-orange/10', text: 'text-festiva-confetti-orange', icon: PartyPopper },
-  'teal': { bg: 'bg-festiva-mint-neon/10', text: 'text-festiva-mint-neon', icon: Award },
-  'navy': { bg: 'bg-festiva-midnight-blue/10', text: 'text-festiva-midnight-blue', icon: Images },
-};
-
-export default function PortfolioSection({ images }: PortfolioSectionProps) {
+const fallbackIcons = [FolderHeart, Sparkles, ImageIcon, Briefcase];
+    
+export default function PortfolioSection({ items = [] }: PortfolioSectionProps) {
     
     const router = useRouter();
 
@@ -26,7 +22,7 @@ export default function PortfolioSection({ images }: PortfolioSectionProps) {
         router.push('/proveedor/portfolio');
     };
 
-    const hasImages = images && images.length > 0;
+    const hasItems = items && items.length > 0;
     
     return (
         <Card>
@@ -36,22 +32,35 @@ export default function PortfolioSection({ images }: PortfolioSectionProps) {
                 onActionClick={handleNavigateToManage}
             />
             <div className="grid grid-cols-3 gap-3 mt-2">
-                
-                {hasImages ? (
-                    images.map((colorKey, index) => {
-                        const config = brandStyles[colorKey] || { bg: 'bg-slate-100', text: 'text-slate-400', icon: Image };
-                        const IconComponent = config.icon;
+                {hasItems &&
+                    items.map((item, index) => {
+                        const IconComponent = fallbackIcons[index % fallbackIcons.length];
+                        const hasImage = Boolean(item.imageUrl && item.imageUrl.trim().length > 0);
+
                         return (
-                            <div
-                                key={index}
-                                onClick={handleNavigateToManage}
-                                className={`aspect-square flex items-center justify-center rounded-[20px] transition-transform hover:scale-[1.02] cursor-pointer ${config.bg}`}
-                            >
-                                <IconComponent className={`w-7 h-7 stroke-[1.5] ${config.text}`} />
+                        <div
+                            key={item.id || index}
+                            onClick={handleNavigateToManage}
+                            className="relative aspect-square rounded-[20px] overflow-hidden border border-slate-100 bg-slate-50 cursor-pointer transition-transform hover:scale-[1.02]"
+                        >
+                            {hasImage ? (
+                            <Image
+                                src={item.imageUrl!}
+                                alt={item.title || 'Trabajo de portafolio'}
+                                fill
+                                className="object-cover"
+                            />
+                            ) : (
+                            <div className="w-full h-full bg-gradient-to-br from-festiva-electric-violet/10 to-festiva-euphoric-pink/10 flex flex-col items-center justify-center p-2 text-center">
+                                <IconComponent className="w-6 h-6 text-festiva-electric-violet mb-1" />
+                                <span className="text-[10px] font-bold text-festiva-midnight-blue line-clamp-1">
+                                {item.title}
+                                </span>
                             </div>
+                            )}
+                        </div>
                         );
-                    })
-                ) : null}
+                })}
                 
                 <button
                     type="button"
