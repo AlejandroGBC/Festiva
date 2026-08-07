@@ -197,9 +197,9 @@ export async function getEventoDetalle(idEvento: string): Promise<EventoDetalle 
     // Servicios únicos cubiertos en TOTAL por todos los proveedores contratados
     // (si dos proveedores cubren "Catering", solo cuenta una vez).
     const nombresServiciosCubiertos = new Set<string>();
-    for (const lista of serviciosPorProveedor.values()) {
+    serviciosPorProveedor.forEach((lista) => {
       lista.forEach((nombre) => nombresServiciosCubiertos.add(nombre));
-    }
+    });
     serviciosUnicosCubiertos = nombresServiciosCubiertos.size;
 
     // id_pago === id_contratacion (1:1), así que mapeamos directo
