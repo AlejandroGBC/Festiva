@@ -84,11 +84,26 @@ export async function PUT(request: Request) {
     const body = await request.json();
     const { businessName, description, city, phone, foto_perfil_url, initialSpecialties } = body;
 
+    if (!foto_perfil_url) {
+        const { data: usuarioActual } = await supabase
+            .from("tbl_usuarios")
+            .select("foto_perfil_url")
+            .eq("id_usuario", user.id)
+            .single();
+
+        if (usuarioActual?.foto_perfil_url) {
+            const oldPath = usuarioActual.foto_perfil_url.split('/avatars/')[1];
+            if (oldPath) {
+                await supabase.storage.from('avatars').remove([oldPath]);
+            }
+        }
+    }
+
     const { error: userErr } = await supabase
         .from("tbl_usuarios")
         .update({
             telefono: phone,
-            ...(foto_perfil_url && { foto_perfil_url }),
+            foto_perfil_url: foto_perfil_url || null,
         })
         .eq("id_usuario", user.id);
 

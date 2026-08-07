@@ -14,11 +14,13 @@ import Loading from "@/shared/components/Loading";
 import { obtenerIniciales } from '@/shared/utils/obtenerIniciales';
 import { portfolioService } from '../../portfolio/services/portfolio.service';
 import { PortfolioItem } from '@/shared/types/portfolio.types';
+import { uploadAvatarImage } from '@/shared/services/upload.service';
 
 export default function EditProviderProfilePage() {
     const { profile, loading, updateField, handleSave } = useProviderProfile();
     const [isSaving, setIsSaving] = useState(false);
     const [portfolioItems, setPortfolioItems] = useState<PortfolioItem[]>([]);
+    const [selectedAvatarFile, setSelectedAvatarFile] = useState<File | null>(null);
 
     useEffect(() => {
         const fetchPortfolio = async () => {
@@ -36,6 +38,17 @@ export default function EditProviderProfilePage() {
         return <Loading fullScreen label="Cargando perfil de Festiva..." />;
     }
 
+    const handleAvatarSelect = (file: File) => {
+        setSelectedAvatarFile(file);
+        const localPreview = URL.createObjectURL(file);
+        updateField('foto_perfil_url', localPreview);
+    };
+
+    const handleAvatarRemove = () => {
+        setSelectedAvatarFile(null);
+        updateField('foto_perfil_url', '');
+    };
+
     const handleAvailabilityToggle = (index: number) => {
         const updated = [...profile.availability];
         updated[index].available = !updated[index].available;
@@ -49,7 +62,19 @@ export default function EditProviderProfilePage() {
     const onSaveTrigger = async () => {
         setIsSaving(true);
         try {
-            await handleSave();
+            let finalFotoUrl = profile.foto_perfil_url;
+
+            if (selectedAvatarFile && profile.id_proveedor) {
+                finalFotoUrl = await uploadAvatarImage(selectedAvatarFile, profile.id_proveedor);
+            }
+
+            const updatedProfileData = {
+                ...profile,
+                foto_perfil_url: finalFotoUrl || ""
+            };
+
+            await handleSave(updatedProfileData);
+            setSelectedAvatarFile(null);
         } catch (error) {
             console.error("Error al guardar el perfil:", error);
         } finally {
@@ -63,11 +88,14 @@ export default function EditProviderProfilePage() {
         <>
             <ProfileBanner 
                 initials={initials} 
+                avatarUrl={profile.foto_perfil_url}
+                onAvatarChange={handleAvatarSelect}
+                onAvatarRemove={handleAvatarRemove}
             />
-            
+
             <div className="flex-1 overflow-y-auto no-scrollbar w-full pb-5">
                 <div style={{ padding: '42px 20px 24px', display: 'flex', flexDirection: 'column', gap: '18px' }}>
-                    
+
                     <ProfileHeader 
                         businessName={profile.businessName} 
                         specialist={profile.specialist}
@@ -91,7 +119,7 @@ export default function EditProviderProfilePage() {
                         initialSpecialties={profile.initialSpecialties || []}
                         onChange={handleSpecialtiesChange} 
                     />
-                    
+
                     <PortfolioSection 
                         items={portfolioItems}
                     />
