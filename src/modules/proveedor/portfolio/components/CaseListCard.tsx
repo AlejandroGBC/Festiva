@@ -36,12 +36,12 @@ export default function CaseListCard({ id, title, imageUrl, isVerified, onDelete
                 </div>
                 <div className="flex flex-col gap-0.5">
                     <h3 className="font-bold text-[14px] text-festiva-midnight-blue tracking-tight">{title}</h3>
-                        {isVerified && (
-                            <div className="flex items-center gap-1 text-festiva-mint-neon">
+                    {isVerified && (
+                        <div className="flex items-center gap-1 text-festiva-mint-neon">
                             <CheckCircle2 className="w-3.5 h-3.5 fill-current text-white" />
                             <span className="text-[11px] font-medium tracking-tight">Proyecto Verificado</span>
-                            </div>
-                        )}
+                        </div>
+                    )}
                 </div>
             </div>
             <div className="flex items-center gap-1">
