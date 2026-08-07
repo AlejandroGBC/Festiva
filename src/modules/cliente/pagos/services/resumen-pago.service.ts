@@ -18,7 +18,7 @@ export async function getResumenPago(
 
   // 1. Obtener la contratación con su evento 
   const { data: contratacion } = await supabase
-    .from("tbl_contrataaaciones")
+    .from("tbl_contrataciones")
     .select("id_contratacion, id_evento, id_proveedor")
     .eq("id_contratacion", idContratacion)
     .maybeSingle();
