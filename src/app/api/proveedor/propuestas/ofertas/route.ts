@@ -1,5 +1,6 @@
 import { NextRequest } from "next/server";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
+import { createClient } from "@supabase/supabase-js";
 import { apiSuccess, apiError } from "@/lib/api/api-response";
 
 export async function POST(request: NextRequest) {
@@ -52,15 +53,24 @@ export async function POST(request: NextRequest) {
   });
   if (errorOferta) return apiError("No se pudo crear la oferta", 500);
 
-  // Servicios que cubre (tbl_oferta_servicios)
-  const { error: errorServicios } = await supabase.from("tbl_oferta_servicios").insert(
+  // Bypass RLS para insertar los servicios (ya validamos seguridad arriba)
+  const supabaseAdmin = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  );
+
+  const { error: errorServicios } = await supabaseAdmin.from("tbl_oferta_servicios").insert(
     (servicios_incluidos as number[]).map((id_servicio) => ({
       id_evento,
       id_proveedor: idProveedor,
       id_servicio,
     }))
   );
-  if (errorServicios) return apiError("No se pudieron guardar los servicios de la oferta", 500);
+  
+  if (errorServicios) {
+    console.error("Error al insertar servicios de la oferta:", errorServicios);
+    return apiError("No se pudieron guardar los servicios de la oferta", 500);
+  }
 
   // Items informativos (horas de montaje/servicio, sin id_servicio propio)
   const items = [];
