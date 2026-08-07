@@ -73,7 +73,7 @@ const ROL_LABEL: Record<UsuarioSesion["rol"], string> = {
 interface SidebarProps {
     isOpen: boolean;
     onClose: () => void;
-    user?: UsuarioSesion;
+    user?: UsuarioSesion | null;
     signOut: () => void;
 }
 
