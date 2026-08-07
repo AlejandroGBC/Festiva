@@ -1,11 +1,9 @@
 /** 
 Constante y cálculo de comisión de la plataforma Festiva.
 
-Modelo de negocio:
-  - El cliente paga el precio que puso del proveedor.
-  - Festiva descuenta la comisión antes de transferir al proveedor.
-  - Tasa fija: COMISION_FESTIVA_PCT (actualmente 7%).
-Para cambiar la tasa en un futuro, solo modificar COMISION_FESTIVA_PCT.
+Flujo:
+- El cliente paga el precio que puso del proveedor y nosotros (Festiva) descontamos la comisión antes de transferir al proveedor.
+- La tasa fija se puede cambiar en COMISION_FESTIVA_PCT.
  */
 
 
