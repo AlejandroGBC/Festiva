@@ -23,10 +23,11 @@ export function useProviderProfile() {
         setProfile({ ...profile, [field]: value });
     };
 
-    const handleSave = async () => {
-        if (!profile) return;
+    const handleSave = async (updatedProfile?: ProviderProfile) => {
+        const profileToSave = updatedProfile || profile;
+        if (!profileToSave) return;
 
-        const ok = await providerService.updateProfile(profile);
+        const ok = await providerService.updateProfile(profileToSave);
         
         if (!ok) {
             throw new Error("No se pudieron guardar los cambios");

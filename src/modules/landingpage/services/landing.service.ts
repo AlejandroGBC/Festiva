@@ -35,7 +35,7 @@ export const getLandingData = async () => {
     ];
 
     const faqs: FAQItem[] = [
-        { id: '1', question: '¿Tiene algún costo publicar mi evento?', answer: '¡Absolutamente no! Publicar tu evento es 100% gratuito. Solo pagas cuando decides contratar a un proveedor a través de nuestra plataforma segura.' },
+        { id: '1', question: '¿Tiene algún costo publicar mi evento?', answer: '¡Absolutamente no! Publicar tu evento es 100% gratuito.' },
         { id: '2', question: '¿Cómo sé si el proveedor es confiable?', answer: 'Todos nuestros proveedores pasan por un proceso de verificación previo e incluyen valoraciones reales de otros clientes.' },
     ];
 
