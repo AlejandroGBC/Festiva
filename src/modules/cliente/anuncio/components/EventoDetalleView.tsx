@@ -1,10 +1,5 @@
 "use client";
 
-/**
- * Ubicación sugerida:
- *   src/modules/cliente/anuncio/components/EventoDetalleView.tsx
- */
-
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
@@ -21,6 +16,7 @@ import {
   ArrowLeft,
   MessageCircle,
   RefreshCw,
+  CreditCard,
 } from "lucide-react";
 
 import Card from "@/shared/components/Card";
@@ -167,9 +163,20 @@ export default function EventoDetalleView({ evento }: EventoDetalleViewProps) {
                       </Chip>
                     </div>
 
+                    {/* Botón pagar — solo si aún no está confirmado */}
+                    {!p.confirmado && (
+                      <Link
+                        href={`/cliente/eventos/${evento.id_evento}/pago/${p.id_contratacion}`}
+                        className="flex items-center justify-center gap-2 mt-3 w-full bg-festiva-euphoric-pink text-white rounded-xl px-4 py-2.5 text-[13px] font-bold"
+                      >
+                        <CreditCard size={15} />
+                        Pagar a {p.nombre_comercial}
+                      </Link>
+                    )}
+
                     <Link
                       href={`/cliente/chat/iniciar/${evento.id_evento}/${p.id_proveedor}`}
-                      className="flex items-center justify-center gap-2 mt-3 w-full bg-festiva-electric-violet/10 text-festiva-electric-violet rounded-xl px-4 py-2.5 text-[13px] font-bold"
+                      className="flex items-center justify-center gap-2 mt-2 w-full bg-festiva-electric-violet/10 text-festiva-electric-violet rounded-xl px-4 py-2.5 text-[13px] font-bold"
                     >
                       <MessageCircle size={15} />
                       Chatear con {p.nombre_comercial}
