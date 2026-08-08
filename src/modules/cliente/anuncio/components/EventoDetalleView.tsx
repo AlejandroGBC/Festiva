@@ -50,7 +50,7 @@ export default function EventoDetalleView({ evento }: EventoDetalleViewProps) {
   const [error, setError] = useState("");
 
   const puedeEliminar = evento.cantidad_ofertas === 0;
-  const puedeEditar = evento.estado !== "finalizado" && evento.estado !== "cancelado";
+  const puedeEditar = evento.estado === "recibiendo_ofertas";
   const puedeCancelar = evento.estado === "recibiendo_ofertas" || evento.estado === "en_proceso";
   const puedeFinalizar = evento.estado === "en_proceso";
 
@@ -78,13 +78,30 @@ export default function EventoDetalleView({ evento }: EventoDetalleViewProps) {
   return (
     <div className="min-h-dvh bg-[#F5F2FA] flex flex-col overflow-y-auto no-scrollbar w-full">
       {/* Header oscuro con progreso — reemplaza al TopNavbar simple */}
-      <header className="bg-festiva-midnight-blue px-5 pt-14 pb-6 rounded-b-[28px]">
-        <button
-          onClick={() => router.back()}
-          className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center mb-4"
-        >
-          <ArrowLeft size={16} className="text-white" />
-        </button>
+      <header className="bg-festiva-midnight-blue px-5 pt-6 pb-6 rounded-b-[28px]">
+        <div className="flex items-center justify-between mb-6">
+          <button
+            onClick={() => router.back()}
+            className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 transition-colors flex items-center justify-center"
+          >
+            <ArrowLeft size={16} className="text-white" />
+          </button>
+
+          <span className="text-white/90 text-[13px] font-semibold tracking-wide">
+            Detalle del evento
+          </span>
+
+          {puedeEditar ? (
+            <button
+              onClick={() => router.push(`/cliente/eventos/${evento.id_evento}/editar`)}
+              className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 transition-colors flex items-center justify-center"
+            >
+              <Pencil size={14} className="text-white" />
+            </button>
+          ) : (
+            <div className="w-8 h-8" /> 
+          )}
+        </div>
 
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
@@ -248,6 +265,9 @@ export default function EventoDetalleView({ evento }: EventoDetalleViewProps) {
 
         {/* Detalle del evento */}
         <Card className="mt-2">
+          <h2 className="font-bold text-base text-festiva-midnight-blue mb-3 leading-snug">
+            {evento.titulo}
+          </h2>
           <div className="flex items-start justify-between gap-2 mb-3">
             <div>
               <div className="flex items-center gap-2 flex-wrap">
@@ -353,16 +373,7 @@ export default function EventoDetalleView({ evento }: EventoDetalleViewProps) {
 
         {/* Acciones */}
         <div className="mt-5 flex flex-col gap-2.5">
-          {puedeEditar && (
-            <Button
-              variant="light"
-              className="w-full"
-              onClick={() => router.push(`/cliente/eventos/${evento.id_evento}/editar`)}
-            >
-              <Pencil size={16} />
-              Editar evento
-            </Button>
-          )}
+
 
           {puedeFinalizar && (
             <Button variant="light" className="w-full" onClick={() => setConfirmando("finalizar")}>
@@ -374,7 +385,7 @@ export default function EventoDetalleView({ evento }: EventoDetalleViewProps) {
           {puedeCancelar && (
             <Button
               variant="light"
-              className="w-full !text-festiva-confetti-orange"
+              className="w-full !text-red-500"
               onClick={() => setConfirmando("cancelar")}
             >
               <Ban size={16} />

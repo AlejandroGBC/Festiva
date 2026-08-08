@@ -11,9 +11,13 @@ import ConfigRow from '../components/ConfigRow';
 import Toggle from '@/shared/components/Toggle';
 import Chip from '@/shared/components/Chip';
 import { Check } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useAuthContext } from "@/lib/context/auth-context";
 import Loading from "@/shared/components/Loading";
 
 export default function SettingPage() {
+    const router = useRouter();
+    const { signOut } = useAuthContext();
     const { settings, loading, toggleSetting } = useSettings();
 
     if (loading || !settings) {
@@ -128,13 +132,6 @@ export default function SettingPage() {
                 {/* Secció: Peligro */}
                 <ConfigSection label="Zona de peligro">
                     <ConfigRow 
-                        icon={LogOut} 
-                        iconBg="bg-festiva-euphoric-pink/10" 
-                        iconColor="text-festiva-euphoric-pink"
-                        title="Cerrar sesión"
-                        isDanger
-                    />
-                    <ConfigRow 
                         icon={Trash2} 
                         iconBg="bg-festiva-euphoric-pink/10" 
                         iconColor="text-festiva-euphoric-pink"
@@ -143,6 +140,18 @@ export default function SettingPage() {
                         isDanger
                     />
                 </ConfigSection>
+
+                <button
+                    className="w-full flex items-center justify-center gap-2 rounded-xl bg-festiva-midnight-blue/10 text-festiva-midnight-blue hover:bg-festiva-midnight-blue/15 transition-colors font-bold text-sm py-3.5 mt-2"
+                    onClick={async () => {
+                        await signOut();
+                        router.push("/auth/login");
+                        router.refresh();
+                    }}
+                >
+                    <LogOut size={18} />
+                    Cerrar sesión
+                </button>
 
                 {/* Footer legal */}
                 <p className="text-center text-[11px] text-slate-400 font-medium mt-2">
