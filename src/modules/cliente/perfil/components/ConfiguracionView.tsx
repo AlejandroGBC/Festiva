@@ -179,6 +179,10 @@ export default function ConfiguracionView() {
           <LogOut size={18} />
           Cerrar sesión
         </button>
+
+        <p className="text-center text-[11px] text-slate-400 font-medium mt-6">
+          Festiva v2.4.1 · © 2026 Festiva Technologies
+        </p>
       </main>
     </div>
   );
