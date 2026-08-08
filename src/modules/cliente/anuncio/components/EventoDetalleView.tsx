@@ -17,6 +17,7 @@ import {
   MessageCircle,
   RefreshCw,
   CreditCard,
+  Star,
 } from "lucide-react";
 
 import Card from "@/shared/components/Card";
@@ -204,6 +205,41 @@ export default function EventoDetalleView({ evento }: EventoDetalleViewProps) {
             </div>
           </div>
         )}
+
+        {/* Banner de calificación pendiente */}
+        {evento.estado === "finalizado" && evento.calificaciones_pendientes > 0 && (
+          <Link
+            href={`/cliente/eventos/${evento.id_evento}/calificar`}
+            className="block mt-5 rounded-2xl overflow-hidden"
+          >
+            <div className="bg-gradient-to-r from-festiva-confetti-orange to-festiva-euphoric-pink p-4 flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center shrink-0">
+                <Star size={20} className="text-white fill-white" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-white font-bold text-[14px] m-0">
+                  Califica a tus proveedores
+                </p>
+                <p className="text-white/80 text-[12px] m-0 mt-0.5">
+                  {evento.calificaciones_pendientes} reseña{evento.calificaciones_pendientes > 1 ? "s" : ""} pendiente{evento.calificaciones_pendientes > 1 ? "s" : ""} — es obligatorio
+                </p>
+              </div>
+              <ArrowRight size={18} className="text-white shrink-0" />
+            </div>
+          </Link>
+        )}
+
+        {/* Éxito: ya calificó a todos */}
+        {evento.estado === "finalizado" &&
+          evento.calificaciones_pendientes === 0 &&
+          evento.proveedores_contratados.length > 0 && (
+            <div className="mt-5 rounded-2xl bg-festiva-mint-neon/10 border border-festiva-mint-neon/20 p-4 flex items-center gap-3">
+              <CheckCircle2 size={20} className="text-festiva-mint-neon shrink-0" />
+              <p className="text-[13px] font-semibold text-festiva-midnight-blue m-0">
+                Ya calificaste a todos tus proveedores. ¡Gracias!
+              </p>
+            </div>
+          )}
 
         {/* Timeline del evento */}
         <div className="mt-6">

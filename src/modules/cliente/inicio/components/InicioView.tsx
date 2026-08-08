@@ -1,13 +1,9 @@
 "use client";
 
-/**
- * Ubicación sugerida:
- *   src/modules/cliente/inicio/components/InicioView.tsx
- */
-
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Plus } from "lucide-react";
+import { Plus, Star, ArrowRight } from "lucide-react";
+import Link from "next/link";
 
 import SearchBar from "@/shared/components/SearchBar";
 import HeroBanner from "@/shared/components/HeroBanner";
@@ -22,17 +18,20 @@ import { obtenerIconoServicio } from "@/shared/lib/servicio-icono";
 import ProveedorTarjetaCard from "@/modules/cliente/proveedores/components/ProveedorTarjetaCard";
 import type { CategoriaInicio } from "@/modules/cliente/inicio/types/inicio.types";
 import type { ProveedorTarjeta } from "@/modules/cliente/proveedores/types/proveedor.types";
+import type { ResenasPendientesInfo } from "@/modules/cliente/calificaciones/services/resenas-pendientes.service";
 
 interface InicioViewProps {
   categorias: CategoriaInicio[];
   proveedoresDestacados: ProveedorTarjeta[];
   tieneNotificacionesNuevas?: boolean;
+  resenasPendientes?: ResenasPendientesInfo;
 }
 
 export default function InicioView({
   categorias,
   proveedoresDestacados,
   tieneNotificacionesNuevas,
+  resenasPendientes,
 }: InicioViewProps) {
   const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -56,6 +55,27 @@ export default function InicioView({
       />
 
       <section className="px-5 flex flex-col flex-1 w-full">
+        {/* Banner de reseñas pendientes — visible al abrir la app */}
+        {resenasPendientes?.tienePendientes && resenasPendientes.idEvento && (
+          <Link
+            href={`/cliente/eventos/${resenasPendientes.idEvento}/calificar`}
+            className="flex items-center gap-3 bg-gradient-to-r from-festiva-confetti-orange to-festiva-euphoric-pink rounded-2xl p-3.5 mb-4 mt-1"
+          >
+            <div className="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center shrink-0">
+              <Star size={18} className="text-white fill-white" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-white font-bold text-[13px] m-0 leading-tight">
+                Tienes una reseña pendiente
+              </p>
+              <p className="text-white/80 text-[11px] m-0 mt-0.5 truncate">
+                {resenasPendientes.tituloEvento ?? "Califica a tus proveedores"}
+              </p>
+            </div>
+            <ArrowRight size={16} className="text-white shrink-0" />
+          </Link>
+        )}
+
         <div className="pb-7">
           <p className="text-festiva-midnight-blue/45 text-sm pb-2">Buenos días</p>
           <h1 className="text-festiva-midnight-blue font-bold text-3xl">{user?.nombre}</h1>

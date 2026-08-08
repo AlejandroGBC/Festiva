@@ -1,7 +1,4 @@
 /**
- * Ubicación sugerida:
- *   src/modules/cliente/anuncio/services/evento-detalle.service.ts
- *
  * Corre en el SERVIDOR. Se llama directo desde page.tsx.
  */
 
@@ -93,7 +90,7 @@ export async function getEventoDetalle(idEvento: string): Promise<EventoDetalle 
   }
   const ev = evento as unknown as EventoRow;
 
-  // ── Servicios solicitados por el evento ──
+  //Servicios solicitados por el evento
   const { data: serviciosDb } = await supabase
     .from("tbl_evento_servicios")
     .select("tbl_servicios ( nombre )")
@@ -106,7 +103,7 @@ export async function getEventoDetalle(idEvento: string): Promise<EventoDetalle 
     .map((s) => s.tbl_servicios?.nombre)
     .filter((n): n is string => Boolean(n));
 
-  // ── Ofertas recibidas (cantidad + fechas para el timeline) ──
+  // Ofertas recibidas (cantidad + fechas para el timeline)
   const { data: ofertasDb, count: cantidadOfertas } = await supabase
     .from("tbl_ofertas")
     .select("creada_en", { count: "exact" })
@@ -116,7 +113,7 @@ export async function getEventoDetalle(idEvento: string): Promise<EventoDetalle 
     .map((o) => o.creada_en)
     .filter((f): f is string => Boolean(f));
 
-  // ── Contrataciones (proveedores seleccionados) ──
+  // Contrataciones (proveedores seleccionados)
   const { data: contratacionesDb } = await supabase
     .from("tbl_contrataciones")
     .select("id_contratacion, id_proveedor, creado_en")
@@ -233,7 +230,27 @@ export async function getEventoDetalle(idEvento: string): Promise<EventoDetalle 
     });
   }
 
-  // ── Timeline ──
+  // ── Calificaciones pendientes ──
+  // Solo se pide reseña por las contrataciones que tienen pago confirmado.
+  // Las contrataciones sin pago (proveedor nunca fue pagado) no generan
+  // obligación de reseña porque el servicio podría no haberse prestado.
+  let calificacionesPendientes = 0;
+  if (ev.estado === "finalizado") {
+    // IDs de contrataciones que sí tienen pago confirmado
+    const idsConfirmadas = proveedoresContratados
+      .filter((p) => p.confirmado)
+      .map((p) => p.id_contratacion);
+
+    if (idsConfirmadas.length > 0) {
+      const { count: totalCalificadas } = await supabase
+        .from("tbl_calificaciones")
+        .select("id_contratacion", { count: "exact", head: true })
+        .in("id_contratacion", idsConfirmadas);
+      calificacionesPendientes = idsConfirmadas.length - (totalCalificadas ?? 0);
+    }
+  }
+
+  // Timeline 
   const totalServiciosSolicitados = servicios.length || 1;
   const todosLosPagosConfirmados =
     proveedoresContratados.length > 0 && proveedoresContratados.every((p) => p.confirmado);
@@ -266,7 +283,7 @@ export async function getEventoDetalle(idEvento: string): Promise<EventoDetalle 
       descripcion: todosLosPagosConfirmados
         ? "Pagos completados con todos los proveedores"
         : "Pendiente de completar",
-      fecha: null, // no tenemos fecha de pago cargada acá; se podría sumar si hace falta
+      fecha: null, // no tenemos fecha de pago cargada acá, se podría sumar si hace falta
     },
     {
       id: "realizado",
@@ -291,7 +308,7 @@ export async function getEventoDetalle(idEvento: string): Promise<EventoDetalle 
     estado: completitud[i] ? "completado" : i === indiceActual ? "actual" : "pendiente",
   }));
 
-  // ── % de progreso ──
+  //% de progreso
   // Cada hito completo vale 20%. El hito "actual" (el primero incompleto)
   // suma un porcentaje parcial según qué tan avanzado está internamente.
   const PESO_POR_HITO = 20;
@@ -326,5 +343,6 @@ export async function getEventoDetalle(idEvento: string): Promise<EventoDetalle 
     proveedores_contratados: proveedoresContratados,
     timeline,
     progreso_porcentaje: progresoPorcentaje,
+    calificaciones_pendientes: calificacionesPendientes,
   };
 }
