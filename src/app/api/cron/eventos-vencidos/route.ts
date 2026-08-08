@@ -16,6 +16,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceRoleClient } from "@/lib/supabase/service-role";
+import { enviarPushAUsuario } from "@/lib/push/send-push";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic"; // Marcar como dinámica para que Next.js no la precalcule en build time
@@ -45,7 +46,7 @@ export async function GET(req: NextRequest) {
   // 1. Buscar eventos cuya fecha ya pasó y que están activos 
   const { data: eventosVencidos, error: errBusqueda } = await supabase
     .from("tbl_eventos")
-    .select("id_evento, titulo, fecha_evento, estado")
+    .select("id_evento, titulo, fecha_evento, estado, id_cliente")
     .in("estado", ["recibiendo_ofertas", "en_proceso"])
     .lt("fecha_evento", ahora); // fecha_evento < ahora → ya pasó
 
@@ -101,6 +102,14 @@ export async function GET(req: NextRequest) {
 
       if (nuevoEstado === "finalizado") {
         resultado.finalizados.push(evento.id_evento);
+
+        // Enviar Push notification al cliente para que califique
+        // No bloqueamos si falla — el banner en inicio los recordará de todas formas
+        enviarPushAUsuario(evento.id_cliente, {
+          title: "\uD83C\uDF89 \u00a1Tu evento finaliz\u00f3!",
+          body: `\u00bfC\u00f3mo te fue en \u201c${evento.titulo}\u201d? Califica a tus proveedores.`,
+          url: `/cliente/eventos/${evento.id_evento}/calificar`,
+        }).catch((err) => console.error("[cron] Error enviando push:", err));
       } else {
         resultado.cancelados.push(evento.id_evento);
       }
