@@ -16,7 +16,6 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceRoleClient } from "@/lib/supabase/service-role";
-import { enviarPushAUsuario } from "@/lib/push/send-push";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic"; // Marcar como dinámica para que Next.js no la precalcule en build time
@@ -104,12 +103,17 @@ export async function GET(req: NextRequest) {
         resultado.finalizados.push(evento.id_evento);
 
         // Enviar Push notification al cliente para que califique
-        // No bloqueamos si falla — el banner en inicio los recordará de todas formas
-        enviarPushAUsuario(evento.id_cliente, {
-          title: "\uD83C\uDF89 \u00a1Tu evento finaliz\u00f3!",
-          body: `\u00bfC\u00f3mo te fue en \u201c${evento.titulo}\u201d? Califica a tus proveedores.`,
-          url: `/cliente/eventos/${evento.id_evento}/calificar`,
-        }).catch((err) => console.error("[cron] Error enviando push:", err));
+        // Importación dinámica para evitar errores de Webpack en build time
+        try {
+          const { enviarPushAUsuario } = await import("@/lib/push/send-push");
+          await enviarPushAUsuario(evento.id_cliente, {
+            title: "\uD83C\uDF89 \u00a1Tu evento finaliz\u00f3!",
+            body: `\u00bfC\u00f3mo te fue en \u201c${evento.titulo}\u201d? Califica a tus proveedores.`,
+            url: `/cliente/eventos/${evento.id_evento}/calificar`,
+          });
+        } catch (err) {
+          console.error("[cron] Error enviando push:", err);
+        }
       } else {
         resultado.cancelados.push(evento.id_evento);
       }
