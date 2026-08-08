@@ -95,9 +95,12 @@ export default function PropuestaDetalleView({ propuesta }: PropuestaDetalleView
 
         {/* Detalle del evento */}
         <Card className="mt-3">
-          <p className="text-[11px] font-bold text-festiva-midnight-blue/40 uppercase tracking-wide mb-3">
+          <p className="text-[11px] font-bold text-festiva-midnight-blue/40 uppercase tracking-wide mb-1.5">
             Detalle del evento
           </p>
+          <h2 className="font-bold text-base text-festiva-midnight-blue mb-4 leading-snug">
+            {propuesta.tituloEvento}
+          </h2>
 
           <div className="grid grid-cols-2 gap-2">
             <div className="bg-[#F9F8FF] rounded-lg px-3 py-2.5 border border-festiva-electric-violet/10">

@@ -265,6 +265,9 @@ export default function EventoDetalleView({ evento }: EventoDetalleViewProps) {
 
         {/* Detalle del evento */}
         <Card className="mt-2">
+          <h2 className="font-bold text-base text-festiva-midnight-blue mb-3 leading-snug">
+            {evento.titulo}
+          </h2>
           <div className="flex items-start justify-between gap-2 mb-3">
             <div>
               <div className="flex items-center gap-2 flex-wrap">
