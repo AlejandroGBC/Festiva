@@ -9,6 +9,7 @@ import type { ConversacionListado } from "../types/chat.types";
 import Header from "@/shared/components/HeaderInicio";
 import Sidebar from "@/shared/components/Sidebar";
 import Card from "@/shared/components/Card";
+import { clienteLinks, proveedorLinks } from "@/shared/constant/sidebarLinks";
 
 interface ChatListViewProps {
   conversaciones: ConversacionListado[];
@@ -30,6 +31,7 @@ export default function ChatListView({ conversaciones, tieneNotificacionesNuevas
   const router = useRouter();
   const { user, signOut } = useAuthContext();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const mainLinks = user?.rol === "cliente" ? clienteLinks : proveedorLinks;
 
   return (
     <div className="relative min-h-dvh bg-[#F5F2FA] flex flex-col">
@@ -38,7 +40,7 @@ export default function ChatListView({ conversaciones, tieneNotificacionesNuevas
         onMenuClick={() => setSidebarOpen(true)}
         tieneNotificacionesNuevas={tieneNotificacionesNuevas}
       />
-      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} user={user!} signOut={signOut} />
+      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} user={user!} signOut={signOut} mainLinks={mainLinks} />
 
       <section className="px-5 flex-1 pb-6">
         <h1 className="text-festiva-midnight-blue font-bold text-xl pt-1 pb-4 m-0">Chat</h1>

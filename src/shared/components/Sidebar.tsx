@@ -6,6 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import { obtenerIniciales } from "../utils/obtenerIniciales";
 import { UsuarioSesion } from "../types/auth.types";
+import { SidebarLink } from "../types/sidebar.type";
 
 const sidebarMainLinks = [
     {
@@ -75,9 +76,10 @@ interface SidebarProps {
     onClose: () => void;
     user?: UsuarioSesion | null;
     signOut: () => void;
+    mainLinks: SidebarLink[];
 }
 
-export function Sidebar({ isOpen, onClose, user, signOut }: SidebarProps) {
+export function Sidebar({ isOpen, onClose, user, signOut, mainLinks }: SidebarProps) {
     const pathname = usePathname();
     const router = useRouter();
     const [isSigningOut, setIsSigningOut] = useState(false);
@@ -124,7 +126,7 @@ export function Sidebar({ isOpen, onClose, user, signOut }: SidebarProps) {
 
                 <div className="py-4">
                 <div className="flex flex-col gap-2">
-                    {sidebarMainLinks.map((link) => {
+                    {mainLinks.map((link) => {
                     const Icon = link.icon;
                     const href = `${basePath}/${link.href}`;
                     const isActive = pathname === href;

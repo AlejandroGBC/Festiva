@@ -22,6 +22,7 @@ import { buscarProveedores } from "@/modules/cliente/proveedores/services/provee
 import ProveedorListItem from "@/modules/cliente/proveedores/components/ProveedorListItem";
 import { CategoriaInicio } from "../../inicio/types/inicio.types";
 import { ProveedorTarjeta } from "../types/proveedor.types";
+import { clienteLinks, proveedorLinks } from "@/shared/constant/sidebarLinks";
 
 interface BuscarProveedoresVistaProps {
   categorias: CategoriaInicio[];
@@ -46,6 +47,8 @@ export default function BuscarProveedoresVista({
   const [resultados, setResultados] = useState<ProveedorTarjeta[]>(resultadosIniciales);
   const [cargando, setCargando] = useState(false);
   const primerRender = useRef(true);
+  const mainLinks = user?.rol === "cliente" ? clienteLinks : proveedorLinks;
+
 
   const idCategoriaActiva =
     categoriaActiva === "Todas"
@@ -80,7 +83,7 @@ export default function BuscarProveedoresVista({
         onMenuClick={() => setSidebarOpen(true)}
         tieneNotificacionesNuevas={tieneNotificacionesNuevas}
       />
-      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} user={user!} signOut={signOut} />
+      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} user={user!} signOut={signOut} mainLinks={mainLinks} />
 
       <section className="px-5 flex-1 pb-6">
         <h1 className="text-festiva-midnight-blue font-bold text-xl pt-1 pb-4 m-0">

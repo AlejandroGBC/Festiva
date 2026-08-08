@@ -22,6 +22,7 @@ import { obtenerIconoServicio } from "@/shared/lib/servicio-icono";
 import ProveedorTarjetaCard from "@/modules/cliente/proveedores/components/ProveedorTarjetaCard";
 import type { CategoriaInicio } from "@/modules/cliente/inicio/types/inicio.types";
 import type { ProveedorTarjeta } from "@/modules/cliente/proveedores/types/proveedor.types";
+import { clienteLinks, proveedorLinks } from "@/shared/constant/sidebarLinks";
 
 interface InicioViewProps {
   categorias: CategoriaInicio[];
@@ -37,6 +38,7 @@ export default function InicioView({
   const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { user, isLoading, signOut } = useAuthContext();
+  const mainLinks = user?.rol === "cliente" ? clienteLinks : proveedorLinks;
 
   if (isLoading) return <Loading fullScreen label="Cargando..." />;
 
@@ -53,6 +55,7 @@ export default function InicioView({
         onClose={() => setSidebarOpen(false)}
         user={user!}
         signOut={signOut}
+        mainLinks={mainLinks}
       />
 
       <section className="px-5 flex flex-col flex-1 w-full">

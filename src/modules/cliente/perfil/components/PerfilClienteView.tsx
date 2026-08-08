@@ -25,6 +25,7 @@ import Chip from "@/shared/components/Chip";
 import { useAuthContext } from "@/lib/context/auth-context";
 
 import type { PerfilClienteData } from "@/modules/cliente/perfil/types/perfil.types";
+import { clienteLinks, proveedorLinks } from "@/shared/constant/sidebarLinks";
 
 function iniciales(nombreCompleto: string): string {
   const partes = nombreCompleto.trim().split(/\s+/);
@@ -73,6 +74,8 @@ export default function PerfilClienteView({ perfil, tieneNotificacionesNuevas }:
   const router = useRouter();
   const { user, signOut } = useAuthContext();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const mainLinks = user?.rol === "cliente" ? clienteLinks : proveedorLinks;
+
 
   return (
     <div className="relative min-h-dvh bg-[#F5F2FA] flex flex-col">
@@ -81,7 +84,7 @@ export default function PerfilClienteView({ perfil, tieneNotificacionesNuevas }:
         tieneNotificacionesNuevas={tieneNotificacionesNuevas}
         user={user}
       />
-      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} user={user} signOut={signOut} />
+      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} user={user} signOut={signOut} mainLinks={mainLinks} />
 
       <section className="px-5 flex-1 pb-6">
         <h1 className="text-festiva-midnight-blue font-bold text-xl pt-1 pb-4 m-0">
