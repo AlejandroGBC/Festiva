@@ -19,6 +19,7 @@ import ProveedorTarjetaCard from "@/modules/cliente/proveedores/components/Prove
 import type { CategoriaInicio } from "@/modules/cliente/inicio/types/inicio.types";
 import type { ProveedorTarjeta } from "@/modules/cliente/proveedores/types/proveedor.types";
 import type { ResenasPendientesInfo } from "@/modules/cliente/calificaciones/services/resenas-pendientes.service";
+import { clienteLinks, proveedorLinks } from "@/shared/constant/sidebarLinks";
 
 interface InicioViewProps {
   categorias: CategoriaInicio[];
