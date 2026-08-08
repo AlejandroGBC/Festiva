@@ -3,6 +3,7 @@
 import React, { useRef } from 'react';
 import Image from 'next/image';
 import { Camera, Trash2 } from 'lucide-react';
+import { getAvatarUrl } from '@/shared/utils/getAvatarUrl';
 
 interface AvatarProps {
     initials?: string;
@@ -20,6 +21,7 @@ export default function Avatar({
     onImageRemove,
 }: AvatarProps) {
     const fileInputRef = useRef<HTMLInputElement>(null);
+    const resolvedImageUrl = getAvatarUrl(imageUrl);
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -31,9 +33,9 @@ export default function Avatar({
     return (
         <div className="group relative flex h-[72px] w-[72px] items-center justify-center rounded-full border-[3px] border-white bg-festiva-electric-violet shadow-md">
             <div className="w-full h-full rounded-full overflow-hidden relative flex items-center justify-center">
-                {imageUrl ? (
+                {resolvedImageUrl ? (
                     <Image
-                        src={imageUrl}
+                        src={resolvedImageUrl}
                         alt="Foto de Perfil"
                         fill
                         className="object-cover"

@@ -1,10 +1,5 @@
 "use client";
 
-/**
- * Ubicación sugerida:
- *   src/modules/cliente/perfil/components/DatosPersonalesView.tsx
- */
-
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Check, AlertCircle } from "lucide-react";

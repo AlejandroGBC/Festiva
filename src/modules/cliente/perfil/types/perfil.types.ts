@@ -1,8 +1,3 @@
-/**
- * Ubicación sugerida:
- *   src/modules/cliente/perfil/types/perfil.types.ts
- */
-
 export interface PerfilClienteData {
   nombreCompleto: string;
   correo: string;

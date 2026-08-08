@@ -1,10 +1,3 @@
-/**
- * Ubicación sugerida:
- *   src/modules/cliente/perfil/services/perfil-editar.service.ts
- *
- * Corre en el CLIENTE.
- */
-
 import { createClient } from "@/lib/supabase/client";
 
 export interface ActualizarDatosPersonalesDTO {

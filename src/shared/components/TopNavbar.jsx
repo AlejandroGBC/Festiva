@@ -1,7 +1,9 @@
+'use client';
+
 import React from 'react';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft } from 'lucide-react';
-import Button from './Button'
+import Button from './Button';
 
 /**
  * @typedef {Object} TopNavbarProps

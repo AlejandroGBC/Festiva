@@ -1,9 +1,6 @@
 "use client";
 
 /**
- * Ubicación sugerida:
- *   src/modules/cliente/proveedores/components/BuscarProveedoresVista.tsx
- *
  * La búsqueda es interactiva: debounce de 350ms antes de consultar,
  * para no disparar una query por cada letra que tipea el usuario.
  */

@@ -1,5 +1,6 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import React, { useState, useEffect } from 'react';
 import { useProviderProfile } from '../hooks/useProviderProfile';
 import ProfileBanner from '../components/ProfileBanner';
@@ -15,8 +16,10 @@ import { obtenerIniciales } from '@/shared/utils/obtenerIniciales';
 import { portfolioService } from '../../portfolio/services/portfolio.service';
 import { PortfolioItem } from '@/shared/types/portfolio.types';
 import { uploadAvatarImage } from '@/shared/services/upload.service';
+import { getAvatarUrl } from '@/shared/utils/getAvatarUrl';
 
 export default function EditProviderProfilePage() {
+    const router = useRouter();
     const { profile, loading, updateField, handleSave } = useProviderProfile();
     const [isSaving, setIsSaving] = useState(false);
     const [portfolioItems, setPortfolioItems] = useState<PortfolioItem[]>([]);
@@ -75,6 +78,8 @@ export default function EditProviderProfilePage() {
 
             await handleSave(updatedProfileData);
             setSelectedAvatarFile(null);
+
+            router.refresh();
         } catch (error) {
             console.error("Error al guardar el perfil:", error);
         } finally {
@@ -83,12 +88,13 @@ export default function EditProviderProfilePage() {
     };
 
     const initials = obtenerIniciales(profile.businessName);
+    const avatarUrl = getAvatarUrl(profile.foto_perfil_url);
 
     return (
         <>
             <ProfileBanner 
                 initials={initials} 
-                avatarUrl={profile.foto_perfil_url}
+                avatarUrl={avatarUrl}
                 onAvatarChange={handleAvatarSelect}
                 onAvatarRemove={handleAvatarRemove}
             />

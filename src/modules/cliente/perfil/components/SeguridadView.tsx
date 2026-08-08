@@ -1,10 +1,5 @@
 "use client";
 
-/**
- * Ubicación sugerida:
- *   src/modules/cliente/perfil/components/SeguridadView.tsx
- */
-
 import { useState } from "react";
 import { Lock, Check, AlertCircle } from "lucide-react";
 

@@ -24,7 +24,7 @@ export default function ProfileBanner({
     const router = useRouter();    
     return (
         <div className="edit-banner relative">
-            <div className="absolute top-4 left-0 right-0 px-4 z-20 flex justify-between">
+            <div className="absolute top-4 left-0 right-0 px-4 z-20 flex items-center justify-between">
                 <Button
                     variant="ghost" 
                     size="icon" 
@@ -34,6 +34,10 @@ export default function ProfileBanner({
                 >
                     <ArrowLeft className="w-5 h-5" />
                 </Button>
+
+                <span className="text-white/90 text-[13px] font-semibold tracking-wide">
+                    Mi Perfil
+                </span>
 
                 {showShare ? (
                     <Button
@@ -45,7 +49,7 @@ export default function ProfileBanner({
                         <Share2 className="w-5 h-5" />
                     </Button>
                 ) : (
-                    <div className="w-9" />
+                    <div className="w-10 h-10" />
                 )}                
             </div>
             <div className="absolute -bottom-[30px] left-5 z-30">

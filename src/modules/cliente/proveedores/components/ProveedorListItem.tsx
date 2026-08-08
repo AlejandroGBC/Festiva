@@ -1,9 +1,6 @@
 "use client";
 
 /**
- * Ubicación sugerida:
- *   src/modules/cliente/proveedores/components/ProveedorListItem.tsx
- *
  * Tarjeta HORIZONTAL para listas de una columna (resultados de
  * búsqueda). Distinta de ProveedorTarjetaCard (vertical, imagen
  * cuadrada arriba), que es específica para el grid de 2 columnas de

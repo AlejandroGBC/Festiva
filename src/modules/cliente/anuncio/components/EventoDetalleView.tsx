@@ -17,6 +17,7 @@ import {
   MessageCircle,
   RefreshCw,
   CreditCard,
+  Star,
 } from "lucide-react";
 
 import Card from "@/shared/components/Card";
@@ -50,7 +51,7 @@ export default function EventoDetalleView({ evento }: EventoDetalleViewProps) {
   const [error, setError] = useState("");
 
   const puedeEliminar = evento.cantidad_ofertas === 0;
-  const puedeEditar = evento.estado !== "finalizado" && evento.estado !== "cancelado";
+  const puedeEditar = evento.estado === "recibiendo_ofertas";
   const puedeCancelar = evento.estado === "recibiendo_ofertas" || evento.estado === "en_proceso";
   const puedeFinalizar = evento.estado === "en_proceso";
 
@@ -78,13 +79,30 @@ export default function EventoDetalleView({ evento }: EventoDetalleViewProps) {
   return (
     <div className="min-h-dvh bg-[#F5F2FA] flex flex-col overflow-y-auto no-scrollbar w-full">
       {/* Header oscuro con progreso — reemplaza al TopNavbar simple */}
-      <header className="bg-festiva-midnight-blue px-5 pt-14 pb-6 rounded-b-[28px]">
-        <button
-          onClick={() => router.back()}
-          className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center mb-4"
-        >
-          <ArrowLeft size={16} className="text-white" />
-        </button>
+      <header className="bg-festiva-midnight-blue px-5 pt-6 pb-6 rounded-b-[28px]">
+        <div className="flex items-center justify-between mb-6">
+          <button
+            onClick={() => router.back()}
+            className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 transition-colors flex items-center justify-center"
+          >
+            <ArrowLeft size={16} className="text-white" />
+          </button>
+
+          <span className="text-white/90 text-[13px] font-semibold tracking-wide">
+            Detalle del evento
+          </span>
+
+          {puedeEditar ? (
+            <button
+              onClick={() => router.push(`/cliente/eventos/${evento.id_evento}/editar`)}
+              className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 transition-colors flex items-center justify-center"
+            >
+              <Pencil size={14} className="text-white" />
+            </button>
+          ) : (
+            <div className="w-8 h-8" /> 
+          )}
+        </div>
 
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
@@ -188,6 +206,41 @@ export default function EventoDetalleView({ evento }: EventoDetalleViewProps) {
           </div>
         )}
 
+        {/* Banner de calificación pendiente */}
+        {evento.estado === "finalizado" && evento.calificaciones_pendientes > 0 && (
+          <Link
+            href={`/cliente/eventos/${evento.id_evento}/calificar`}
+            className="block mt-5 rounded-2xl overflow-hidden"
+          >
+            <div className="bg-gradient-to-r from-festiva-confetti-orange to-festiva-euphoric-pink p-4 flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center shrink-0">
+                <Star size={20} className="text-white fill-white" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-white font-bold text-[14px] m-0">
+                  Califica a tus proveedores
+                </p>
+                <p className="text-white/80 text-[12px] m-0 mt-0.5">
+                  {evento.calificaciones_pendientes} reseña{evento.calificaciones_pendientes > 1 ? "s" : ""} pendiente{evento.calificaciones_pendientes > 1 ? "s" : ""} — es obligatorio
+                </p>
+              </div>
+              <ArrowRight size={18} className="text-white shrink-0" />
+            </div>
+          </Link>
+        )}
+
+        {/* Éxito: ya calificó a todos */}
+        {evento.estado === "finalizado" &&
+          evento.calificaciones_pendientes === 0 &&
+          evento.proveedores_contratados.length > 0 && (
+            <div className="mt-5 rounded-2xl bg-festiva-mint-neon/10 border border-festiva-mint-neon/20 p-4 flex items-center gap-3">
+              <CheckCircle2 size={20} className="text-festiva-mint-neon shrink-0" />
+              <p className="text-[13px] font-semibold text-festiva-midnight-blue m-0">
+                Ya calificaste a todos tus proveedores. ¡Gracias!
+              </p>
+            </div>
+          )}
+
         {/* Timeline del evento */}
         <div className="mt-6">
           <h2 className="font-bold text-base text-festiva-midnight-blue mb-4">
@@ -248,6 +301,9 @@ export default function EventoDetalleView({ evento }: EventoDetalleViewProps) {
 
         {/* Detalle del evento */}
         <Card className="mt-2">
+          <h2 className="font-bold text-base text-festiva-midnight-blue mb-3 leading-snug">
+            {evento.titulo}
+          </h2>
           <div className="flex items-start justify-between gap-2 mb-3">
             <div>
               <div className="flex items-center gap-2 flex-wrap">
@@ -353,16 +409,7 @@ export default function EventoDetalleView({ evento }: EventoDetalleViewProps) {
 
         {/* Acciones */}
         <div className="mt-5 flex flex-col gap-2.5">
-          {puedeEditar && (
-            <Button
-              variant="light"
-              className="w-full"
-              onClick={() => router.push(`/cliente/eventos/${evento.id_evento}/editar`)}
-            >
-              <Pencil size={16} />
-              Editar evento
-            </Button>
-          )}
+
 
           {puedeFinalizar && (
             <Button variant="light" className="w-full" onClick={() => setConfirmando("finalizar")}>
@@ -374,7 +421,7 @@ export default function EventoDetalleView({ evento }: EventoDetalleViewProps) {
           {puedeCancelar && (
             <Button
               variant="light"
-              className="w-full !text-festiva-confetti-orange"
+              className="w-full !text-red-500"
               onClick={() => setConfirmando("cancelar")}
             >
               <Ban size={16} />

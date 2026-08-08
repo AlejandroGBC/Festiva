@@ -1,4 +1,5 @@
-import SettingPage from '@/modules/proveedor/setting/pages/SettingsPage';
+// import SettingPage from '@/modules/proveedor/setting/pages/SettingsPage';
+import ConfiguracionUnificadaView from "@/modules/shared/configuracion/components/ConfiguracionUnificadaView";
 
 export const metadata = {
     title: 'Festiva - Configuración',
@@ -6,5 +7,5 @@ export const metadata = {
 };
 
 export default function Page() {
-  return <SettingPage/>;
+  return <ConfiguracionUnificadaView/>;
 }

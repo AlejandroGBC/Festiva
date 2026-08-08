@@ -1,6 +1,4 @@
 /**
- * Ubicación sugerida:
- *   src/modules/cliente/perfil/services/perfil.service.ts
  *
  * Corre en el SERVIDOR, se llama directo desde page.tsx.
  *
@@ -15,6 +13,7 @@
 
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import type { PerfilClienteData } from "@/modules/cliente/perfil/types/perfil.types";
+import { getAvatarUrl } from "@/shared/utils/getAvatarUrl";
 
 export async function getPerfilCliente(): Promise<PerfilClienteData | null> {
   const supabase = createServerSupabaseClient();
@@ -74,7 +73,7 @@ export async function getPerfilCliente(): Promise<PerfilClienteData | null> {
     nombreCompleto: usuario.nombre_completo,
     correo: usuario.correo,
     telefono: usuario.telefono,
-    fotoPerfilUrl: usuario.foto_perfil_url,
+    fotoPerfilUrl: getAvatarUrl(usuario.foto_perfil_url) ?? null,
     clienteDesde: perfilCliente.creado_en ?? new Date().toISOString(),
     cuentaActiva: perfilCliente.activo ?? true,
     totalEventos: idsEventos.length,

@@ -198,13 +198,15 @@ export default function OfertasRecibidasView({
                     </div>
 
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between flex-wrap gap-1">
-                        <span className="font-bold text-[15px] text-festiva-midnight-blue">
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="font-bold text-[15px] text-festiva-midnight-blue truncate">
                           {oferta.proveedor_nombre}
                         </span>
-                        <Chip variant={ESTADO_VARIANT[oferta.estado]}>
-                          {ESTADO_LABEL[oferta.estado]}
-                        </Chip>
+                        <div className="shrink-0">
+                          <Chip variant={ESTADO_VARIANT[oferta.estado]}>
+                            {ESTADO_LABEL[oferta.estado]}
+                          </Chip>
+                        </div>
                       </div>
 
                       <div className="flex items-center gap-1.5 flex-wrap mt-0.5">

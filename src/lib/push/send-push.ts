@@ -1,3 +1,5 @@
+"use server";
+
 /**
  * Ubicación sugerida:
  *   src/lib/push/send-push.ts
