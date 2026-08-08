@@ -11,9 +11,13 @@ import ConfigRow from '../components/ConfigRow';
 import Toggle from '@/shared/components/Toggle';
 import Chip from '@/shared/components/Chip';
 import { Check } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useAuthContext } from "@/lib/context/auth-context";
 import Loading from "@/shared/components/Loading";
 
 export default function SettingPage() {
+    const router = useRouter();
+    const { signOut } = useAuthContext();
     const { settings, loading, toggleSetting } = useSettings();
 
     if (loading || !settings) {
@@ -133,6 +137,11 @@ export default function SettingPage() {
                         iconColor="text-festiva-euphoric-pink"
                         title="Cerrar sesión"
                         isDanger
+                        onClick={async () => {
+                            await signOut();
+                            router.push("/auth/login");
+                            router.refresh();
+                        }}
                     />
                     <ConfigRow 
                         icon={Trash2} 
