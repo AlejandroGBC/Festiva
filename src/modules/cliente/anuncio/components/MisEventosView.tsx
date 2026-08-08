@@ -21,6 +21,7 @@ import Button from "@/shared/components/Button";
 import { useAuthContext } from "@/lib/context/auth-context";
 
 import type { EventoListado } from "@/modules/cliente/anuncio/services/eventos-list.service";
+import { clienteLinks, proveedorLinks } from "@/shared/constant/sidebarLinks";
 
 const ESTADO_LABEL: Record<string, string> = {
   recibiendo_ofertas: "Recibiendo ofertas",
@@ -53,11 +54,14 @@ interface MisEventosViewProps {
   tieneNotificacionesNuevas?: boolean;
 }
 
+
 export default function MisEventosView({ eventos, tieneNotificacionesNuevas }: MisEventosViewProps) {
   const router = useRouter();
   const { user, signOut } = useAuthContext();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [filtro, setFiltro] = useState<FiltroId>("todos");
+  const mainLinks = user?.rol === "cliente" ? clienteLinks : proveedorLinks;
+
 
   const eventosFiltrados =
     filtro === "todos" ? eventos : eventos.filter((e) => e.estado === filtro);
@@ -69,7 +73,7 @@ export default function MisEventosView({ eventos, tieneNotificacionesNuevas }: M
         tieneNotificacionesNuevas={tieneNotificacionesNuevas}
         user={user}
       />
-      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} user={user} signOut={signOut} />
+      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} user={user} signOut={signOut} mainLinks={mainLinks} />
 
       <section className="px-5 flex-1">
         <div className="flex items-center justify-between flex-wrap gap-2 pb-4">

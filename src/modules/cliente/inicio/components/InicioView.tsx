@@ -36,6 +36,7 @@ export default function InicioView({
   const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { user, isLoading, signOut } = useAuthContext();
+  const mainLinks = user?.rol === "cliente" ? clienteLinks : proveedorLinks;
 
   if (isLoading) return <Loading fullScreen label="Cargando..." />;
 
@@ -52,6 +53,7 @@ export default function InicioView({
         onClose={() => setSidebarOpen(false)}
         user={user!}
         signOut={signOut}
+        mainLinks={mainLinks}
       />
 
       <section className="px-5 flex flex-col flex-1 w-full">
