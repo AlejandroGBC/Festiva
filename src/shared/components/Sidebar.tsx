@@ -8,6 +8,7 @@ import Image from "next/image";
 import { obtenerIniciales } from "../utils/obtenerIniciales";
 import { UsuarioSesion } from "../types/auth.types";
 import { getAvatarUrl } from "../utils/getAvatarUrl";
+import { SidebarLink } from "../types/sidebar.type";
 
 
 const sidebarSecondaryLinks = [
