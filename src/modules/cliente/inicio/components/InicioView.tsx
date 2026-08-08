@@ -1,10 +1,5 @@
 "use client";
 
-/**
- * Ubicación sugerida:
- *   src/modules/cliente/inicio/components/InicioView.tsx
- */
-
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Plus, Star, ArrowRight } from "lucide-react";

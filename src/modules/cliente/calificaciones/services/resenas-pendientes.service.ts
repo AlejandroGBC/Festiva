@@ -1,20 +1,13 @@
-/**
- * src/modules/cliente/calificaciones/services/resenas-pendientes.service.ts
- *
- * Corre en el SERVIDOR. Detecta si el cliente autenticado tiene
- * algún evento finalizado con proveedores pagados sin calificar.
- * Se usa en la pantalla de inicio para mostrar el banner global.
- */
+// Corre en el SERVIDOR. Detecta si el cliente autenticado tiene
+// algún evento finalizado con proveedores pagados sin calificar.
+// Se usa en la pantalla de inicio para mostrar el banner global.
 
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 
 export interface ResenasPendientesInfo {
-  /** true si hay al menos 1 contratación pagada sin calificación */
-  tienePendientes: boolean;
-  /** ID del primer evento que tiene reseñas pendientes (para el link del banner) */
-  idEvento: string | null;
-  /** Título del evento para mostrarlo en el banner */
-  tituloEvento: string | null;
+  tienePendientes: boolean; // true si hay al menos 1 contratación pagada sin calificación
+  idEvento: string | null; // ID del primer evento que tiene reseñas pendientes (para el link del banner)
+  tituloEvento: string | null; // Título del evento para mostrarlo en el banner
 }
 
 export async function getResenasPendientes(): Promise<ResenasPendientesInfo> {
@@ -61,7 +54,7 @@ export async function getResenasPendientes(): Promise<ResenasPendientesInfo> {
 
     const idsPagadas = pagadas.map((p) => p.id_pago);
 
-    // ¿Cuántas ya tienen calificación?
+    // cuantas ya tienen calificacion?
     const { count: totalCalificadas } = await supabase
       .from("tbl_calificaciones")
       .select("id_contratacion", { count: "exact", head: true })
