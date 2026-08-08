@@ -2,13 +2,15 @@ import { contarNotificacionesNuevas } from "@/modules/cliente/notificaciones/ser
 import InicioView from "@/modules/cliente/inicio/components/InicioView";
 import { getCategoriasInicio } from "@/modules/cliente/inicio/services/inicio.service";
 import { getProveedoresDestacados } from "@/modules/cliente/proveedores/services/proveedores-destacados.service";
+import { getResenasPendientes } from "@/modules/cliente/calificaciones/services/resenas-pendientes.service";
 
 
 export default async function InicioPage() {
-  const [categorias, proveedoresDestacados, notificacionesNuevas] = await Promise.all([
+  const [categorias, proveedoresDestacados, notificacionesNuevas, resenasPendientes] = await Promise.all([
     getCategoriasInicio(5),
     getProveedoresDestacados(2),
     contarNotificacionesNuevas(),
+    getResenasPendientes(),
   ]);
 
   return (
@@ -16,6 +18,7 @@ export default async function InicioPage() {
       categorias={categorias}
       proveedoresDestacados={proveedoresDestacados}
       tieneNotificacionesNuevas={notificacionesNuevas > 0}
+      resenasPendientes={resenasPendientes}
     />
   );
 }
