@@ -1,5 +1,5 @@
-import ConfiguracionView from "@/modules/cliente/perfil/components/ConfiguracionView";
+import ConfiguracionUnificadaView from "@/modules/shared/configuracion/components/ConfiguracionUnificadaView";
 
 export default function ConfiguracionPage() {
-  return <ConfiguracionView />;
+  return <ConfiguracionUnificadaView />;
 }

@@ -1,10 +1,5 @@
 "use client";
 
-/**
- * Ubicación sugerida:
- *   src/modules/cliente/proveedores/components/ProveedorDetalleView.tsx
- */
-
 import { useRouter } from "next/navigation";
 import { ArrowLeft, MapPin, Star, Image as ImageIcon, MessageSquareText } from "lucide-react";
 

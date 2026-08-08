@@ -1,6 +1,4 @@
 /**
- * Ubicación sugerida:
- *   src/modules/cliente/perfil/services/perfil.service.ts
  *
  * Corre en el SERVIDOR, se llama directo desde page.tsx.
  *

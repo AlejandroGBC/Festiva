@@ -1,10 +1,5 @@
 "use client";
 
-/**
- * Ubicación sugerida:
- *   src/modules/cliente/proveedores/components/ProveedorTarjetaCard.tsx
- */
-
 import { Star } from "lucide-react";
 import Chip from "@/shared/components/Chip";
 import { obtenerIconoServicio } from "@/shared/lib/servicio-icono";

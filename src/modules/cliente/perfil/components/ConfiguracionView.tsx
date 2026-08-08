@@ -1,8 +1,6 @@
 "use client";
 
 /**
- * Ubicación sugerida:
- *   src/modules/cliente/perfil/components/ConfiguracionView.tsx
  *
  * Sin tabla de "settings" en la DB, esta pantalla es un hub de enlaces
  * a lo que ya existe (Datos personales, Seguridad, Notificaciones) +

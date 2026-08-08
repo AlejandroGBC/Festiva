@@ -1,10 +1,5 @@
 "use client";
 
-/**
- * Ubicación sugerida:
- *   src/modules/cliente/perfil/components/PerfilClienteView.tsx
- */
-
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
