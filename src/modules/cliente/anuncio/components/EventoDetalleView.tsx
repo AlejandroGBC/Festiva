@@ -50,7 +50,7 @@ export default function EventoDetalleView({ evento }: EventoDetalleViewProps) {
   const [error, setError] = useState("");
 
   const puedeEliminar = evento.cantidad_ofertas === 0;
-  const puedeEditar = evento.estado !== "finalizado" && evento.estado !== "cancelado";
+  const puedeEditar = evento.estado === "recibiendo_ofertas";
   const puedeCancelar = evento.estado === "recibiendo_ofertas" || evento.estado === "en_proceso";
   const puedeFinalizar = evento.estado === "en_proceso";
 
@@ -370,16 +370,7 @@ export default function EventoDetalleView({ evento }: EventoDetalleViewProps) {
 
         {/* Acciones */}
         <div className="mt-5 flex flex-col gap-2.5">
-          {puedeEditar && (
-            <Button
-              variant="light"
-              className="w-full"
-              onClick={() => router.push(`/cliente/eventos/${evento.id_evento}/editar`)}
-            >
-              <Pencil size={16} />
-              Editar evento
-            </Button>
-          )}
+
 
           {puedeFinalizar && (
             <Button variant="light" className="w-full" onClick={() => setConfirmando("finalizar")}>
@@ -391,7 +382,7 @@ export default function EventoDetalleView({ evento }: EventoDetalleViewProps) {
           {puedeCancelar && (
             <Button
               variant="light"
-              className="w-full !text-festiva-confetti-orange"
+              className="w-full !text-red-500"
               onClick={() => setConfirmando("cancelar")}
             >
               <Ban size={16} />
