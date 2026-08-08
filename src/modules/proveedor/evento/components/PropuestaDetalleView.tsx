@@ -37,13 +37,21 @@ export default function PropuestaDetalleView({ propuesta }: PropuestaDetalleView
 
   return (
     <div className="min-h-dvh bg-[#F5F2FA] flex flex-col overflow-y-auto no-scrollbar w-full">
-      <header className="bg-festiva-midnight-blue px-5 pt-14 pb-6 rounded-b-[28px]">
-        <button
-          onClick={() => router.back()}
-          className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center mb-4"
-        >
-          <ArrowLeft size={16} className="text-white" />
-        </button>
+      <header className="bg-festiva-midnight-blue px-5 pt-6 pb-6 rounded-b-[28px]">
+        <div className="flex items-center justify-between mb-6">
+          <button
+            onClick={() => router.back()}
+            className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 transition-colors flex items-center justify-center"
+          >
+            <ArrowLeft size={16} className="text-white" />
+          </button>
+
+          <span className="text-white/90 text-[13px] font-semibold tracking-wide">
+            Detalle del evento
+          </span>
+
+          <div className="w-8 h-8" />
+        </div>
 
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
