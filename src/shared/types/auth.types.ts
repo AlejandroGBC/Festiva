@@ -7,4 +7,5 @@ export interface UsuarioSesion {
   correo: string;
   rol: RolUsuario;
   nombre: string;
+  foto_perfil_url?: string | null;
 }

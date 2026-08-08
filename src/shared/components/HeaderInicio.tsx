@@ -14,6 +14,7 @@ import Image from "next/image";
 import isotipoColor from "@/shared/img/isotipoColor.svg";
 import { obtenerIniciales } from "../utils/obtenerIniciales";
 import { UsuarioSesion } from "../types/auth.types";
+import { getAvatarUrl } from "../utils/getAvatarUrl";
 
 interface HeaderProps {
     onMenuClick: () => void;
@@ -23,6 +24,7 @@ interface HeaderProps {
 
 export function Header({ onMenuClick, tieneNotificacionesNuevas = false, user }: HeaderProps) {
     const router = useRouter();
+    const avatarUrl = getAvatarUrl(user?.foto_perfil_url);
 
     return (
         <header className="justify-between flex p-5">
@@ -49,9 +51,20 @@ export function Header({ onMenuClick, tieneNotificacionesNuevas = false, user }:
                         <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-festiva-euphoric-pink border-2 border-white animate-pulse" />
                     )}
                 </button>
-                <span className="flex items-center justify-center w-11 h-11 bg-festiva-euphoric-pink text-white font-bold rounded-full text-sm shadow-sm">
-                    {obtenerIniciales(user?.nombre)}
-                </span>
+                {avatarUrl ? (
+                    <Image
+                        src={avatarUrl}
+                        alt={user?.nombre ?? "Foto de perfil"}
+                        width={44}
+                        height={44}
+                        className="w-11 h-11 rounded-full object-cover border border-festiva-midnight-blue/10 shadow-sm"
+                        unoptimized
+                    />
+                ) : (
+                    <span className="flex items-center justify-center w-11 h-11 bg-festiva-euphoric-pink text-white font-bold rounded-full text-sm shadow-sm">
+                        {obtenerIniciales(user?.nombre)}
+                    </span>
+                )}
             </div>
         </header>
     );

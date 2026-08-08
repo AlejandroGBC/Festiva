@@ -31,7 +31,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const { data: perfil } = await supabase
       .from("tbl_usuarios")
-      .select("id_usuario, correo, nombre_completo, rol")
+      .select("id_usuario, correo, nombre_completo, rol, foto_perfil_url")
       .eq("id_usuario", authUser.id)
       .single();
 
@@ -45,6 +45,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         // se necesita, hay que agregar 'admin' a RolUsuario en vez de
         // sacar este cast.
         rol: perfil.rol as RolUsuario,
+        foto_perfil_url: perfil.foto_perfil_url,
       });
     } else {
       setUser(null);
