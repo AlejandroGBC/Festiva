@@ -95,14 +95,14 @@ export default function ConfiguracionView() {
           <Fila
             icon={<User size={18} className="text-festiva-electric-violet" />}
             iconBg="rgba(123,63,228,0.08)"
-            titulo="Datos personales"
+            titulo="Información personal"
             subtitulo="Nombre, correo, teléfono"
             onClick={() => router.push("/cliente/perfil/datos")}
           />
           <Fila
             icon={<Lock size={18} className="text-festiva-mint-neon" />}
             iconBg="rgba(46,196,182,0.10)"
-            titulo="Seguridad"
+            titulo="Seguridad y contraseña"
             subtitulo="Cambiar contraseña"
             onClick={() => router.push("/cliente/perfil/seguridad")}
           />
@@ -149,7 +149,7 @@ export default function ConfiguracionView() {
         )}
 
         <p className="text-[11px] font-bold text-festiva-midnight-blue/40 uppercase tracking-wide mb-2 px-1">
-          Legal
+          Privacidad y datos
         </p>
         <div className="rounded-2xl bg-white border border-[#EDEAF8] overflow-hidden divide-y divide-[#F5F2FA] mb-5">
           <Fila
@@ -167,7 +167,7 @@ export default function ConfiguracionView() {
         </div>
 
         <button
-          className="w-full flex items-center justify-center gap-2 rounded-2xl bg-red-500/8 text-red-500 font-bold text-sm py-3.5"
+          className="w-full flex items-center justify-center gap-2 rounded-xl bg-festiva-midnight-blue/10 text-festiva-midnight-blue hover:bg-festiva-midnight-blue/15 transition-colors font-bold text-sm py-3.5"
           onClick={async () => {
             await signOut();
             router.push("/auth/login");
@@ -177,6 +177,10 @@ export default function ConfiguracionView() {
           <LogOut size={18} />
           Cerrar sesión
         </button>
+
+        <p className="text-center text-[11px] text-slate-400 font-medium mt-6">
+          Festiva v2.4.1 · © 2026 Festiva Technologies
+        </p>
       </main>
     </div>
   );
