@@ -1,3 +1,4 @@
+import Link from "next/link";
 import RegistroProveedorFooter from "./RegistroProveedorFooter";
 import RegistroProveedorForm from "./RegistroProveedorForm";
 import RegistroProveedorHeader from "./RegistroProveedorHeader";
@@ -8,6 +9,9 @@ export default function RegistroProveedorPage() {
       <RegistroProveedorHeader />
       <RegistroProveedorForm />
       <RegistroProveedorFooter />
+      <p className="text-center text-festiva-secondary text-sm pb-8">
+        Ya tienes cuenta — <Link href="/auth/login" className="text-festiva-electric-violet font-semibold">Inicia sesión</Link>
+      </p>
     </div>
   );
 }
