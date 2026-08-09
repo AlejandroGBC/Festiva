@@ -48,22 +48,25 @@ export default function PortfolioUploadGrid({ items, onDelete, onEdit, onNew }: 
                         <button
                             type="button"
                             onClick={(e) => {
-                            e.stopPropagation();
-                            onEdit(item);
+                                e.stopPropagation();
+                                e.preventDefault();
+                                onEdit(item);
                             }}
                             className="p-2 bg-white/90 text-festiva-midnight-blue rounded-xl hover:bg-white transition-colors"
                             title="Editar"
                         >
                             <Edit3 className="w-4 h-4" />
                         </button>
-                        <button 
+                        <button
                             type="button"
+                            style={{ position: 'relative', zIndex: 9999, pointerEvents: 'auto' }}
                             onClick={(e) => {
                                 e.stopPropagation();
+                                e.preventDefault();
                                 onDelete(item.id);
                             }}
-                            className="p-2 bg-red-500/90 text-white rounded-xl hover:bg-red-600 transition-colors"
-                            title="Eliminar"
+                            className="p-2 text-red-500 hover:text-red-700 cursor-pointer"
+                            aria-label={`Eliminar ${item.title}`}
                         >
                             <Trash2 className="w-4 h-4" />
                         </button>
