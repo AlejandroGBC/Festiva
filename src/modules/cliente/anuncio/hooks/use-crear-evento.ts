@@ -40,11 +40,13 @@ export function useCrearEvento({ onPublicado }: UseCrearEventoParams = {}) {
   // Paso 3 — Detalles
   const [presupuestoMin, setPresupuestoMin] = useState("");
   const [presupuestoMax, setPresupuestoMax] = useState("");
-  const [servicios, setServicios] = useState<string[]>([
-    "Decoración",
-    "Fotografía",
-    "Catering",
-  ]);
+  // Antes arrancaba con ["Decoración", "Fotografía", "Catering"] —
+  // nombres viejos que ni siquiera coinciden con tbl_servicios, y que
+  // se sumaban (no reemplazaban) a lo que sugería la IA. Por eso
+  // siempre aparecía "Catering" de más, y "Decoración"/"Fotografía"
+  // duplicados con nombre distinto al real. Ahora arranca vacío; el
+  // usuario elige a mano o la IA los completa vía aplicarPropuesta.
+  const [servicios, setServicios] = useState<string[]>([]);
   const [descripcion, setDescripcion] = useState("");
   const [cargandoDesc, setCargandoDesc] = useState(false);
 
@@ -70,9 +72,10 @@ export function useCrearEvento({ onPublicado }: UseCrearEventoParams = {}) {
     if (d.lugar) setLugar(d.lugar);
     if (d.descripcion_optimizada) setDescripcion(d.descripcion_optimizada);
     if (d.servicios_sugeridos?.length) {
-      setServicios((prev) =>
-        Array.from(new Set([...prev, ...d.servicios_sugeridos!]))
-      );
+      // Reemplaza los servicios en vez de sumarlos al estado previo —
+      // así el formulario refleja exactamente lo que detectó la IA,
+      // sin arrastrar selecciones anteriores.
+      setServicios(d.servicios_sugeridos);
     }
   }
 
