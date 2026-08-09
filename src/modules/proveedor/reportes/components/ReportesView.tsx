@@ -5,7 +5,7 @@ import { Header } from "@/shared/components/HeaderInicio";
 import { SectionHeader } from "@/shared/components/SectionHeader";
 import Sidebar from "@/shared/components/Sidebar";
 import { clienteLinks, proveedorLinks } from "@/shared/constant/sidebarLinks";
-import { CircleCheckBig, Percent, TrendingUp, Wallet, GraduationCap } from "lucide-react";
+import { CircleCheckBig, Percent, TrendingUp, Wallet, GraduationCap, ChartNoAxesColumnIncreasing, CreditCard } from "lucide-react";
 import { useState } from "react";
 
 export default function ReportesView() {
@@ -32,11 +32,11 @@ export default function ReportesView() {
                             Retirar
                         </div>
                         <div className="text-white font-semibold border border-solid border-white/15 bg-white/10 w-full px-5 py-3 rounded-2xl flex items-center justify-center">
-                            <TrendingUp size={15} className="mr-2" />
+                            <ChartNoAxesColumnIncreasing size={15} className="mr-2" />
                             Reportes
                         </div>
                         <div className="text-white font-semibold border border-solid border-white/15 bg-white/10 w-full px-5 py-3 rounded-2xl flex items-center justify-center">
-                            <Wallet size={15} className="mr-2" />
+                            <CreditCard size={15} className="mr-2" />
                             Cuenta
                         </div>
                     </div>
@@ -47,7 +47,7 @@ export default function ReportesView() {
                     <div className="bg-white py-5 px-4 rounded-[20px] mb-5">
                         <div className="flex justify-between items-center">
                             <h1 className="text-festiva-midnight-blue font-semibold text-sm">Ingresos — Ultimos 6 meses</h1>
-                            <div className="flex font-semibold text-festiva-mint-neon text-xs w-fit h-fit px-3 py-2 rounded-[999px] justify-between gap-2 bg-festiva-mint-neon/10">
+                            <div className="flex font-semibold text-festiva-mint-neon text-xs w-fit h-fit px-3 py-2 rounded-[999px] justify-between gap-2 bg-festiva-mint-neon/10 items-center">
                                 <TrendingUp size={12} className="text-festiva-mint-neon" />
                                 +18%
                             </div>
