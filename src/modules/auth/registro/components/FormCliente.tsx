@@ -1,6 +1,7 @@
 "use client";
 
 import { User, Mail, Phone, Lock } from "lucide-react";
+import Link from "next/link";
 import Input from "@/shared/components/Input";
 import Button from "@/shared/components/Button";
 import { useRegistroCliente } from "../hooks/useRegistroCliente";
@@ -64,17 +65,27 @@ export const FormCliente = () => {
         />
       </div>
 
-      <label className="flex items-center gap-2 text-sm text-festiva-secondary">
-        <input
-          type="checkbox"
-          name="aceptaTerminos"
-          className="accent-festiva-electric-violet"
-        />
-        <span>
-          Acepto los <b className="text-festiva-midnight-blue">Terminos y Condiciones</b> y la{" "}
-          <b className="text-festiva-midnight-blue">Politica de Privacidad</b> de Festiva
-        </span>
-      </label>
+      <div className="flex items-start gap-2 text-sm text-festiva-secondary">
+        <label className="flex items-center gap-2 shrink-0 mt-0.5" htmlFor="aceptaTerminos">
+          <input
+            id="aceptaTerminos"
+            type="checkbox"
+            name="aceptaTerminos"
+            className="accent-festiva-electric-violet"
+          />
+        </label>
+        <p className="leading-snug">
+          Acepto los{" "}
+          <Link href="/legal/terminos" className="text-festiva-electric-violet font-semibold underline underline-offset-2">
+            Términos y Condiciones
+          </Link>{" "}
+          y la{" "}
+          <Link href="/legal/privacidad" className="text-festiva-electric-violet font-semibold underline underline-offset-2">
+            Política de Privacidad
+          </Link>{" "}
+          de Festiva
+        </p>
+      </div>
 
       {errors.general && (
         <p className="text-sm text-red-500 text-center">{errors.general}</p>
