@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import {
   User,
@@ -17,7 +17,9 @@ import Header from "@/shared/components/HeaderInicio";
 import Sidebar from "@/shared/components/Sidebar";
 import Card from "@/shared/components/Card";
 import Chip from "@/shared/components/Chip";
+import Avatar from "@/shared/components/Avatar";
 import { useAuthContext } from "@/lib/context/auth-context";
+import { actualizarFotoPerfil } from "../services/perfil-client.service";
 
 import type { PerfilClienteData } from "@/modules/cliente/perfil/types/perfil.types";
 import { clienteLinks, proveedorLinks } from "@/shared/constant/sidebarLinks";
@@ -72,8 +74,45 @@ export default function PerfilClienteView({ perfil, tieneNotificacionesNuevas }:
   const mainLinks = user?.rol === "cliente" ? clienteLinks : proveedorLinks;
 
 
+  const [fotoUrl, setFotoUrl] = useState<string | null>(perfil.fotoPerfilUrl);
+  const [cargandoFoto, setCargandoFoto] = useState(false);
+
+  useEffect(() => {
+    setFotoUrl(perfil.fotoPerfilUrl);
+  }, [perfil.fotoPerfilUrl]);
+
+  const handleAvatarChange = async (file: File) => {
+    setCargandoFoto(true);
+    try {
+      const localPreview = URL.createObjectURL(file);
+      setFotoUrl(localPreview);
+
+      const urlGuardada = await actualizarFotoPerfil(file);
+      setFotoUrl(urlGuardada);
+      router.refresh();
+    } catch (error) {
+      console.error("Error al subir imagen:", error);
+      setFotoUrl(perfil.fotoPerfilUrl);
+    } finally {
+      setCargandoFoto(false);
+    }
+  };
+
+  const handleAvatarRemove = async () => {
+    setCargandoFoto(true);
+    try {
+      await actualizarFotoPerfil(null);
+      setFotoUrl(null);
+      router.refresh();
+    } catch (error) {
+      console.error("Error al eliminar imagen:", error);
+    } finally {
+      setCargandoFoto(false);
+    }
+  };
+
   return (
-    <div className="flex-1 h-full overflow-y-auto no-scrollbar bg-[#F5F2FA]">
+    <div className="relative min-h-dvh bg-[#F5F2FA] flex flex-col" suppressHydrationWarning>
       <Header
         onMenuClick={() => setSidebarOpen(true)}
         tieneNotificacionesNuevas={tieneNotificacionesNuevas}
@@ -86,7 +125,6 @@ export default function PerfilClienteView({ perfil, tieneNotificacionesNuevas }:
           Mi Perfil
         </h1>
 
-        {/* Cabecera colorida */}
         <div className="relative overflow-hidden rounded-[18px] bg-festiva-midnight-blue p-5 mb-4">
           <svg
             className="absolute top-0 right-0 w-28 h-28 pointer-events-none"
@@ -97,13 +135,22 @@ export default function PerfilClienteView({ perfil, tieneNotificacionesNuevas }:
           </svg>
 
           <div className="relative z-10 flex flex-col items-center text-center">
-            <div className="w-[72px] h-[72px] rounded-full bg-festiva-euphoric-pink flex items-center justify-center text-2xl font-extrabold text-white shadow-lg mb-3">
-              {iniciales(perfil.nombreCompleto)}
+            {/* Avatar dinámico con las mismas opciones que ProfileBanner */}
+            <div className="mb-3">
+              <Avatar
+                initials={iniciales(perfil.nombreCompleto)}
+                imageUrl={fotoUrl || undefined}
+                editable={!cargandoFoto}
+                onImageChange={handleAvatarChange}
+                onImageRemove={handleAvatarRemove}
+              />
             </div>
+
             <h2 className="text-white font-bold text-lg m-0">{perfil.nombreCompleto}</h2>
             <p className="text-white/50 text-xs mt-1 mb-3">
               {perfil.correo} · Cliente desde {anioDesde(perfil.clienteDesde)}
             </p>
+
             <div className="flex items-center gap-2 flex-wrap justify-center">
               {perfil.cuentaActiva && <Chip variant="mint-neon">Cuenta verificada</Chip>}
               <Chip variant="electric-violet">
@@ -196,7 +243,6 @@ export default function PerfilClienteView({ perfil, tieneNotificacionesNuevas }:
           Cerrar sesión
         </button>
       </section>
-
     </div>
   );
 }

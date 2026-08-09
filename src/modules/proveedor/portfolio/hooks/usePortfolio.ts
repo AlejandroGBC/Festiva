@@ -23,7 +23,7 @@ export function usePortfolio() {
         loadPortfolio();
     }, []);
 
-    const saveItem = async (item: Omit<PortfolioItem, 'id'> & { id?: string }) => {
+    const saveItem = async (item: Omit<PortfolioItem, 'id'> & { id?: string; removeExistingImage?: boolean }) => {
         try {
             setUpdating(true);
             const updated = await portfolioService.savePortfolioItem(item);
@@ -40,7 +40,11 @@ export function usePortfolio() {
         try {
             setUpdating(true);
             const updated = await portfolioService.deletePortfolioItem(id);
-            setData(updated);
+            if (updated && Array.isArray(updated.items)) {
+                setData(updated);
+            } else {
+                await loadPortfolio();
+            }
         } catch {
             console.error('Error al borrar el trabajo de portafolio');
         } finally {

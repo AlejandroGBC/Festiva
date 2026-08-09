@@ -46,13 +46,24 @@ export default function CaseListCard({ id, title, imageUrl, isVerified, onDelete
             </div>
             <div className="flex items-center gap-1">
                 <button 
-                    onClick={onEdit}
+                    type="button"
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        onEdit();
+                    }}
                     className="p-2 text-slate-400 hover:text-festiva-electric-violet rounded-lg transition-colors cursor-pointer"
                 >
                     <Edit className="w-4 h-4" />
                 </button>
+
                 <button 
-                    onClick={() => onDelete(id)}
+                    type="button"
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        console.log("Clic en borrar Card ID:", id);
+                        onDelete(id);
+                    }}
                     className="p-2 text-slate-400 hover:text-red-500 rounded-lg transition-colors cursor-pointer"
                 >
                     <Trash2 className="w-4 h-4" />

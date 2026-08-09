@@ -1,8 +1,3 @@
-/**
- * Ubicación sugerida:
- *   src/modules/cliente/ofertas/types/ofertas.types.ts
- */
-
 export interface OfertaListado {
   id_evento: string;
   evento_titulo: string;
@@ -13,6 +8,7 @@ export interface OfertaListado {
   estado: "enviada" | "aceptada" | "rechazada" | "cancelada";
   creada_en: string;
   calificacion_promedio: number | null;
+  proveedor_foto_url: string | null
 }
 
 export interface EventoFiltro {

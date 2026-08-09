@@ -11,7 +11,8 @@ export interface ConversacionListado {
   id_conversacion: string;
   id_evento: string;
   id_proveedor: string;
-  nombre_otro: string;      // proveedor si soy cliente, cliente si soy proveedor
+  nombre_otro: string;
+  foto_perfil_otro_url?: string | null;
   evento_titulo: string;
   ultimo_mensaje: string | null;
   ultimo_mensaje_en: string | null;
@@ -23,6 +24,7 @@ export interface ConversacionDetalle {
   id_evento: string;
   id_proveedor: string;
   nombre_otro: string;
+  foto_perfil_otro_url?: string | null;
   evento_titulo: string;
   mensajes: Mensaje[];
 }

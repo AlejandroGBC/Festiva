@@ -8,11 +8,15 @@ export const portfolioService = {
         return res.json();
     },
 
-    savePortfolioItem: async (item: Omit<PortfolioItem, 'id'> & { id?: string }): Promise<PortfolioData> => {
+    savePortfolioItem: async (item: Omit<PortfolioItem, 'id'> & { id?: string; removeExistingImage?: boolean }): Promise<PortfolioData> => {
         const res = await fetch('/api/proveedor/portfolio', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(item),
+            body: JSON.stringify({
+                ...item,
+                imageUrl: item.imageUrl ?? null,
+                removeExistingImage: Boolean(item.removeExistingImage),
+            }),
         });
         
         if (!res.ok) throw new Error('Error guardando ítem');

@@ -84,7 +84,12 @@ export default function ManagePortfolioView() {
 
         try {
             setUploadingImage(true);
-            let finalImageUrl = form.imageUrl;
+            const previousImageUrl = editingId
+                ? (data?.items.find((item) => item.id === editingId)?.imageUrl ?? '')
+                : '';
+            const shouldRemoveExistingImage = Boolean(editingId && previousImageUrl && !selectedFile && !form.imageUrl.trim());
+
+            let finalImageUrl: string | null = form.imageUrl || null;
 
             if (selectedFile) {
                 finalImageUrl = await uploadPortfolioImage(selectedFile, 'proveedor');
@@ -96,7 +101,8 @@ export default function ManagePortfolioView() {
                 description: form.description,
                 location: form.location,
                 externalUrl: form.externalUrl,
-                imageUrl: finalImageUrl
+                imageUrl: finalImageUrl,
+                removeExistingImage: shouldRemoveExistingImage,
             });
 
             if (success) {
@@ -261,7 +267,7 @@ export default function ManagePortfolioView() {
                     {activeSection === 'multimedia' && (
                         <PortfolioUploadGrid
                             items={data?.items || []}
-                            onDelete={deleteItem}
+                            onDelete={(idToDelete) => deleteItem(idToDelete)}
                             onEdit={handleOpenEdit}
                             onNew={handleOpenCreateNew}
                         />
@@ -277,7 +283,7 @@ export default function ManagePortfolioView() {
                                         title={c.title}
                                         imageUrl={c.imageUrl || ''}
                                         isVerified={!!c.isVerified}
-                                        onDelete={() => deleteItem(c.id)}
+                                        onDelete={(idToDelete) => deleteItem(idToDelete)}
                                         onEdit={() => handleOpenEdit(c)}
                                     />
                                 ))

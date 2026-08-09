@@ -1,4 +1,3 @@
-// modules/shared/chat/services/conversaciones.service.ts
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import type { ConversacionListado, ConversacionDetalle, RolChat } from "../types/chat.types";
 
@@ -18,9 +17,8 @@ export async function getConversaciones(rol: RolChat): Promise<ConversacionLista
       .maybeSingle();
     if (!perfilCliente) return [];
   }
-  // Para proveedor no necesitamos perfil aparte: filtramos directo por
-  // id_proveedor = user.id más abajo.
 
+  // Realizamos JOIN anidado a tbl_usuarios desde tbl_perfiles_proveedor
   let query = supabase
     .from("tbl_conversaciones")
     .select(
@@ -29,7 +27,10 @@ export async function getConversaciones(rol: RolChat): Promise<ConversacionLista
       id_evento,
       id_proveedor,
       tbl_eventos!inner ( titulo, id_cliente ),
-      tbl_perfiles_proveedor ( nombre_comercial )
+      tbl_perfiles_proveedor (
+        nombre_comercial,
+        tbl_usuarios ( foto_perfil_url )
+      )
     `
     )
     .order("creado_en", { ascending: false });
@@ -46,14 +47,15 @@ export async function getConversaciones(rol: RolChat): Promise<ConversacionLista
     id_evento: string;
     id_proveedor: string;
     tbl_eventos: { titulo: string; id_cliente: string } | null;
-    tbl_perfiles_proveedor: { nombre_comercial: string } | null;
+    tbl_perfiles_proveedor: {
+      nombre_comercial: string;
+      tbl_usuarios: { foto_perfil_url: string | null } | null;
+    } | null;
   }
   const conversaciones = (conversacionesDb ?? []) as unknown as ConversacionRow[];
   if (conversaciones.length === 0) return [];
 
-  // Si soy proveedor, "el otro" es el cliente de cada evento — hay que
-  // resolver su nombre_completo desde tbl_usuarios (batch, no N+1).
-  let nombrePorIdCliente = new Map<string, string>();
+  let clientePorId = new Map<string, { nombre: string; foto?: string | null }>();
   if (rol === "proveedor") {
     const idsClientes = Array.from(
       new Set(conversaciones.map((c) => c.tbl_eventos?.id_cliente).filter((id): id is string => Boolean(id)))
@@ -61,10 +63,14 @@ export async function getConversaciones(rol: RolChat): Promise<ConversacionLista
     if (idsClientes.length > 0) {
       const { data: clientesDb } = await supabase
         .from("tbl_usuarios")
-        .select("id_usuario, nombre_completo")
+        .select("id_usuario, nombre_completo, foto_perfil_url")
         .in("id_usuario", idsClientes);
-      nombrePorIdCliente = new Map(
-        (clientesDb ?? []).map((u) => [u.id_usuario as string, u.nombre_completo as string])
+      
+      clientePorId = new Map(
+        (clientesDb ?? []).map((u) => [
+          u.id_usuario as string,
+          { nombre: u.nombre_completo as string, foto: u.foto_perfil_url as string | null },
+        ])
       );
     }
   }
@@ -94,16 +100,24 @@ export async function getConversaciones(rol: RolChat): Promise<ConversacionLista
       (m) => m.id_remitente !== user.id && m.leido_en === null
     ).length;
 
+    const infoCliente = clientePorId.get(c.tbl_eventos?.id_cliente ?? "");
+    
     const nombreOtro =
       rol === "cliente"
         ? c.tbl_perfiles_proveedor?.nombre_comercial ?? "Proveedor"
-        : nombrePorIdCliente.get(c.tbl_eventos?.id_cliente ?? "") ?? "Cliente";
+        : infoCliente?.nombre ?? "Cliente";
+
+    const fotoPerfilOtro =
+      rol === "cliente"
+        ? c.tbl_perfiles_proveedor?.tbl_usuarios?.foto_perfil_url
+        : infoCliente?.foto;
 
     return {
       id_conversacion: c.id_conversacion,
       id_evento: c.id_evento,
       id_proveedor: c.id_proveedor,
       nombre_otro: nombreOtro,
+      foto_perfil_otro_url: fotoPerfilOtro ?? null,
       evento_titulo: c.tbl_eventos?.titulo ?? "Evento",
       ultimo_mensaje: ultimo?.contenido ?? null,
       ultimo_mensaje_en: ultimo?.creado_en ?? null,
@@ -112,7 +126,6 @@ export async function getConversaciones(rol: RolChat): Promise<ConversacionLista
   });
 }
 
-// ── getConversacionDetalle: sin cambios de lógica, solo se mueve acá ──
 export async function getConversacionDetalle(
   idConversacion: string
 ): Promise<ConversacionDetalle | null> {
@@ -131,7 +144,10 @@ export async function getConversacionDetalle(
       id_evento,
       id_proveedor,
       tbl_eventos ( titulo, id_cliente ),
-      tbl_perfiles_proveedor ( nombre_comercial )
+      tbl_perfiles_proveedor (
+        nombre_comercial,
+        tbl_usuarios ( foto_perfil_url )
+      )
     `
     )
     .eq("id_conversacion", idConversacion)
@@ -144,7 +160,10 @@ export async function getConversacionDetalle(
     id_evento: string;
     id_proveedor: string;
     tbl_eventos: { titulo: string; id_cliente: string } | null;
-    tbl_perfiles_proveedor: { nombre_comercial: string } | null;
+    tbl_perfiles_proveedor: {
+      nombre_comercial: string;
+      tbl_usuarios: { foto_perfil_url: string | null } | null;
+    } | null;
   }
   const conv = conversacion as unknown as ConversacionRow;
 
@@ -154,15 +173,19 @@ export async function getConversacionDetalle(
   if (!esCliente && !esProveedor) return null;
 
   let nombreOtro = "Usuario";
+  let fotoPerfilOtroUrl: string | null = null;
+
   if (esCliente) {
     nombreOtro = conv.tbl_perfiles_proveedor?.nombre_comercial ?? "Proveedor";
+    fotoPerfilOtroUrl = conv.tbl_perfiles_proveedor?.tbl_usuarios?.foto_perfil_url ?? null;
   } else if (conv.tbl_eventos?.id_cliente) {
     const { data: clienteUsuario } = await supabase
       .from("tbl_usuarios")
-      .select("nombre_completo")
+      .select("nombre_completo, foto_perfil_url")
       .eq("id_usuario", conv.tbl_eventos.id_cliente)
       .maybeSingle();
     nombreOtro = clienteUsuario?.nombre_completo ?? "Cliente";
+    fotoPerfilOtroUrl = clienteUsuario?.foto_perfil_url ?? null;
   }
 
   const { data: mensajesDb } = await supabase
@@ -184,6 +207,7 @@ export async function getConversacionDetalle(
     id_evento: conv.id_evento,
     id_proveedor: conv.id_proveedor,
     nombre_otro: nombreOtro,
+    foto_perfil_otro_url: fotoPerfilOtroUrl,
     evento_titulo: conv.tbl_eventos?.titulo ?? "Evento",
     mensajes: (mensajesDb ?? []) as ConversacionDetalle["mensajes"],
   };
@@ -208,8 +232,6 @@ export async function buscarOCrearConversacion(
     .maybeSingle();
   if (!evento) return null;
 
-  // Seguridad: cada rol solo puede iniciar/entrar a conversaciones donde
-  // realmente participa.
   if (rol === "cliente" && evento.id_cliente !== user.id) return null;
   if (rol === "proveedor" && idProveedor !== user.id) return null;
 

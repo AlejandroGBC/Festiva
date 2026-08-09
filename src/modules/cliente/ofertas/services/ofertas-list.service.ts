@@ -1,18 +1,3 @@
-/**
- * Ubicación sugerida:
- *   src/modules/cliente/ofertas/services/ofertas-list.service.ts
- *
- * Corre en el SERVIDOR. Se llama directo desde page.tsx (Server Component),
- * sin hook, según la regla del proyecto.
- *
- * Cadena de relaciones real (confirmada por ERD):
- *   tbl_ofertas.id_evento     → tbl_eventos.id_evento
- *   tbl_ofertas.id_proveedor  → tbl_perfiles_proveedor.id_proveedor
- *   tbl_calificaciones.id_contratacion → tbl_contrataciones.id_contratacion
- *   tbl_contrataciones.id_proveedor    → tbl_perfiles_proveedor.id_proveedor
- * (la calificación es por trabajo confirmado, no por oferta directa)
- */
-
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import type {
   OfertaListado,
@@ -41,7 +26,7 @@ export async function getOfertasRecibidas(): Promise<OfertasRecibidasData> {
     .maybeSingle();
   if (!perfilCliente) return VACIO;
 
-  // 1. Eventos del cliente (para los filtros y para saber el título)
+  // 1. Eventos del cliente
   const { data: eventosDb, error: eventosError } = await supabase
     .from("tbl_eventos")
     .select("id_evento, titulo")
@@ -51,7 +36,7 @@ export async function getOfertasRecibidas(): Promise<OfertasRecibidasData> {
 
   const idsEventos = eventosDb.map((e) => e.id_evento);
 
-  // 2. Ofertas de esos eventos, con el nombre comercial del proveedor
+  // 2. Ofertas con JOIN anidado hacia tbl_usuarios para obtener la foto
   const { data: ofertasDb, error: ofertasError } = await supabase
     .from("tbl_ofertas")
     .select(
@@ -62,7 +47,12 @@ export async function getOfertasRecibidas(): Promise<OfertasRecibidasData> {
       descripcion_servicio,
       estado,
       creada_en,
-      tbl_perfiles_proveedor ( nombre_comercial )
+      tbl_perfiles_proveedor (
+        nombre_comercial,
+        tbl_usuarios (
+          foto_perfil_url
+        )
+      )
     `
     )
     .in("id_evento", idsEventos)
@@ -75,6 +65,7 @@ export async function getOfertasRecibidas(): Promise<OfertasRecibidasData> {
 
   const eventoTituloPorId = new Map(eventosDb.map((e) => [e.id_evento, e.titulo]));
 
+  // Interface actualizada para reflejar la relación con tbl_usuarios
   interface OfertaConProveedorRow {
     id_evento: string;
     id_proveedor: string;
@@ -82,12 +73,17 @@ export async function getOfertasRecibidas(): Promise<OfertasRecibidasData> {
     descripcion_servicio: string | null;
     estado: OfertaListado["estado"];
     creada_en: string;
-    tbl_perfiles_proveedor: { nombre_comercial: string } | null;
+    tbl_perfiles_proveedor: {
+      nombre_comercial: string;
+      tbl_usuarios: {
+        foto_perfil_url: string | null;
+      } | null;
+    } | null;
   }
 
-  const ofertasTipadas = (ofertasDb ?? []) as OfertaConProveedorRow[];
+  const ofertasTipadas = (ofertasDb ?? []) as unknown as OfertaConProveedorRow[];
 
-  // 3. Calificación promedio por proveedor (best-effort: si falla, seguimos sin ella)
+  // 3. Calificación promedio por proveedor
   const idsProveedores = Array.from(
     new Set(ofertasTipadas.map((o) => o.id_proveedor))
   );
@@ -132,6 +128,7 @@ export async function getOfertasRecibidas(): Promise<OfertasRecibidasData> {
     evento_titulo: eventoTituloPorId.get(o.id_evento) ?? "Evento",
     id_proveedor: o.id_proveedor,
     proveedor_nombre: o.tbl_perfiles_proveedor?.nombre_comercial ?? "Proveedor",
+    proveedor_foto_url: o.tbl_perfiles_proveedor?.tbl_usuarios?.foto_perfil_url ?? null,
     precio_total: o.precio_total,
     descripcion_servicio: o.descripcion_servicio,
     estado: o.estado,

@@ -1,7 +1,5 @@
 /**
  *
- * Corre en el SERVIDOR, se llama directo desde page.tsx.
- *
  * Cálculo de estadísticas:
  * - totalEventos: cantidad de tbl_eventos del cliente
  * - totalProveedores: proveedores DISTINTOS que le enviaron oferta en

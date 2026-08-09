@@ -1,15 +1,8 @@
 "use client";
 
-/**
- * Ubicación sugerida:
- *   src/modules/cliente/ofertas/components/OfertasRecibidasView.tsx
- *
- * Recibe eventos + ofertas ya cargados desde el Server Component
- * (page.tsx) — no hace fetch acá, solo estado de UI (filtros, sidebar).
- */
-
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { Plus, Clock, Star, ChevronRight, Inbox } from "lucide-react";
 
 import Header from "@/shared/components/HeaderInicio";
@@ -24,6 +17,8 @@ import type {
   EventoFiltro,
 } from "@/modules/cliente/ofertas/types/ofertas.types";
 import { tiempoRelativo } from "@/shared/utils/tiempo";
+import { getAvatarUrl } from "@/shared/utils/getAvatarUrl";
+import { obtenerIniciales } from "@/shared/utils/obtenerIniciales";
 import { clienteLinks, proveedorLinks } from "@/shared/constant/sidebarLinks";
 
 const ESTADO_LABEL: Record<OfertaListado["estado"], string> = {
@@ -119,7 +114,7 @@ export default function OfertasRecibidasView({
           </Button>
         </div>
 
-        {/* Filtro por evento — cada uno muestra cuántas ofertas tiene */}
+        {/* Filtro por evento */}
         {eventos.length > 0 && (
           <div className="flex gap-1.5 overflow-x-auto pb-1 mt-3 [scrollbar-width:none]">
             <Button
@@ -183,71 +178,85 @@ export default function OfertasRecibidasView({
           </Card>
         ) : (
           <div className="flex flex-col gap-2.5">
-            {ofertasFiltradas.map((oferta) => (
-              <div
-                key={`${oferta.id_evento}-${oferta.id_proveedor}`}
-                onClick={() =>
-                  router.push(`/cliente/ofertas/${oferta.id_evento}/${oferta.id_proveedor}`)
-                }
-                className="cursor-pointer"
-              >
-                <Card className="hover:shadow-md transition-shadow">
-                  <div className="flex gap-3.5 items-center">
-                    <div className="w-[52px] h-[52px] rounded-2xl bg-gradient-to-br from-festiva-electric-violet/10 to-festiva-euphoric-pink/10 border border-festiva-electric-violet/15 flex items-center justify-center shrink-0 text-lg font-bold text-festiva-electric-violet">
-                      {oferta.proveedor_nombre.charAt(0)}
-                    </div>
+            {ofertasFiltradas.map((oferta) => {
+              const avatarUrl = getAvatarUrl(oferta.proveedor_foto_url);
 
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between gap-2">
-                        <span className="font-bold text-[15px] text-festiva-midnight-blue truncate">
-                          {oferta.proveedor_nombre}
-                        </span>
-                        <div className="shrink-0">
-                          <Chip variant={ESTADO_VARIANT[oferta.estado]}>
-                            {ESTADO_LABEL[oferta.estado]}
-                          </Chip>
+              return (
+                <div
+                  key={`${oferta.id_evento}-${oferta.id_proveedor}`}
+                  onClick={() =>
+                    router.push(`/cliente/ofertas/${oferta.id_evento}/${oferta.id_proveedor}`)
+                  }
+                  className="cursor-pointer"
+                >
+                  <Card className="hover:shadow-md transition-shadow">
+                    <div className="flex gap-3.5 items-center">
+                      {avatarUrl ? (
+                        <Image
+                          src={avatarUrl}
+                          alt={oferta.proveedor_nombre}
+                          width={52}
+                          height={52}
+                          className="w-[52px] h-[52px] rounded-2xl object-cover border border-festiva-electric-violet/15 shrink-0"
+                          unoptimized
+                        />
+                      ) : (
+                        <div className="w-[52px] h-[52px] rounded-2xl bg-gradient-to-br from-festiva-electric-violet/10 to-festiva-euphoric-pink/10 border border-festiva-electric-violet/15 flex items-center justify-center shrink-0 text-lg font-bold text-festiva-electric-violet">
+                          {obtenerIniciales(oferta.proveedor_nombre)}
+                        </div>
+                      )}
+
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="font-bold text-[15px] text-festiva-midnight-blue truncate">
+                            {oferta.proveedor_nombre}
+                          </span>
+                          <div className="shrink-0">
+                            <Chip variant={ESTADO_VARIANT[oferta.estado]}>
+                              {ESTADO_LABEL[oferta.estado]}
+                            </Chip>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-1.5 flex-wrap mt-0.5">
+                          {oferta.descripcion_servicio && (
+                            <span className="text-[13px] text-festiva-midnight-blue/50 truncate max-w-[180px]">
+                              {oferta.descripcion_servicio}
+                            </span>
+                          )}
+                          <span className="flex items-center gap-1 text-xs text-festiva-midnight-blue/40">
+                            <Clock size={12} />
+                            {tiempoRelativo(oferta.creada_en)}
+                          </span>
+                        </div>
+
+                        <div className="flex items-center gap-2 mt-1.5 flex-wrap">
+                          {oferta.precio_total != null && (
+                            <span className="text-xl font-extrabold text-festiva-electric-violet">
+                              L. {oferta.precio_total.toLocaleString()}
+                            </span>
+                          )}
+                          <span className="text-[11px] text-festiva-midnight-blue/50 bg-[#F5F2FA] px-2 py-0.5 rounded-md">
+                            {oferta.evento_titulo}
+                          </span>
+                          {oferta.calificacion_promedio != null && (
+                            <span className="flex items-center gap-0.5 text-[11px] font-semibold text-festiva-confetti-orange">
+                              <Star size={11} className="fill-festiva-confetti-orange" />
+                              {oferta.calificacion_promedio}
+                            </span>
+                          )}
                         </div>
                       </div>
 
-                      <div className="flex items-center gap-1.5 flex-wrap mt-0.5">
-                        {oferta.descripcion_servicio && (
-                          <span className="text-[13px] text-festiva-midnight-blue/50 truncate max-w-[180px]">
-                            {oferta.descripcion_servicio}
-                          </span>
-                        )}
-                        <span className="flex items-center gap-1 text-xs text-festiva-midnight-blue/40">
-                          <Clock size={12} />
-                          {tiempoRelativo(oferta.creada_en)}
-                        </span>
-                      </div>
-
-                      <div className="flex items-center gap-2 mt-1.5 flex-wrap">
-                        {oferta.precio_total != null && (
-                          <span className="text-xl font-extrabold text-festiva-electric-violet">
-                            L. {oferta.precio_total.toLocaleString()}
-                          </span>
-                        )}
-                        <span className="text-[11px] text-festiva-midnight-blue/50 bg-[#F5F2FA] px-2 py-0.5 rounded-md">
-                          {oferta.evento_titulo}
-                        </span>
-                        {oferta.calificacion_promedio != null && (
-                          <span className="flex items-center gap-0.5 text-[11px] font-semibold text-festiva-confetti-orange">
-                            <Star size={11} className="fill-festiva-confetti-orange" />
-                            {oferta.calificacion_promedio}
-                          </span>
-                        )}
-                      </div>
+                      <ChevronRight size={16} className="text-festiva-midnight-blue/30 shrink-0" />
                     </div>
-
-                    <ChevronRight size={16} className="text-festiva-midnight-blue/30 shrink-0" />
-                  </div>
-                </Card>
-              </div>
-            ))}
+                  </Card>
+                </div>
+              );
+            })}
           </div>
         )}
       </section>
-
     </div>
   );
 }

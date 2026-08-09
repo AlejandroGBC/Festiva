@@ -3,8 +3,8 @@ export interface PortfolioItem {
     title: string;
     description: string;
     location: string;
-    externalUrl?: string;
-    imageUrl?: string;
+    externalUrl?: string | null;
+    imageUrl?: string | null;
     isVerified?: boolean;
 }
 
