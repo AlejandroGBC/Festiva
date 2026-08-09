@@ -6,31 +6,56 @@ export async function getPagosCliente(
 ): Promise<ResumenPagosCliente> {
     const supabase = await createServerSupabaseClient();
 
-    // Traer todos los pagos pagados cuyo evento pertenezca al cliente
-    // tbl_pagos → tbl_contrataciones → tbl_eventos (filtrado por id_cliente)
-    const { data: pagos, error } = await supabase
+    // 1. Obtener los eventos del cliente
+    const { data: eventos, error: errorEventos } = await supabase
+        .from("tbl_eventos")
+        .select("id_evento, titulo")
+        .eq("id_cliente", clienteId);
+
+    if (errorEventos) {
+        console.error("Error al obtener eventos del cliente:", errorEventos);
+        throw new Error("No se pudieron obtener los eventos");
+    }
+
+    if (!eventos || eventos.length === 0) {
+        return { totalGastado: 0, pagos: [] };
+    }
+
+    const eventoIds = eventos.map((e) => e.id_evento);
+    const eventoMap = new Map<string, string>();
+    eventos.forEach((e) => eventoMap.set(e.id_evento, e.titulo));
+
+    // 2. Obtener las contrataciones de esos eventos
+    const { data: contrataciones, error: errorContrataciones } = await supabase
+        .from("tbl_contrataciones")
+        .select("id_contratacion, id_evento, id_proveedor")
+        .in("id_evento", eventoIds);
+
+    if (errorContrataciones) {
+        console.error("Error al obtener contrataciones:", errorContrataciones);
+        throw new Error("No se pudieron obtener las contrataciones");
+    }
+
+    if (!contrataciones || contrataciones.length === 0) {
+        return { totalGastado: 0, pagos: [] };
+    }
+
+    const contratacionIds = contrataciones.map((c) => c.id_contratacion);
+    const contratacionMap = new Map<string, { id_evento: string; id_proveedor: string }>();
+    contrataciones.forEach((c) => {
+        contratacionMap.set(c.id_contratacion, { id_evento: c.id_evento, id_proveedor: c.id_proveedor });
+    });
+
+    // 3. Obtener los pagos confirmados de esas contrataciones
+    const { data: pagos, error: errorPagos } = await supabase
         .from("tbl_pagos")
-        .select(`
-            id_pago,
-            monto_total,
-            metodo_pago,
-            tarjeta_mascara,
-            creado_en,
-            contratacion:tbl_contrataciones!inner (
-                id_proveedor,
-                evento:tbl_eventos!inner (
-                    id_evento,
-                    titulo,
-                    id_cliente
-                )
-            )
-        `)
+        .select("id_pago, monto_total, metodo_pago, tarjeta_mascara, creado_en")
+        .in("id_pago", contratacionIds)
         .eq("estado_pago", "pagado")
-        .eq("contratacion.evento.id_cliente", clienteId)
         .order("creado_en", { ascending: false });
 
-    if (error) {
-        console.error("Error al obtener pagos del cliente:", error);
+    if (errorPagos) {
+        console.error("Error al obtener pagos:", errorPagos);
         throw new Error("No se pudieron obtener los pagos");
     }
 
@@ -38,13 +63,9 @@ export async function getPagosCliente(
         return { totalGastado: 0, pagos: [] };
     }
 
-    // IDs de proveedores únicos para obtener sus nombres comerciales
+    // 4. Obtener nombres de los proveedores
     const proveedorIds = Array.from(
-        new Set(
-            pagos
-                .map((p) => p.contratacion?.id_proveedor)
-                .filter(Boolean) as string[]
-        )
+        new Set(contrataciones.map((c) => c.id_proveedor))
     );
 
     const { data: perfiles, error: errorPerfiles } = await supabase
@@ -62,22 +83,18 @@ export async function getPagosCliente(
         nombreProveedorMap.set(p.id_proveedor, p.nombre_comercial)
     );
 
-    // Calcular total gastado
+    // 5. Calcular totales y mapear resultados
     let totalGastado = 0;
-    pagos.forEach((p) => {
-        totalGastado += p.monto_total ?? 0;
-    });
-
-    // Mapear a tipo de salida — el cliente solo ve monto_total, sin comisiones
+    
     const pagosFormateados: PagoCliente[] = pagos.map((p) => {
-        const evento = p.contratacion?.evento;
-        const nombreEvento =
-            // @ts-expect-error Supabase join type inference
-            (Array.isArray(evento) ? evento[0]?.titulo : evento?.titulo) ??
-            "Evento sin título";
-        const idProveedor = p.contratacion?.id_proveedor ?? "";
-        const nombreProveedor =
-            nombreProveedorMap.get(idProveedor) ?? "Proveedor";
+        totalGastado += p.monto_total ?? 0;
+
+        const contratacion = contratacionMap.get(p.id_pago);
+        const idEvento = contratacion?.id_evento ?? "";
+        const idProveedor = contratacion?.id_proveedor ?? "";
+
+        const nombreEvento = eventoMap.get(idEvento) ?? "Evento sin título";
+        const nombreProveedor = nombreProveedorMap.get(idProveedor) ?? "Proveedor";
 
         return {
             idPago: p.id_pago,

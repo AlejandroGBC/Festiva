@@ -30,7 +30,7 @@ export default function ResumenGastoCliente({
                 </div>
                 <div>
                     <p className="text-white/60 text-[11px]">Cada lempira es una experiencia memorable</p>
-                    <p className="text-white text-xs font-semibold mt-0.5">Festiva · Pagos seguros 🔒</p>
+                    <p className="text-white text-xs font-semibold mt-0.5">Festiva · Pagos seguros</p>
                 </div>
             </div>
         </article>
