@@ -106,11 +106,17 @@ export async function GET(req: NextRequest) {
         // Importación dinámica para evitar errores de Webpack en build time
         try {
           const { enviarPushAUsuario } = await import("@/lib/push/send-push");
-          await enviarPushAUsuario(evento.id_cliente, {
-            title: "\uD83C\uDF89 \u00a1Tu evento finaliz\u00f3!",
-            body: `\u00bfC\u00f3mo te fue en \u201c${evento.titulo}\u201d? Califica a tus proveedores.`,
-            url: `/cliente/eventos/${evento.id_evento}/calificar`,
-          });
+          // Pasamos el service role client porque el cron no tiene sesión de usuario.
+          // Sin esto, createServerSupabaseClient() fallaría al leer tbl_push_subscriptions.
+          await enviarPushAUsuario(
+            evento.id_cliente,
+            {
+              title: "\uD83C\uDF89 \u00a1Tu evento finaliz\u00f3!",
+              body: `\u00bfC\u00f3mo te fue en \u201c${evento.titulo}\u201d? Califica a tus proveedores.`,
+              url: `/cliente/eventos/${evento.id_evento}/calificar`,
+            },
+            supabase // ← service role client, bypassa RLS y no necesita sesión
+          );
         } catch (err) {
           console.error("[cron] Error enviando push:", err);
         }
