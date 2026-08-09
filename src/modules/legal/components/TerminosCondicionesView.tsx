@@ -205,7 +205,6 @@ export default function TerminosCondicionesView() {
                     <ul>
                         <li><strong>Correo:</strong> legal@festiva.hn</li>
                         <li><strong>Dirección:</strong> Tegucigalpa, Honduras</li>
-                        <li><strong>Chat de soporte:</strong> Disponible dentro de la plataforma Festiva</li>
                     </ul>
                 </LegalSection>
 

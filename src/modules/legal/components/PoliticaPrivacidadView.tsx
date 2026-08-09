@@ -71,7 +71,7 @@ export default function PoliticaPrivacidadView() {
                         <li>Número de teléfono</li>
                         <li>Contraseña (almacenada de forma encriptada, nunca en texto plano)</li>
                         <li>Fotografía de perfil (opcional)</li>
-                        <li>Para Proveedores: información comercial, RTN/NIT, área de cobertura, categoría de servicio y portafolio</li>
+                        <li>Para Proveedores: información comercial, área de cobertura, categoría de servicio y portafolio</li>
                     </ul>
 
                     <p className="font-semibold text-festiva-midnight-blue mt-2">2.2 Datos de actividad en la plataforma</p>
@@ -212,7 +212,6 @@ export default function PoliticaPrivacidadView() {
                     <ul>
                         <li><strong>Correo:</strong> privacidad@festiva.hn</li>
                         <li><strong>Dirección:</strong> Tegucigalpa, Honduras</li>
-                        <li><strong>Chat de soporte:</strong> Disponible dentro de la plataforma Festiva</li>
                     </ul>
                     <p>
                         Si no obtienes una respuesta satisfactoria, tienes derecho a presentar un reclamo ante la autoridad reguladora competente en Honduras.
