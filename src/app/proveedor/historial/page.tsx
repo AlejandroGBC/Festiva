@@ -35,7 +35,7 @@ export default function DashboardProveedorPage() {
 
           <div className="grid grid-cols-2 gap-4">
             <ResumenStatCard etiqueta="Este mes" monto={48500} descripcion="HN ingresados" color="mint-neon" />
-            <ResumenStatCard etiqueta="Comisiones" monto={4850} descripcion="HN Festiva 10%" color="euphoric-pink" signo="-" />
+            <ResumenStatCard etiqueta="Comisiones" monto={4850} descripcion="HN Festiva 7%" color="euphoric-pink" signo="-" />
           </div>
 
           <div>
