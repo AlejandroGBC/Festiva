@@ -1,8 +1,3 @@
-/**
- * Ubicación sugerida:
- *   src/modules/cliente/anuncio/types/evento-detalle.types.ts
- */
-
 export type EstadoEvento = "recibiendo_ofertas" | "en_proceso" | "finalizado" | "cancelado";
 
 export interface ProveedorContratado {
@@ -10,8 +5,8 @@ export interface ProveedorContratado {
   id_proveedor: string;
   nombre_comercial: string;
   /** Categoría a mostrar — servicio en común entre lo pedido por el
-   * evento y lo que ofrece el proveedor; si no hay match, cae al
-   * primer servicio del proveedor, y si tampoco hay, a un texto genérico. */
+  evento y lo que ofrece el proveedor; si no hay match, cae al
+  primer servicio del proveedor, y si tampoco hay, a un texto genérico. */
   categoria: string;
   precio_total: number;
   servicios: string[];
@@ -51,9 +46,12 @@ export interface EventoDetalle {
   cantidad_ofertas: number;
   creado_en: string;
 
-  // ── Datos para la vista enriquecida ──
+  //Datos para la vista enriquecida
   proveedores_contratados: ProveedorContratado[];
   timeline: TimelineHito[];
-  /** 0-100, calculado en el service a partir de los 5 hitos del timeline. */
+  // 0-100, calculado en el service a partir de los 5 hitos del timeline.
   progreso_porcentaje: number;
+  //Número de contrataciones del evento que aún no tienen calificación.
+  //Solo relevante cuando estado === "finalizado".
+  calificaciones_pendientes: number;
 }

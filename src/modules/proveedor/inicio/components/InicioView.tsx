@@ -8,11 +8,13 @@ import Header from "@/shared/components/HeaderInicio";
 import { useAuthContext } from "@/lib/context/auth-context";
 import { InicioViewProps } from "@/modules/proveedor/inicio/types/inicio.types";
 import Loading from "@/shared/components/Loading";
+import { clienteLinks, proveedorLinks } from "@/shared/constant/sidebarLinks";
 
 
 export default function InicioView({ stats, eventos }: InicioViewProps) {
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const { user, isLoading, signOut } = useAuthContext();
+    const mainLinks = user?.rol === "cliente" ? clienteLinks : proveedorLinks;
 
     if (isLoading) return <Loading fullScreen label="Cargando..." />;
 
@@ -24,12 +26,13 @@ export default function InicioView({ stats, eventos }: InicioViewProps) {
                 onClose={() => setSidebarOpen(false)}
                 user={user!}
                 signOut={signOut}
+                mainLinks={mainLinks}
             />
 
             <section className="px-5">
                 <div className="pb-6">
                     <p className="text-festiva-midnight-blue/45 text-sm pb-2">
-                        Buenos días, proveedor
+                        Buen día, proveedor
                     </p>
                     <h1 className="text-festiva-midnight-blue font-bold text-3xl">
                         {user?.nombre}

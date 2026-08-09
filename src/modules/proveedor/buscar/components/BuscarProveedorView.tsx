@@ -9,6 +9,7 @@ import FiltrosRapidos, { FiltroRapido } from "@/modules/proveedor/buscar/compone
 import EventosDisponiblesList from "@/modules/proveedor/buscar/components/EventosDisponiblesList";
 import { useAuthContext } from "@/lib/context/auth-context";
 import type { EventoDisponible } from "@/shared/types/buscar-proveedor.types";
+import { clienteLinks, proveedorLinks } from "@/shared/constant/sidebarLinks";
 
 interface BuscarProveedorViewProps {
   eventosIniciales: EventoDisponible[];
@@ -20,6 +21,8 @@ export default function BuscarProveedorView({ eventosIniciales, error }: BuscarP
   const [busqueda, setBusqueda] = useState("");
   const [filtroActivo, setFiltroActivo] = useState<FiltroRapido>("todos");
   const { user, signOut } = useAuthContext();
+  const mainLinks = user?.rol === "cliente" ? clienteLinks : proveedorLinks;
+
 
   const eventosFiltrados = useMemo(() => {
     const texto = busqueda.trim().toLowerCase();
@@ -55,7 +58,7 @@ export default function BuscarProveedorView({ eventosIniciales, error }: BuscarP
       <section>
         <HeaderSeccion titulo="Explorar eventos" onMenuClick={() => setSidebarOpen(true)} />
 
-        <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} user={user!} signOut={signOut} />
+        <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} user={user!} signOut={signOut} mainLinks={mainLinks} />
 
         <section className="px-5 flex flex-col gap-4 flex-1 min-h-0">
           <BuscarInput value={busqueda} onChange={setBusqueda} />

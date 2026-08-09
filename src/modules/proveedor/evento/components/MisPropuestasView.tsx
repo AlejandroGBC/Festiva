@@ -9,6 +9,7 @@ import { AlertCircle } from "lucide-react";
 import { PropuestaCard } from "../../propuestas/components/PropuestaCard";
 import { TabsPropuestas } from "../../propuestas/components/TabsPropuestas";
 import Sidebar from "@/shared/components/Sidebar";
+import { clienteLinks, proveedorLinks } from "@/shared/constant/sidebarLinks";
 
 
 interface MisPropuestasViewProps {
@@ -21,6 +22,8 @@ export default function MisPropuestasView({ propuestasIniciales, error }: MisPro
   const [tabActivo, setTabActivo] = useState<TabPropuestas>("enviadas");
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { user, signOut } = useAuthContext();
+  const mainLinks = user?.rol === "cliente" ? clienteLinks : proveedorLinks;
+
 
   const propuestasFiltradas = propuestasIniciales.filter((p) => {
     if (tabActivo === "enviadas") return p.estado === "enviada";
@@ -35,7 +38,7 @@ export default function MisPropuestasView({ propuestasIniciales, error }: MisPro
         <TabsPropuestas tabActivo={tabActivo} onCambiarTab={setTabActivo} />
       </div>
 
-      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} user={user!} signOut={signOut} />
+      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} user={user!} signOut={signOut} mainLinks={mainLinks} />
 
       <div className="flex-1 overflow-y-auto no-scrollbar w-full px-4 pt-4 pb-36 flex flex-col gap-4">
         {error ? (

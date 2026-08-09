@@ -1,24 +1,29 @@
+"use server";
 /**
- * Ubicación sugerida:
- *   src/lib/push/send-push.ts
- *
- * Server-only. Requiere `npm install web-push` y las variables de entorno
- * NEXT_PUBLIC_VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY, VAPID_SUBJECT.
- *
- * ¿Quién llama a esto? Quien construya el lado del PROVEEDOR (enviar
- * oferta), ya que ahí es donde se genera el evento "el cliente debe
- * enterarse de una oferta nueva". Ejemplo de uso al crear una oferta:
- *
- *   import { enviarPushAUsuario } from "@/lib/push/send-push";
- *   await enviarPushAUsuario(idClienteDelEvento, {
- *     title: "Nueva oferta recibida",
- *     body: `${nombreProveedor} envió una oferta para "${tituloEvento}"`,
- *     url: "/cliente/ofertas",
- *   });
+
+  Server-only. Requiere `npm install web-push` y las variables de entorno
+  NEXT_PUBLIC_VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY, VAPID_SUBJECT.
+  
+  ¿Quién llama a esto? Quien construya el lado del PROVEEDOR (enviar
+  oferta), ya que ahí es donde se genera el evento "el cliente debe
+  enterarse de una oferta nueva". Ejemplo de uso al crear una oferta:
+ 
+    import { enviarPushAUsuario } from "@/lib/push/send-push";
+    await enviarPushAUsuario(idClienteDelEvento, {
+      title: "Nueva oferta recibida",
+      body: `${nombreProveedor} envió una oferta para "${tituloEvento}"`,
+      url: "/cliente/ofertas",
+    });
+ 
+  Contextos sin sesión (cron jobs, webhooks, workers):
+    pasar createServiceRoleClient() como tercer argumento para evitar
+    el error de "no session" al leer tbl_push_subscriptions.
  */
 
 import webpush from "web-push";
+import { SupabaseClient } from "@supabase/supabase-js";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
+import { Database } from "@/shared/types/supabase.types";
 
 let vapidConfigurado = false;
 
@@ -47,11 +52,21 @@ export interface PushPayload {
 
 export async function enviarPushAUsuario(
   idUsuario: string,
-  payload: PushPayload
+  payload: PushPayload,
+  /**
+    Cliente de Supabase a usar para leer las suscripciones push.
+    - Contextos normales (Server Actions, Route Handlers con sesión):
+      omitir este parámetro → usará createServerSupabaseClient() con cookies.
+    - Contextos sin sesión (cron jobs, webhooks, workers):
+      pasar createServiceRoleClient() para evitar el error de "no session".
+   */
+  supabaseClient?: SupabaseClient<Database>
 ): Promise<void> {
   asegurarVapidConfigurado();
 
-  const supabase = await createServerSupabaseClient();
+  // Si no se provee un cliente externo, usamos el cliente de sesión normal
+  const supabase: SupabaseClient<Database> =
+    supabaseClient ?? (await createServerSupabaseClient());
 
   const { data: suscripciones, error } = await supabase
     .from("tbl_push_subscriptions")
@@ -72,7 +87,7 @@ export async function enviarPushAUsuario(
         );
       } catch (err: unknown) {
         // 410 Gone / 404 = la suscripción expiró o el usuario desinstaló
-        // la app; la borramos para no seguir intentando en vano.
+        // la app; la borramos para no seguir intentando para nada.
         const statusCode =
           err && typeof err === "object" && "statusCode" in err
             ? (err as { statusCode: number }).statusCode

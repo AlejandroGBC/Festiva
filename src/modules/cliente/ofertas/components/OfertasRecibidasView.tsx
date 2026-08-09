@@ -19,6 +19,7 @@ import type {
 import { tiempoRelativo } from "@/shared/utils/tiempo";
 import { getAvatarUrl } from "@/shared/utils/getAvatarUrl";
 import { obtenerIniciales } from "@/shared/utils/obtenerIniciales";
+import { clienteLinks, proveedorLinks } from "@/shared/constant/sidebarLinks";
 
 const ESTADO_LABEL: Record<OfertaListado["estado"], string> = {
   enviada: "Nueva",
@@ -74,6 +75,7 @@ export default function OfertasRecibidasView({
       : ofertasPorEvento.filter((o) => o.estado === filtroEstado);
 
   const ofertasNuevas = ofertas.filter((o) => o.estado === "enviada").length;
+  const mainLinks = user?.rol === "cliente" ? clienteLinks : proveedorLinks;
 
   const contarPorEstado = (estado: FiltroEstado) =>
     estado === "todas"
@@ -87,7 +89,7 @@ export default function OfertasRecibidasView({
         tieneNotificacionesNuevas={tieneNotificacionesNuevas}
         user={user}
       />
-      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} user={user!} signOut={signOut} />
+      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} user={user!} signOut={signOut} mainLinks={mainLinks} />
 
       <section className="px-5 flex-1 pb-6 overflow-y-auto no-scrollbar">
         <div className="flex items-center justify-between flex-wrap gap-2 pt-1">
