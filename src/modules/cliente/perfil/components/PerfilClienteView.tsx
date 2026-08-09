@@ -73,7 +73,7 @@ export default function PerfilClienteView({ perfil, tieneNotificacionesNuevas }:
 
 
   return (
-    <div className="relative min-h-dvh bg-[#F5F2FA] flex flex-col">
+    <div className="flex-1 h-full overflow-y-auto no-scrollbar bg-[#F5F2FA] flex flex-col">
       <Header
         onMenuClick={() => setSidebarOpen(true)}
         tieneNotificacionesNuevas={tieneNotificacionesNuevas}
