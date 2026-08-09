@@ -58,7 +58,7 @@ export default function ProveedorTarjetaCard({ proveedor, onClick }: ProveedorTa
 
           {proveedor.precio_desde != null && (
             <span className="font-bold text-xs text-festiva-electric-violet truncate">
-              Desde ${proveedor.precio_desde.toLocaleString()}
+              Desde L. {proveedor.precio_desde.toLocaleString()}
             </span>
           )}
         </div>
