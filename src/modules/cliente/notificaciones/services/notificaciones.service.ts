@@ -1,7 +1,4 @@
 /**
- * Ubicación sugerida:
- *   src/modules/cliente/notificaciones/services/notificaciones.service.ts
- *
  * Corre en el CLIENTE. Se llama al entrar a la página de notificaciones,
  * para actualizar notificaciones_vistas_en = ahora.
  */
