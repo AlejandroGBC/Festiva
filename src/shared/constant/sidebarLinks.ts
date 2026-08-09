@@ -93,11 +93,11 @@ export const proveedorLinks = [
         href: "reportes",
         icon: ChartLine,
         color: {
-            text: "text-festiva-euphoric-pink",
-            bg: "bg-festiva-euphoric-pink/10",
-            hoverBg: "hover:bg-festiva-euphoric-pink/10",
-            hoverText: "group-hover:text-festiva-euphoric-pink",
-            bl: "border-l-4 border-l-festiva-euphoric-pink",
+            text: "text-festiva-midnight-blue",
+            bg: "bg-festiva-midnight-blue/10",
+            hoverBg: "hover:bg-festiva-midnight-blue/10",
+            hoverText: "group-hover:text-festiva-midnight-blue",
+            bl: "border-l-4 border-l-festiva-midnight-blue",
         },
     },
     {
