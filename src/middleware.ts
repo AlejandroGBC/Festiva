@@ -1,7 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { updateSession } from "@/lib/supabase/middleware";
 import { routeGeneratorOverLogin } from "./shared/utils/routeGeneratosOverLogin";
-const PUBLIC_PATHS = ["/", "/auth", "/auth/login", "/auth/registro", "/api/servicios"];
+const PUBLIC_PATHS = ["/", "/auth", "/auth/login", "/auth/registro", "/api/servicios", "/legal"];
 
 function esRutaPublica(pathname: string) {
   return PUBLIC_PATHS.some((p) => pathname === p || pathname.startsWith(`${p}/`));
