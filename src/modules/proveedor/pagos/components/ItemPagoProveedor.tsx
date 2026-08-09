@@ -1,10 +1,11 @@
-import { CalendarDays, CreditCard, ArrowDownLeft } from "lucide-react";
+import { CalendarDays, CreditCard, ArrowDownLeft, ChevronRight } from "lucide-react";
 import { formatCurrency } from "@/shared/utils/formatCurrency";
 import type { PagoProveedor } from "../types/pagos.types";
 
 interface ItemPagoProveedorProps {
     pago: PagoProveedor;
     isLast: boolean;
+    onClick?: () => void;
 }
 
 function formatFecha(fechaStr: string | null): string {
@@ -23,10 +24,12 @@ function formatMetodo(metodo: string | null, mascara: string | null): string {
     return metodo;
 }
 
-export default function ItemPagoProveedor({ pago, isLast }: ItemPagoProveedorProps) {
+export default function ItemPagoProveedor({ pago, isLast, onClick }: ItemPagoProveedorProps) {
     return (
-        <div
-            className={`py-4 ${!isLast ? "border-b border-festiva-midnight-blue/8" : ""}`}
+        <button
+            type="button"
+            onClick={onClick}
+            className={`w-full text-left py-4 transition-colors active:bg-festiva-midnight-blue/5 ${!isLast ? "border-b border-festiva-midnight-blue/8" : ""}`}
         >
             {/* Fila principal: evento + monto neto */}
             <div className="flex items-start justify-between gap-3 mb-3">
@@ -47,14 +50,17 @@ export default function ItemPagoProveedor({ pago, isLast }: ItemPagoProveedorPro
                     </div>
                 </div>
                 {/* Monto neto (lo que recibió el proveedor) */}
-                <span className="text-festiva-mint-neon font-bold text-base shrink-0">
-                    +{formatCurrency(pago.montoProveedor)}
-                </span>
+                <div className="flex items-center gap-1 shrink-0">
+                    <span className="text-festiva-mint-neon font-bold text-base">
+                        +{formatCurrency(pago.montoProveedor)}
+                    </span>
+                    <ChevronRight size={14} className="text-festiva-midnight-blue/30" />
+                </div>
             </div>
 
-            {/* Fila secundaria: desglose */}
-            <div className="ml-13 flex items-center justify-between">
-                <div className="flex items-center gap-1 ml-[52px]">
+            {/* Fila secundaria: método + desglose */}
+            <div className="flex items-center justify-between ml-[52px]">
+                <div className="flex items-center gap-1">
                     <CreditCard size={11} className="text-festiva-midnight-blue/30" />
                     <span className="text-festiva-midnight-blue/40 text-xs">
                         {formatMetodo(pago.metodoPago, pago.tarjetaMascara)}
@@ -62,16 +68,16 @@ export default function ItemPagoProveedor({ pago, isLast }: ItemPagoProveedorPro
                 </div>
                 <div className="flex items-center gap-3 text-xs text-festiva-midnight-blue/40">
                     <span>
-                        Total cliente:{" "}
+                        Bruto:{" "}
                         <span className="font-semibold text-festiva-midnight-blue/60">
                             {formatCurrency(pago.montoTotal)}
                         </span>
                     </span>
                     <span className="text-festiva-euphoric-pink/70 font-medium">
-                        -{formatCurrency(pago.comisionFestiva)} Festiva
+                        -{formatCurrency(pago.comisionFestiva)}
                     </span>
                 </div>
             </div>
-        </div>
+        </button>
     );
 }
