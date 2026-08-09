@@ -40,8 +40,10 @@ export async function getDatosReportes(proveedorId: string): Promise<DatosReport
     }
 
     // 2. Obtener los IDs de eventos únicos para consultar sus títulos
-    const eventoIds = [...new Set(pagos.map(p => p.contratacion?.id_evento).filter(Boolean))];
-
+    const eventoIds = Array.from(
+        new Set(pagos.map(p => p.contratacion?.id_evento).filter(Boolean) as string[])
+    );
+    
     const { data: eventos, error: errorEventos } = await supabase
         .from("tbl_eventos")
         .select("id_evento, titulo")
