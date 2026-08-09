@@ -1,11 +1,16 @@
 "use client";
 
+import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, MapPin, Star, Image as ImageIcon, MessageSquareText } from "lucide-react";
+import {
+  ArrowLeft, MapPin, Star, Image as ImageIcon, MessageSquareText,
+  X, ChevronLeft, ChevronRight,
+} from "lucide-react";
 
 import Card from "@/shared/components/Card";
+import Avatar from "@/shared/components/Avatar";
 import { obtenerIconoServicio } from "@/shared/lib/servicio-icono";
-import type { ProveedorDetalle } from "@/modules/cliente/proveedores/types/proveedor-detalle.types";
+import type { ProveedorDetalle, TrabajoPortafolio } from "@/modules/cliente/proveedores/types/proveedor-detalle.types";
 import { formatFecha } from "@/shared/utils/tiempo";
 
 interface ProveedorDetalleViewProps {
@@ -21,6 +26,8 @@ const COLORES_PORTAFOLIO = [
 
 export default function ProveedorDetalleView({ proveedor }: ProveedorDetalleViewProps) {
   const router = useRouter();
+  const [trabajoSeleccionado, setTrabajoSeleccionado] = useState<TrabajoPortafolio | null>(null);
+  const [fotoActualIndex, setFotoActualIndex] = useState(0);
 
   const inicial = proveedor.nombre_comercial
     .split(" ")
@@ -28,20 +35,51 @@ export default function ProveedorDetalleView({ proveedor }: ProveedorDetalleView
     .map((w) => w.charAt(0))
     .join("");
 
+  const abrirModalTrabajo = (trabajo: TrabajoPortafolio) => {
+    setTrabajoSeleccionado(trabajo);
+    setFotoActualIndex(0);
+  };
+
+  const cerrarModal = () => {
+    setTrabajoSeleccionado(null);
+    setFotoActualIndex(0);
+  };
+
+  const imagenesModal = trabajoSeleccionado?.imagenes && trabajoSeleccionado.imagenes.length > 0
+    ? trabajoSeleccionado.imagenes
+    : trabajoSeleccionado?.imagen_portada
+    ? [trabajoSeleccionado.imagen_portada]
+    : [];
+
+  const handlePrevFoto = () => {
+    if (imagenesModal.length <= 1) return;
+    setFotoActualIndex((prev) => (prev === 0 ? imagenesModal.length - 1 : prev - 1));
+  };
+
+  const handleNextFoto = () => {
+    if (imagenesModal.length <= 1) return;
+    setFotoActualIndex((prev) => (prev === imagenesModal.length - 1 ? 0 : prev + 1));
+  };
+
   return (
-    <div className="min-h-dvh bg-[#F5F2FA] flex flex-col overflow-y-auto no-scrollbar">
-      <header className="bg-festiva-midnight-blue px-5 pt-14 pb-7 rounded-b-[28px]">
+    <div className="h-dvh bg-[#F5F2FA] flex flex-col overflow-hidden">
+      <header className="bg-festiva-midnight-blue px-5 pt-12 pb-6 rounded-b-[28px] shrink-0 z-10 shadow-md">
         <button
           onClick={() => router.back()}
-          className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center mb-4"
+          className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center mb-4 hover:bg-white/20 transition-colors"
         >
           <ArrowLeft size={16} className="text-white" />
         </button>
 
         <div className="flex items-center gap-3.5">
-          <div className="w-16 h-16 rounded-2xl bg-festiva-euphoric-pink/20 border-2 border-festiva-euphoric-pink/30 flex items-center justify-center shrink-0 text-lg font-bold text-white">
-            {inicial}
+          <div className="shrink-0">
+            <Avatar
+              initials={inicial}
+              imageUrl={proveedor.foto_perfil_url || undefined}
+              editable={false}
+            />
           </div>
+
           <div className="min-w-0">
             <h1 className="font-bold text-xl text-white m-0 truncate">
               {proveedor.nombre_comercial}
@@ -71,7 +109,7 @@ export default function ProveedorDetalleView({ proveedor }: ProveedorDetalleView
         </div>
       </header>
 
-      <main className="flex-1 px-5 pb-8 lg:max-w-2xl lg:mx-auto lg:w-full">
+      <main className="flex-1 min-h-0 overflow-y-auto no-scrollbar px-5 pb-8 lg:max-w-2xl lg:mx-auto lg:w-full">
         {/* Estadísticas */}
         <div className="grid grid-cols-3 gap-2.5 mt-5">
           <Card className="!p-3.5 text-center">
@@ -135,7 +173,8 @@ export default function ProveedorDetalleView({ proveedor }: ProveedorDetalleView
                 return (
                   <div
                     key={trabajo.id_portafolio}
-                    className="aspect-square rounded-2xl overflow-hidden relative border border-[#EDEAF8]"
+                    onClick={() => abrirModalTrabajo(trabajo)}
+                    className="aspect-square rounded-2xl overflow-hidden relative border border-[#EDEAF8] cursor-pointer hover:opacity-90 transition-opacity"
                   >
                     {trabajo.imagen_portada ? (
                       // eslint-disable-next-line @next/next/no-img-element
@@ -213,6 +252,91 @@ export default function ProveedorDetalleView({ proveedor }: ProveedorDetalleView
           </Card>
         )}
       </main>
+
+      {/* Modal con carrusel */}
+      {trabajoSeleccionado && (
+        <div className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-3 sm:p-4 backdrop-blur-sm animate-fade-in">
+          <div className="bg-white w-full max-w-md rounded-3xl overflow-hidden shadow-2xl flex flex-col max-h-[90dvh]">
+            
+            {/* Visor de imágenes / Carrusel */}
+            <div className="relative w-full bg-black shrink-0 flex items-center justify-center min-h-[200px] max-h-[40vh] overflow-hidden">
+              {imagenesModal.length > 0 ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={imagenesModal[fotoActualIndex]}
+                  alt={`${trabajoSeleccionado.titulo} - Foto ${fotoActualIndex + 1}`}
+                  className="w-full max-h-[40vh] object-contain"
+                />
+              ) : (
+                <div className="w-full h-48 flex items-center justify-center bg-festiva-electric-violet/10">
+                  <ImageIcon size={40} className="text-festiva-electric-violet" />
+                </div>
+              )}
+
+              {/* Botón Cerrar */}
+              <button
+                onClick={cerrarModal}
+                className="absolute top-3 right-3 z-10 w-8 h-8 rounded-full bg-black/60 hover:bg-black/80 flex items-center justify-center text-white transition-colors"
+              >
+                <X size={18} />
+              </button>
+
+              {/* Controles de Navegación del Carrusel (Si hay más de 1 imagen) */}
+              {imagenesModal.length > 1 && (
+                <>
+                  <button
+                    onClick={handlePrevFoto}
+                    className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/50 hover:bg-black/75 flex items-center justify-center text-white transition-colors"
+                  >
+                    <ChevronLeft size={20} />
+                  </button>
+                  <button
+                    onClick={handleNextFoto}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/50 hover:bg-black/75 flex items-center justify-center text-white transition-colors"
+                  >
+                    <ChevronRight size={20} />
+                  </button>
+
+                  <div className="absolute bottom-2 left-0 right-0 flex justify-center gap-1.5 z-10">
+                    {imagenesModal.map((_, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => setFotoActualIndex(idx)}
+                        className={`h-1.5 rounded-full transition-all ${
+                          idx === fotoActualIndex
+                            ? "w-4 bg-white"
+                            : "w-1.5 bg-white/50"
+                        }`}
+                      />
+                    ))}
+                  </div>
+                </>
+              )}
+            </div>
+
+            <div className="p-5 overflow-y-auto flex-1 min-h-0">
+              <h3 className="font-bold text-lg text-festiva-midnight-blue mb-1">
+                {trabajoSeleccionado.titulo}
+              </h3>
+              <p className="text-xs font-semibold text-festiva-electric-violet mb-3">
+                Por {proveedor.nombre_comercial}
+              </p>
+              <p className="text-sm text-festiva-midnight-blue/70 leading-relaxed m-0 whitespace-pre-line">
+                {trabajoSeleccionado.descripcion || "Sin descripción adicional para este proyecto."}
+              </p>
+            </div>
+
+            <div className="p-4 bg-[#F9F8FF] border-t border-[#EDEAF8] shrink-0">
+              <button
+                onClick={cerrarModal}
+                className="w-full py-3 bg-festiva-midnight-blue text-white font-bold rounded-2xl text-sm hover:opacity-95 transition-opacity"
+              >
+                Cerrar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -1,5 +1,11 @@
 import { PortfolioItem, PortfolioData } from '@/shared/types/portfolio.types';
 
+export interface SavePortfolioPayload extends Omit<PortfolioItem, 'id' | 'imageUrls'> {
+    id?: string;
+    imageUrls: string[];
+    removedImageUrls?: string[];
+}
+
 export const portfolioService = {
     getProviderPortfolio: async (): Promise<PortfolioData> => {
         const res = await fetch('/api/proveedor/portfolio');
@@ -8,15 +14,11 @@ export const portfolioService = {
         return res.json();
     },
 
-    savePortfolioItem: async (item: Omit<PortfolioItem, 'id'> & { id?: string; removeExistingImage?: boolean }): Promise<PortfolioData> => {
+    savePortfolioItem: async (item: SavePortfolioPayload): Promise<PortfolioData> => {
         const res = await fetch('/api/proveedor/portfolio', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                ...item,
-                imageUrl: item.imageUrl ?? null,
-                removeExistingImage: Boolean(item.removeExistingImage),
-            }),
+            body: JSON.stringify(item),
         });
         
         if (!res.ok) throw new Error('Error guardando ítem');

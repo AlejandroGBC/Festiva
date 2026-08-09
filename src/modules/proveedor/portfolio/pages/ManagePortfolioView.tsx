@@ -15,6 +15,13 @@ import { usePortfolio } from '../hooks/usePortfolio';
 import { PortfolioItem } from '@/shared/types/portfolio.types';
 import { uploadPortfolioImage } from '@/shared/services/upload.service';
 
+interface ImagePreview {
+    id: string;
+    url: string;
+    file?: File;
+    isExisting?: boolean;
+}
+
 export default function ManagePortfolioView() {
     const { 
         data, 
@@ -26,15 +33,15 @@ export default function ManagePortfolioView() {
     const [activeSection, setActiveSection] = useState<'multimedia' | 'casos'>('multimedia');
     const [editingId, setEditingId] = useState<string | null>(null);
     const [uploadingImage, setUploadingImage] = useState(false);
-    
-    const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
+    const [images, setImages] = useState<ImagePreview[]>([]);
+    const [removedImageUrls, setRemovedImageUrls] = useState<string[]>([]);
 
     const [form, setForm] = useState({
         title: '',
         description: '',
         location: '',
         externalUrl: '',
-        imageUrl: ''
     });
 
     const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -45,19 +52,32 @@ export default function ManagePortfolioView() {
     };
 
     const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (file) {
-            setSelectedFile(file);
-            
-            const previewUrl = URL.createObjectURL(file);
-            setForm((prev) => ({ ...prev, imageUrl: previewUrl }));
+        const files = Array.from(e.target.files || []);
+        if (files.length > 0) {
+            const newPreviews: ImagePreview[] = files.map((file) => ({
+                id: `${file.name}-${Date.now()}-${Math.random()}`,
+                url: URL.createObjectURL(file),
+                file,
+                isExisting: false,
+            }));
+
+            setImages((prev) => [...prev, ...newPreviews]);
         }
+        if (fileInputRef.current) fileInputRef.current.value = '';
+    };
+
+    const handleRemoveImage = (imgToRemove: ImagePreview) => {
+        if (imgToRemove.isExisting) {
+            setRemovedImageUrls((prev) => [...prev, imgToRemove.url]);
+        }
+        setImages((prev) => prev.filter((img) => img.id !== imgToRemove.id));
     };
 
     const resetForm = () => {
         setEditingId(null);
-        setSelectedFile(null);
-        setForm({ title: '', description: '', location: '', externalUrl: '', imageUrl: '' });
+        setImages([]);
+        setRemovedImageUrls([]);
+        setForm({ title: '', description: '', location: '', externalUrl: '' });
     };
 
     const handleOpenCreateNew = () => {
@@ -67,13 +87,19 @@ export default function ManagePortfolioView() {
 
     const handleOpenEdit = (item: PortfolioItem) => {
         setEditingId(item.id);
-        setSelectedFile(null);
+        setRemovedImageUrls([]);
+        setImages(
+            (item.imageUrls || []).map((url, idx) => ({
+                id: `existing-${idx}-${url}`,
+                url,
+                isExisting: true,
+            }))
+        );
         setForm({
             title: item.title,
             description: item.description,
             location: item.location,
             externalUrl: item.externalUrl || '',
-            imageUrl: item.imageUrl || ''
         });
         setActiveSection('casos');
     };
@@ -84,15 +110,15 @@ export default function ManagePortfolioView() {
 
         try {
             setUploadingImage(true);
-            const previousImageUrl = editingId
-                ? (data?.items.find((item) => item.id === editingId)?.imageUrl ?? '')
-                : '';
-            const shouldRemoveExistingImage = Boolean(editingId && previousImageUrl && !selectedFile && !form.imageUrl.trim());
 
-            let finalImageUrl: string | null = form.imageUrl || null;
-
-            if (selectedFile) {
-                finalImageUrl = await uploadPortfolioImage(selectedFile, 'proveedor');
+            const uploadedUrls: string[] = [];
+            for (const img of images) {
+                if (img.file) {
+                    const uploadedUrl = await uploadPortfolioImage(img.file, 'proveedor');
+                    uploadedUrls.push(uploadedUrl);
+                } else if (img.isExisting) {
+                    uploadedUrls.push(img.url);
+                }
             }
 
             const success = await saveItem({
@@ -101,8 +127,8 @@ export default function ManagePortfolioView() {
                 description: form.description,
                 location: form.location,
                 externalUrl: form.externalUrl,
-                imageUrl: finalImageUrl,
-                removeExistingImage: shouldRemoveExistingImage,
+                imageUrls: uploadedUrls,
+                removedImageUrls,
             });
 
             if (success) {
@@ -207,40 +233,39 @@ export default function ManagePortfolioView() {
                             />
 
                             <div className="flex flex-col gap-1.5">
-                                <label className="text-xs font-bold text-slate-600">Imagen del Portafolio</label>
+                                <label className="text-xs font-bold text-slate-600">Imágenes del Portafolio</label>
                                 <input
                                     type="file"
                                     accept="image/*"
+                                    multiple
                                     ref={fileInputRef}
                                     onChange={handleImageUpload}
                                     className="hidden"
                                 />
 
-                                {form.imageUrl ? (
-                                    <div className="relative w-full h-36 rounded-xl overflow-hidden border border-slate-200">
-                                        <Image src={form.imageUrl} alt="Preview" fill className="object-cover" unoptimized />
+                                <div className="grid grid-cols-3 gap-2">
+                                    {images.map((img) => (
+                                        <div key={img.id} className="relative aspect-square rounded-xl overflow-hidden border border-slate-200 group">
+                                            <Image src={img.url} alt="Preview" fill className="object-cover" unoptimized />
+                                            <button
+                                                type="button"
+                                                onClick={() => handleRemoveImage(img)}
+                                                className="absolute top-1 right-1 p-1 bg-red-500 text-white rounded-full shadow-md hover:bg-red-600 transition-colors"
+                                            >
+                                                <X className="w-3 h-3" />
+                                            </button>
+                                        </div>
+                                    ))}
 
-                                        <button
-                                            type="button"
-                                            onClick={() => {
-                                                setSelectedFile(null);
-                                                setForm((p) => ({ ...p, imageUrl: '' }));
-                                            }}
-                                            className="absolute top-2 right-2 p-1.5 bg-red-500 text-white rounded-full shadow-md hover:bg-red-600 transition-colors"
-                                        >
-                                            <X className="w-4 h-4" />
-                                        </button>
-                                    </div>
-                                ) : (
                                     <button
                                         type="button"
                                         onClick={() => fileInputRef.current?.click()}
-                                        className="w-full h-24 border-2 border-dashed border-slate-200 hover:border-festiva-electric-violet rounded-xl flex flex-col items-center justify-center gap-1.5 text-slate-400 hover:text-festiva-electric-violet transition-colors bg-slate-50 cursor-pointer"
+                                        className="aspect-square border-2 border-dashed border-slate-200 hover:border-festiva-electric-violet rounded-xl flex flex-col items-center justify-center gap-1 text-slate-400 hover:text-festiva-electric-violet transition-colors bg-slate-50 cursor-pointer"
                                     >
                                         <Upload className="w-5 h-5" />
-                                        <span className="text-xs font-semibold">Cargar imagen</span>
+                                        <span className="text-[10px] font-semibold">Agregar</span>
                                     </button>
-                                )}
+                                </div>
                             </div>
 
                             <Button 
@@ -261,7 +286,7 @@ export default function ManagePortfolioView() {
                     <SectionTitle
                         title={activeSection === 'multimedia' ? 'Mosaico Multimedia' : 'Listado de Proyectos'}
                         actionLabel={activeSection === 'multimedia' ? 'Gestionar Casos' : 'Mis Casos de Éxito'}
-                        onActionClick={() => setActiveSection(activeSection === 'multimedia' ? 'casos' : 'casos')}
+                        onActionClick={() => setActiveSection('casos')}
                     />
 
                     {activeSection === 'multimedia' && (
@@ -281,7 +306,7 @@ export default function ManagePortfolioView() {
                                         key={c.id}
                                         id={c.id}
                                         title={c.title}
-                                        imageUrl={c.imageUrl || ''}
+                                        imageUrl={c.imageUrls?.[0] || ''}
                                         isVerified={!!c.isVerified}
                                         onDelete={(idToDelete) => deleteItem(idToDelete)}
                                         onEdit={() => handleOpenEdit(c)}

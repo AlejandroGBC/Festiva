@@ -51,7 +51,7 @@ export async function GET() {
         title: t.titulo,
         description: t.descripcion || "",
         location: "", 
-        imageUrl: t.tbl_portafolio_imagenes?.[0]?.imagen_url || "",
+        imageUrls: t.tbl_portafolio_imagenes?.map((img) => img.imagen_url) || [],
         isVerified: Boolean(t.id_contratacion),
     })) || [];
 
@@ -67,81 +67,22 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json();
-    const { id, title, description, imageUrl, removeExistingImage } = body;
+    const { id, title, description, imageUrls = [], removedImageUrls = [] } = body;
+    
+    let portfolioId = id;
 
-    if (id) {
+    if (portfolioId) {
         const { error: updateErr } = await supabase
             .from("tbl_trabajos_portafolio")
             .update({
                 titulo: title,
                 descripcion: description,
             })
-            .eq("id_portafolio", id)
+            .eq("id_portafolio", portfolioId)
             .eq("id_proveedor", user.id);
 
         if (updateErr) {
             return NextResponse.json({ error: updateErr.message }, { status: 500 });
-        }
-
-        const shouldClearImage = removeExistingImage === true || imageUrl === null || imageUrl === "";
-
-        if (shouldClearImage) {
-            const { data: oldImages } = await supabase
-                .from("tbl_portafolio_imagenes")
-                .select("imagen_url")
-                .eq("id_portafolio", id);
-
-            if (oldImages && oldImages.length > 0) {
-                const pathsToDelete = oldImages
-                    .map((img) => extractStoragePath(img.imagen_url, "portafolio"))
-                    .filter((p): p is string => Boolean(p));
-
-                if (pathsToDelete.length > 0) {
-                    const adminSupabase = createServiceRoleClient();
-                    const { error: removeErr } = await adminSupabase.storage
-                        .from("portafolio")
-                        .remove(pathsToDelete);
-
-                    if (removeErr) {
-                        console.error("Error borrando archivos antiguos del storage:", removeErr.message);
-                    }
-                }
-            }
-
-            await supabase
-                .from("tbl_portafolio_imagenes")
-                .delete()
-                .eq("id_portafolio", id);
-        } else if (imageUrl) {
-            const { data: oldImages } = await supabase
-                .from("tbl_portafolio_imagenes")
-                .select("imagen_url")
-                .eq("id_portafolio", id);
-
-            if (oldImages && oldImages.length > 0) {
-                const pathsToDelete = oldImages
-                    .map((img) => extractStoragePath(img.imagen_url, "portafolio"))
-                    .filter((p): p is string => Boolean(p));
-
-                if (pathsToDelete.length > 0) {
-                    const adminSupabase = createServiceRoleClient();
-                    const { error: removeErr } = await adminSupabase.storage
-                        .from("portafolio")
-                        .remove(pathsToDelete);
-
-                    if (removeErr) {
-                        console.error("Error borrando archivos antiguos del storage:", removeErr.message);
-                    }
-                }
-            }
-            await supabase
-                .from("tbl_portafolio_imagenes")
-                .delete()
-                .eq("id_portafolio", id);
-
-            await supabase
-                .from("tbl_portafolio_imagenes")
-                .insert({ id_portafolio: id, imagen_url: imageUrl });
         }
     } else {
         const { data: newWork, error: insertErr } = await supabase
@@ -157,12 +98,42 @@ export async function POST(request: Request) {
         if (insertErr || !newWork) {
             return NextResponse.json({ error: insertErr?.message || "Error al crear trabajo" }, { status: 500 });
         }
+        portfolioId = newWork.id_portafolio;
+    }
 
-        if (imageUrl) {
-            await supabase.from("tbl_portafolio_imagenes").insert({
-                id_portafolio: newWork.id_portafolio,
-                imagen_url: imageUrl,
-            });
+    if (removedImageUrls.length > 0) {
+        const pathsToDelete = removedImageUrls
+            .map((url: string) => extractStoragePath(url, "portafolio"))
+            .filter((p: string | null): p is string => Boolean(p));
+
+        if (pathsToDelete.length > 0) {
+            const adminSupabase = createServiceRoleClient();
+            await adminSupabase.storage.from("portafolio").remove(pathsToDelete);
+        }
+
+        await supabase
+            .from("tbl_portafolio_imagenes")
+            .delete()
+            .eq("id_portafolio", portfolioId)
+            .in("imagen_url", removedImageUrls);
+    }
+
+    
+    if (imageUrls.length > 0) {
+        const { data: existingImgData } = await supabase
+            .from("tbl_portafolio_imagenes")
+            .select("imagen_url")
+            .eq("id_portafolio", portfolioId);
+
+        const existingUrls = new Set(existingImgData?.map((img) => img.imagen_url) || []);
+        const newUrlsToInsert = imageUrls.filter((url: string) => !existingUrls.has(url));
+
+        if (newUrlsToInsert.length > 0) {
+            const recordsToInsert = newUrlsToInsert.map((url: string) => ({
+                id_portafolio: portfolioId,
+                imagen_url: url,
+            }));
+            await supabase.from("tbl_portafolio_imagenes").insert(recordsToInsert);
         }
     }
 
@@ -184,19 +155,29 @@ export async function DELETE(request: Request) {
         return NextResponse.json({ error: "ID no proporcionado" }, { status: 400 });
     }
 
-    const { error: delImgErr } = await supabase
+    const { data: images } = await supabase
         .from("tbl_portafolio_imagenes")
-        .delete()
+        .select("imagen_url")
         .eq("id_portafolio", id);
 
-    console.log("Error al borrar de tbl_portafolio_imagenes:", delImgErr);
+    if (images && images.length > 0) {
+        const pathsToDelete = images
+            .map((img) => extractStoragePath(img.imagen_url, "portafolio"))
+            .filter((p): p is string => Boolean(p));
+
+        if (pathsToDelete.length > 0) {
+            const adminSupabase = createServiceRoleClient();
+            await adminSupabase.storage.from("portafolio").remove(pathsToDelete);
+        }
+    }
+
+    await supabase.from("tbl_portafolio_imagenes").delete().eq("id_portafolio", id);
 
     const { error: dbErr } = await supabase
         .from("tbl_trabajos_portafolio")
         .delete()
         .eq("id_portafolio", id)
-        .eq("id_proveedor", user.id)
-        .select();
+        .eq("id_proveedor", user.id);
 
     if (dbErr) {
         return NextResponse.json({ error: dbErr.message }, { status: 500 });

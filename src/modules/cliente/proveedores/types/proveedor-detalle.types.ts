@@ -6,8 +6,10 @@
 export interface TrabajoPortafolio {
   id_portafolio: string;
   titulo: string;
+  descripcion?: string | null;
   /** Primera imagen asociada a ese trabajo (portada). null si no subió ninguna. */
   imagen_portada: string | null;
+  imagenes?: string[];
 }
 
 export interface ResenaProveedor {
@@ -20,6 +22,7 @@ export interface ResenaProveedor {
 export interface ProveedorDetalle {
   id_proveedor: string;
   nombre_comercial: string;
+  foto_perfil_url?: string | null;
   descripcion: string | null;
   ubicacion_base: string;
   especialidades: string[];

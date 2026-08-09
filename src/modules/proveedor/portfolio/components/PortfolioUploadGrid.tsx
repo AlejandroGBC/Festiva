@@ -20,58 +20,65 @@ export default function PortfolioUploadGrid({ items, onDelete, onEdit, onNew }: 
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 w-full">
             {items.map((item, idx) => {
                 const IconComponent = fallbackIcons[idx % fallbackIcons.length];
-                const hasImage = item.imageUrl && item.imageUrl.trim().length > 0;
+                const mainImage = item.imageUrls?.[0];
+                const hasImage = Boolean(mainImage && mainImage.trim().length > 0);
+                const totalImages = item.imageUrls?.length || 0;
 
                 return (
-                <div
-                    key={item.id}
-                    onClick={() => onEdit(item)}
-                    className="group relative aspect-square rounded-2xl overflow-hidden border border-slate-100 bg-slate-50 shadow-sm cursor-pointer transition-all hover:shadow-md hover:border-festiva-electric-violet/30"
-                >
-                    {hasImage ? (
-                        <Image
-                            src={item.imageUrl!}
-                            alt={item.title}
-                            fill
-                            className="object-cover group-hover:scale-105 transition-transform duration-300"
-                        />
-                    ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-festiva-electric-violet/10 to-festiva-euphoric-pink/10 flex flex-col items-center justify-center p-3 text-center">
-                        <IconComponent className="w-8 h-8 text-festiva-electric-violet mb-1" />
-                        <span className="text-[11px] font-bold text-festiva-midnight-blue line-clamp-2">
-                            {item.title}
-                        </span>
-                    </div>
-                    )}
+                    <div
+                        key={item.id}
+                        onClick={() => onEdit(item)}
+                        className="group relative aspect-square rounded-2xl overflow-hidden border border-slate-100 bg-slate-50 shadow-sm cursor-pointer transition-all hover:shadow-md hover:border-festiva-electric-violet/30"
+                    >
+                        {hasImage ? (
+                            <Image
+                                src={mainImage!}
+                                alt={item.title}
+                                fill
+                                className="object-cover group-hover:scale-105 transition-transform duration-300"
+                            />
+                        ) : (
+                            <div className="w-full h-full bg-gradient-to-br from-festiva-electric-violet/10 to-festiva-euphoric-pink/10 flex flex-col items-center justify-center p-3 text-center">
+                                <IconComponent className="w-8 h-8 text-festiva-electric-violet mb-1" />
+                                <span className="text-[11px] font-bold text-festiva-midnight-blue line-clamp-2">
+                                    {item.title}
+                                </span>
+                            </div>
+                        )}
 
-                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 p-2">
-                        <button
-                            type="button"
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                e.preventDefault();
-                                onEdit(item);
-                            }}
-                            className="p-2 bg-white/90 text-festiva-midnight-blue rounded-xl hover:bg-white transition-colors"
-                            title="Editar"
-                        >
-                            <Edit3 className="w-4 h-4" />
-                        </button>
-                        <button
-                            type="button"
-                            style={{ position: 'relative', zIndex: 9999, pointerEvents: 'auto' }}
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                e.preventDefault();
-                                onDelete(item.id);
-                            }}
-                            className="p-2 text-red-500 hover:text-red-700 cursor-pointer"
-                            aria-label={`Eliminar ${item.title}`}
-                        >
-                            <Trash2 className="w-4 h-4" />
-                        </button>
+                        {totalImages > 1 && (
+                            <span className="absolute top-2 left-2 bg-black/60 text-white text-[10px] font-bold px-2 py-0.5 rounded-full backdrop-blur-sm z-10">
+                                +{totalImages} fotos
+                            </span>
+                        )}
+
+                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 p-2 z-20">
+                            <button
+                                type="button"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    e.preventDefault();
+                                    onEdit(item);
+                                }}
+                                className="p-2 bg-white/90 text-festiva-midnight-blue rounded-xl hover:bg-white transition-colors"
+                                title="Editar"
+                            >
+                                <Edit3 className="w-4 h-4" />
+                            </button>
+                            <button
+                                type="button"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    e.preventDefault();
+                                    onDelete(item.id);
+                                }}
+                                className="p-2 text-red-500 hover:text-red-700 bg-white/90 rounded-xl transition-colors cursor-pointer"
+                                aria-label={`Eliminar ${item.title}`}
+                            >
+                                <Trash2 className="w-4 h-4" />
+                            </button>
+                        </div>
                     </div>
-                </div>
                 );
             })}
 

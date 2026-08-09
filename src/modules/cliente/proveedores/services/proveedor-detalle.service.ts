@@ -20,11 +20,20 @@ export async function getProveedorDetalle(idProveedor: string): Promise<Proveedo
 
   const { data: perfil, error } = await supabase
     .from("tbl_perfiles_proveedor")
-    .select("id_proveedor, nombre_comercial, descripcion, ubicacion_base, creado_en")
+    .select(`
+      id_proveedor,
+      nombre_comercial,
+      descripcion,
+      ubicacion_base,
+      creado_en,
+      tbl_usuarios ( foto_perfil_url )
+    `)
     .eq("id_proveedor", idProveedor)
     .maybeSingle();
 
   if (error || !perfil) return null;
+
+  const fotoPerfilUrl = (perfil.tbl_usuarios as { foto_perfil_url: string | null } | null)?.foto_perfil_url ?? null;
 
   // ── Especialidades ──
   const { data: serviciosDb } = await supabase
@@ -92,20 +101,23 @@ export async function getProveedorDetalle(idProveedor: string): Promise<Proveedo
   // ── Portafolio ──
   const { data: portafolioDb } = await supabase
     .from("tbl_trabajos_portafolio")
-    .select("id_portafolio, titulo")
+    .select("id_portafolio, titulo, descripcion")
     .eq("id_proveedor", idProveedor)
     .order("creado_en", { ascending: false });
 
   interface TrabajoRow {
     id_portafolio: string;
     titulo: string;
+    descripcion: string | null;
   }
   const trabajos = (portafolioDb ?? []) as TrabajoRow[];
 
   let portafolio: TrabajoPortafolio[] = trabajos.map((t) => ({
     id_portafolio: t.id_portafolio,
     titulo: t.titulo,
+    descripcion: t.descripcion,
     imagen_portada: null,
+    imagenes: [],
   }));
 
   if (trabajos.length > 0) {
@@ -121,23 +133,28 @@ export async function getProveedorDetalle(idProveedor: string): Promise<Proveedo
       id_portafolio: string;
       imagen_url: string;
     }
-    const portadaPorTrabajo = new Map<string, string>();
+
+    const imagenesPorTrabajo = new Map<string, string[]>();
+
     for (const img of (imagenesDb ?? []) as ImagenRow[]) {
-      // Solo nos quedamos con la primera imagen de cada trabajo (portada)
-      if (!portadaPorTrabajo.has(img.id_portafolio)) {
-        portadaPorTrabajo.set(img.id_portafolio, img.imagen_url);
-      }
+      const actual = imagenesPorTrabajo.get(img.id_portafolio) ?? [];
+      imagenesPorTrabajo.set(img.id_portafolio, [...actual, img.imagen_url]);
     }
 
-    portafolio = portafolio.map((t) => ({
-      ...t,
-      imagen_portada: portadaPorTrabajo.get(t.id_portafolio) ?? null,
-    }));
+    portafolio = portafolio.map((t) => {
+      const imgs = imagenesPorTrabajo.get(t.id_portafolio) ?? [];
+      return {
+        ...t,
+        imagen_portada: imgs[0] ?? null,
+        imagenes: imgs,
+      };
+    });
   }
 
   return {
     id_proveedor: perfil.id_proveedor,
     nombre_comercial: perfil.nombre_comercial,
+    foto_perfil_url: fotoPerfilUrl,
     descripcion: perfil.descripcion,
     ubicacion_base: perfil.ubicacion_base,
     especialidades,

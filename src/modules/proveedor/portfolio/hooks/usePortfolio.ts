@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { portfolioService } from '../services/portfolio.service';
-import { PortfolioItem, PortfolioData } from '@/shared/types/portfolio.types';
+import { portfolioService, SavePortfolioPayload } from '../services/portfolio.service';
+import { PortfolioData } from '@/shared/types/portfolio.types';
 
 export function usePortfolio() {
     const [data, setData] = useState<PortfolioData | null>(null);
@@ -23,7 +23,7 @@ export function usePortfolio() {
         loadPortfolio();
     }, []);
 
-    const saveItem = async (item: Omit<PortfolioItem, 'id'> & { id?: string; removeExistingImage?: boolean }) => {
+    const saveItem = async (item: SavePortfolioPayload) => {
         try {
             setUpdating(true);
             const updated = await portfolioService.savePortfolioItem(item);

@@ -7,15 +7,14 @@ import { CheckCircle2, Edit, Trash2, FolderHeart } from 'lucide-react';
 interface CaseListCardProps {
     id: string;
     title: string;
-    imageUrl: string;
+    imageUrl?: string;
     isVerified: boolean;
     onDelete: (id: string) => void;
     onEdit: () => void;
 }
 
 export default function CaseListCard({ id, title, imageUrl, isVerified, onDelete, onEdit }: CaseListCardProps) {
-    
-    const hasImage = imageUrl && imageUrl.trim().length > 0;
+    const hasImage = Boolean(imageUrl && imageUrl.trim().length > 0);
 
     return (
         <div className="w-full bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between gap-3">
@@ -23,7 +22,7 @@ export default function CaseListCard({ id, title, imageUrl, isVerified, onDelete
                 <div className="w-12 h-12 rounded-xl bg-slate-100 overflow-hidden flex-shrink-0 border border-slate-100 flex items-center justify-center">
                     {hasImage ? (
                         <Image
-                            src={imageUrl}
+                            src={imageUrl!}
                             alt={title}
                             width={48}
                             height={48}
@@ -61,7 +60,6 @@ export default function CaseListCard({ id, title, imageUrl, isVerified, onDelete
                     onClick={(e) => {
                         e.stopPropagation();
                         e.preventDefault();
-                        console.log("Clic en borrar Card ID:", id);
                         onDelete(id);
                     }}
                     className="p-2 text-slate-400 hover:text-red-500 rounded-lg transition-colors cursor-pointer"

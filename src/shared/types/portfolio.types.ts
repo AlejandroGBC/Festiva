@@ -4,7 +4,7 @@ export interface PortfolioItem {
     description: string;
     location: string;
     externalUrl?: string | null;
-    imageUrl?: string | null;
+    imageUrls: string[];
     isVerified?: boolean;
 }
 
