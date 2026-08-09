@@ -74,3 +74,70 @@ export async function getResenasPendientes(): Promise<ResenasPendientesInfo> {
 
   return { tienePendientes: false, idEvento: null, tituloEvento: null };
 }
+
+export interface EventoResenaPendiente {
+  idEvento: string;
+  tituloEvento: string;
+  fechaEvento: string;
+}
+
+export async function getAllResenasPendientes(): Promise<EventoResenaPendiente[]> {
+  const supabase = await createServerSupabaseClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) return [];
+
+  // 1. Obtener eventos finalizados del cliente
+  const { data: eventosFinalizados } = await supabase
+    .from("tbl_eventos")
+    .select("id_evento, titulo, fecha_evento")
+    .eq("id_cliente", user.id)
+    .eq("estado", "finalizado");
+
+  if (!eventosFinalizados || eventosFinalizados.length === 0) {
+    return [];
+  }
+
+  const resultados: EventoResenaPendiente[] = [];
+
+  for (const evento of eventosFinalizados) {
+    const { data: contrataciones } = await supabase
+      .from("tbl_contrataciones")
+      .select("id_contratacion")
+      .eq("id_evento", evento.id_evento);
+
+    if (!contrataciones || contrataciones.length === 0) continue;
+
+    const idsContrataciones = contrataciones.map((c) => c.id_contratacion);
+
+    const { data: pagadas } = await supabase
+      .from("tbl_pagos")
+      .select("id_pago")
+      .in("id_pago", idsContrataciones)
+      .eq("estado_pago", "pagado");
+
+    if (!pagadas || pagadas.length === 0) continue;
+
+    const idsPagadas = pagadas.map((p) => p.id_pago);
+
+    const { count: totalCalificadas } = await supabase
+      .from("tbl_calificaciones")
+      .select("id_contratacion", { count: "exact", head: true })
+      .in("id_contratacion", idsPagadas);
+
+    const pendientes = idsPagadas.length - (totalCalificadas ?? 0);
+
+    if (pendientes > 0) {
+      resultados.push({
+        idEvento: evento.id_evento,
+        tituloEvento: evento.titulo,
+        fechaEvento: evento.fecha_evento,
+      });
+    }
+  }
+
+  return resultados;
+}

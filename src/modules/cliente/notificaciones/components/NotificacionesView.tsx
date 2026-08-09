@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Bell, Inbox } from "lucide-react";
+import { Bell, Inbox, Star } from "lucide-react";
 
 import TopNavbar from "@/shared/components/TopNavbar";
 import Card from "@/shared/components/Card";
@@ -48,7 +48,11 @@ export default function NotificacionesView({ notificaciones }: NotificacionesVie
                 <Card className="hover:shadow-md transition-shadow">
                   <div className="flex gap-3 items-start">
                     <div className="w-10 h-10 rounded-xl bg-festiva-electric-violet/10 flex items-center justify-center shrink-0">
-                      <Bell size={18} className="text-festiva-electric-violet" />
+                      {n.tipo === "resena_pendiente" ? (
+                        <Star size={18} className="text-festiva-electric-violet" />
+                      ) : (
+                        <Bell size={18} className="text-festiva-electric-violet" />
+                      )}
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">

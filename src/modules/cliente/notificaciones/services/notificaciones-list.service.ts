@@ -1,13 +1,11 @@
 /**
- * Ubicación sugerida:
- *   src/modules/cliente/notificaciones/services/notificaciones-list.service.ts
- *
  * Corre en el SERVIDOR. Deriva "notificaciones" a partir de ofertas
  * recientes en vez de leer una tabla dedicada (no existe tbl_notificaciones).
  */
 
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import type { NotificacionItem } from "@/modules/cliente/notificaciones/types/notificaciones.types";
+import { getAllResenasPendientes } from "@/modules/cliente/calificaciones/services/resenas-pendientes.service";
 
 export async function getNotificaciones(): Promise<NotificacionItem[]> {
   const supabase = createServerSupabaseClient();
@@ -60,7 +58,7 @@ export async function getNotificaciones(): Promise<NotificacionItem[]> {
     tbl_perfiles_proveedor: { nombre_comercial: string } | null;
   }
 
-  return (ofertasDb as OfertaNotifRow[]).map((o) => ({
+  const notificaciones: NotificacionItem[] = (ofertasDb as OfertaNotifRow[]).map((o) => ({
     id: `${o.id_evento}-${o.id_proveedor}`,
     tipo: "nueva_oferta" as const,
     titulo: "Nueva oferta recibida",
@@ -71,6 +69,27 @@ export async function getNotificaciones(): Promise<NotificacionItem[]> {
     nueva: !vistasEn || new Date(o.creada_en) > vistasEn,
     href: "/cliente/ofertas",
   }));
+
+  // Agregar notificaciones de eventos finalizados con reseñas pendientes
+  try {
+    const resenasPendientes = await getAllResenasPendientes();
+    for (const resena of resenasPendientes) {
+      notificaciones.push({
+        id: `resena-${resena.idEvento}`,
+        tipo: "resena_pendiente" as const,
+        titulo: "🎉 ¡Tu evento finalizó!",
+        mensaje: `¿Cómo te fue en "${resena.tituloEvento}"? Califica a tus proveedores.`,
+        fecha: resena.fechaEvento, // Usamos la fecha del evento como fecha de la notificación
+        nueva: !vistasEn || new Date(resena.fechaEvento) > vistasEn,
+        href: `/cliente/eventos/${resena.idEvento}/calificar`,
+      });
+    }
+  } catch (err) {
+    console.error("Error al obtener reseñas pendientes para notificaciones:", err);
+  }
+
+  // Ordenar todas las notificaciones por fecha (más recientes primero)
+  return notificaciones.sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
 }
 
 export async function contarNotificacionesNuevas(): Promise<number> {
