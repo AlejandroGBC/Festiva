@@ -112,7 +112,7 @@ export default function PerfilClienteView({ perfil, tieneNotificacionesNuevas }:
   };
 
   return (
-    <div className="relative min-h-dvh bg-[#F5F2FA] flex flex-col" suppressHydrationWarning>
+    <div className="relative h-dvh bg-[#F5F2FA] flex flex-col overflow-hidden">
       <Header
         onMenuClick={() => setSidebarOpen(true)}
         tieneNotificacionesNuevas={tieneNotificacionesNuevas}
@@ -120,12 +120,12 @@ export default function PerfilClienteView({ perfil, tieneNotificacionesNuevas }:
       />
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} user={user} signOut={signOut} mainLinks={mainLinks} />
 
-      <section className="px-5 flex-1 pb-6">
-        <h1 className="text-festiva-midnight-blue font-bold text-xl pt-1 pb-4 m-0">
+      <section className="px-5 flex-1 min-h-0 flex flex-col overflow-hidden">
+        <h1 className="text-festiva-midnight-blue font-bold text-xl pt-1 pb-4 m-0 shrink-0">
           Mi Perfil
         </h1>
 
-        <div className="relative overflow-hidden rounded-[18px] bg-festiva-midnight-blue p-5 mb-4">
+        <div className="relative overflow-hidden rounded-[18px] bg-festiva-midnight-blue p-5 mb-4 shrink-0">
           <svg
             className="absolute top-0 right-0 w-28 h-28 pointer-events-none"
             viewBox="0 0 120 120"
@@ -135,7 +135,6 @@ export default function PerfilClienteView({ perfil, tieneNotificacionesNuevas }:
           </svg>
 
           <div className="relative z-10 flex flex-col items-center text-center">
-            {/* Avatar dinámico con las mismas opciones que ProfileBanner */}
             <div className="mb-3">
               <Avatar
                 initials={iniciales(perfil.nombreCompleto)}
@@ -160,88 +159,90 @@ export default function PerfilClienteView({ perfil, tieneNotificacionesNuevas }:
           </div>
         </div>
 
-        {/* Estadísticas */}
-        <div className="grid grid-cols-3 gap-2.5 mb-5">
-          {[
-            { valor: perfil.totalEventos, label: "Eventos", color: "text-festiva-electric-violet" },
-            { valor: perfil.totalProveedores, label: "Proveedores", color: "text-festiva-euphoric-pink" },
-            { valor: perfil.totalResenas, label: "Reseñas", color: "text-festiva-confetti-orange" },
-          ].map((stat) => (
-            <Card key={stat.label} className="!p-3.5 text-center">
-              <div className={`text-xl font-extrabold ${stat.color}`}>{stat.valor}</div>
-              <div className="text-[11px] text-festiva-midnight-blue/45 mt-0.5">{stat.label}</div>
-            </Card>
-          ))}
-        </div>
+        <div className="flex-1 overflow-y-auto no-scrollbar w-full pb-6">
+          {/* Estadísticas */}
+          <div className="grid grid-cols-3 gap-2.5 mb-5">
+            {[
+              { valor: perfil.totalEventos, label: "Eventos", color: "text-festiva-electric-violet" },
+              { valor: perfil.totalProveedores, label: "Proveedores", color: "text-festiva-euphoric-pink" },
+              { valor: perfil.totalResenas, label: "Reseñas", color: "text-festiva-confetti-orange" },
+            ].map((stat) => (
+              <Card key={stat.label} className="!p-3.5 text-center">
+                <div className={`text-xl font-extrabold ${stat.color}`}>{stat.valor}</div>
+                <div className="text-[11px] text-festiva-midnight-blue/45 mt-0.5">{stat.label}</div>
+              </Card>
+            ))}
+          </div>
 
-        {/* Mi cuenta */}
-        <p className="text-[11px] font-bold text-festiva-midnight-blue/40 uppercase tracking-wide mb-2 px-1">
-          Mi cuenta
-        </p>
-        <div className="rounded-2xl bg-white border border-[#EDEAF8] overflow-hidden divide-y divide-[#F5F2FA] mb-5">
-          <FilaCuenta
-            icon={<User size={18} className="text-festiva-electric-violet" />}
-            iconBg="rgba(123,63,228,0.08)"
-            titulo="Datos personales"
-            subtitulo="Nombre, correo, teléfono"
-            onClick={() => router.push("/cliente/perfil/datos")}
-          />
-          <FilaCuenta
-            icon={<Lock size={18} className="text-festiva-mint-neon" />}
-            iconBg="rgba(46,196,182,0.10)"
-            titulo="Seguridad"
-            subtitulo="Contraseña, verificación"
-            onClick={() => router.push("/cliente/perfil/seguridad")}
-          />
-          <FilaCuenta
-            icon={<Bell size={18} className="text-festiva-confetti-orange" />}
-            iconBg="rgba(255,156,46,0.10)"
-            titulo="Notificaciones"
-            subtitulo="Email y push"
-            onClick={() => router.push("/cliente/perfil/notificaciones")}
-          />
-        </div>
+          {/* Mi cuenta */}
+          <p className="text-[11px] font-bold text-festiva-midnight-blue/40 uppercase tracking-wide mb-2 px-1">
+            Mi cuenta
+          </p>
+          <div className="rounded-2xl bg-white border border-[#EDEAF8] overflow-hidden divide-y divide-[#F5F2FA] mb-5">
+            <FilaCuenta
+              icon={<User size={18} className="text-festiva-electric-violet" />}
+              iconBg="rgba(123,63,228,0.08)"
+              titulo="Datos personales"
+              subtitulo="Nombre, correo, teléfono"
+              onClick={() => router.push("/cliente/perfil/datos")}
+            />
+            <FilaCuenta
+              icon={<Lock size={18} className="text-festiva-mint-neon" />}
+              iconBg="rgba(46,196,182,0.10)"
+              titulo="Seguridad"
+              subtitulo="Contraseña, verificación"
+              onClick={() => router.push("/cliente/perfil/seguridad")}
+            />
+            <FilaCuenta
+              icon={<Bell size={18} className="text-festiva-confetti-orange" />}
+              iconBg="rgba(255,156,46,0.10)"
+              titulo="Notificaciones"
+              subtitulo="Email y push"
+              onClick={() => router.push("/cliente/perfil/notificaciones")}
+            />
+          </div>
 
-        {/* Historial */}
-        <p className="text-[11px] font-bold text-festiva-midnight-blue/40 uppercase tracking-wide mb-2 px-1">
-          Historial
-        </p>
-        <div className="rounded-2xl bg-white border border-[#EDEAF8] overflow-hidden divide-y divide-[#F5F2FA] mb-5">
-          <FilaCuenta
-            icon={<Calendar size={18} className="text-festiva-euphoric-pink" />}
-            iconBg="rgba(255,77,141,0.08)"
-            titulo="Mis eventos"
-            subtitulo={`${perfil.totalEventos} evento${perfil.totalEventos === 1 ? "" : "s"} registrados`}
-            onClick={() => router.push("/cliente/eventos")}
-          />
-          <FilaCuenta
-            icon={<CreditCard size={18} className="text-festiva-electric-violet" />}
-            iconBg="rgba(123,63,228,0.08)"
-            titulo="Historial de pagos"
-            subtitulo="Facturas y recibos"
-            onClick={() => router.push("/cliente/pagos")}
-          />
-          <FilaCuenta
-            icon={<Star size={18} className="text-festiva-confetti-orange" />}
-            iconBg="rgba(255,156,46,0.10)"
-            titulo="Mis reseñas"
-            subtitulo={`${perfil.totalResenas} reseña${perfil.totalResenas === 1 ? "" : "s"} escritas`}
-            onClick={() => router.push("/cliente/perfil/resenas")}
-          />
-        </div>
+          {/* Historial */}
+          <p className="text-[11px] font-bold text-festiva-midnight-blue/40 uppercase tracking-wide mb-2 px-1">
+            Historial
+          </p>
+          <div className="rounded-2xl bg-white border border-[#EDEAF8] overflow-hidden divide-y divide-[#F5F2FA] mb-5">
+            <FilaCuenta
+              icon={<Calendar size={18} className="text-festiva-euphoric-pink" />}
+              iconBg="rgba(255,77,141,0.08)"
+              titulo="Mis eventos"
+              subtitulo={`${perfil.totalEventos} evento${perfil.totalEventos === 1 ? "" : "s"} registrados`}
+              onClick={() => router.push("/cliente/eventos")}
+            />
+            <FilaCuenta
+              icon={<CreditCard size={18} className="text-festiva-electric-violet" />}
+              iconBg="rgba(123,63,228,0.08)"
+              titulo="Historial de pagos"
+              subtitulo="Facturas y recibos"
+              onClick={() => router.push("/cliente/pagos")}
+            />
+            <FilaCuenta
+              icon={<Star size={18} className="text-festiva-confetti-orange" />}
+              iconBg="rgba(255,156,46,0.10)"
+              titulo="Mis reseñas"
+              subtitulo={`${perfil.totalResenas} reseña${perfil.totalResenas === 1 ? "" : "s"} escritas`}
+              onClick={() => router.push("/cliente/perfil/resenas")}
+            />
+          </div>
 
-        {/* Cerrar sesión */}
-        <button
-          className="w-full flex items-center justify-center gap-2 rounded-2xl bg-red-500/8 text-red-500 font-bold text-sm py-3.5"
-          onClick={async () => {
-            await signOut();
-            router.push("/auth/login");
-            router.refresh();
-          }}
-        >
-          <LogOut size={18} />
-          Cerrar sesión
-        </button>
+          {/* Cerrar sesión */}
+          <button
+            className="w-full flex items-center justify-center gap-2 rounded-2xl bg-red-500/8 text-red-500 font-bold text-sm py-3.5"
+            onClick={async () => {
+              await signOut();
+              router.push("/auth/login");
+              router.refresh();
+            }}
+          >
+            <LogOut size={18} />
+            Cerrar sesión
+          </button>
+        </div>
       </section>
     </div>
   );
