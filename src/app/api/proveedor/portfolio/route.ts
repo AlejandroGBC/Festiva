@@ -1,4 +1,5 @@
 import { createServerSupabaseClient } from "@/lib/supabase/server";
+import { createServiceRoleClient } from "@/lib/supabase/service-role";
 import { NextResponse } from "next/server";
 
 interface DBTrabajoPortafolio {
@@ -7,6 +8,18 @@ interface DBTrabajoPortafolio {
     descripcion: string | null;
     id_contratacion: string | null;
     tbl_portafolio_imagenes: { imagen_url: string }[];
+}
+
+function extractStoragePath(fullUrl: string, bucketName: string = "portafolio"): string | null {
+    if (!fullUrl) return null;
+    
+    const token = `/${bucketName}/`;
+    if (fullUrl.includes(token)) {
+        const relative = fullUrl.split(token)[1];
+        return relative ? decodeURIComponent(relative.split("?")[0]) : null;
+    }
+    
+    return decodeURIComponent(fullUrl.split("?")[0]);
 }
 
 export async function GET() {
@@ -54,7 +67,7 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json();
-    const { id, title, description, imageUrl } = body;
+    const { id, title, description, imageUrl, removeExistingImage } = body;
 
     if (id) {
         const { error: updateErr } = await supabase
@@ -63,14 +76,64 @@ export async function POST(request: Request) {
                 titulo: title,
                 descripcion: description,
             })
-        .eq("id_portafolio", id)
-        .eq("id_proveedor", user.id);
+            .eq("id_portafolio", id)
+            .eq("id_proveedor", user.id);
 
         if (updateErr) {
             return NextResponse.json({ error: updateErr.message }, { status: 500 });
         }
 
-        if (imageUrl) {
+        const shouldClearImage = removeExistingImage === true || imageUrl === null || imageUrl === "";
+
+        if (shouldClearImage) {
+            const { data: oldImages } = await supabase
+                .from("tbl_portafolio_imagenes")
+                .select("imagen_url")
+                .eq("id_portafolio", id);
+
+            if (oldImages && oldImages.length > 0) {
+                const pathsToDelete = oldImages
+                    .map((img) => extractStoragePath(img.imagen_url, "portafolio"))
+                    .filter((p): p is string => Boolean(p));
+
+                if (pathsToDelete.length > 0) {
+                    const adminSupabase = createServiceRoleClient();
+                    const { error: removeErr } = await adminSupabase.storage
+                        .from("portafolio")
+                        .remove(pathsToDelete);
+
+                    if (removeErr) {
+                        console.error("Error borrando archivos antiguos del storage:", removeErr.message);
+                    }
+                }
+            }
+
+            await supabase
+                .from("tbl_portafolio_imagenes")
+                .delete()
+                .eq("id_portafolio", id);
+        } else if (imageUrl) {
+            const { data: oldImages } = await supabase
+                .from("tbl_portafolio_imagenes")
+                .select("imagen_url")
+                .eq("id_portafolio", id);
+
+            if (oldImages && oldImages.length > 0) {
+                const pathsToDelete = oldImages
+                    .map((img) => extractStoragePath(img.imagen_url, "portafolio"))
+                    .filter((p): p is string => Boolean(p));
+
+                if (pathsToDelete.length > 0) {
+                    const adminSupabase = createServiceRoleClient();
+                    const { error: removeErr } = await adminSupabase.storage
+                        .from("portafolio")
+                        .remove(pathsToDelete);
+
+                    if (removeErr) {
+                        console.error("Error borrando archivos antiguos del storage:", removeErr.message);
+                    }
+                }
+            }
             await supabase
                 .from("tbl_portafolio_imagenes")
                 .delete()
@@ -79,7 +142,7 @@ export async function POST(request: Request) {
             await supabase
                 .from("tbl_portafolio_imagenes")
                 .insert({ id_portafolio: id, imagen_url: imageUrl });
-            }
+        }
     } else {
         const { data: newWork, error: insertErr } = await supabase
             .from("tbl_trabajos_portafolio")
@@ -88,11 +151,11 @@ export async function POST(request: Request) {
                 titulo: title,
                 descripcion: description,
             })
-        .select("id_portafolio")
-        .single();
+            .select("id_portafolio")
+            .single();
 
         if (insertErr || !newWork) {
-            return NextResponse.json({ error: insertErr?.message || "Error al crear caso" }, { status: 500 });
+            return NextResponse.json({ error: insertErr?.message || "Error al crear trabajo" }, { status: 500 });
         }
 
         if (imageUrl) {
@@ -121,19 +184,22 @@ export async function DELETE(request: Request) {
         return NextResponse.json({ error: "ID no proporcionado" }, { status: 400 });
     }
 
-    await supabase
+    const { error: delImgErr } = await supabase
         .from("tbl_portafolio_imagenes")
         .delete()
         .eq("id_portafolio", id);
 
-    const { error } = await supabase
+    console.log("Error al borrar de tbl_portafolio_imagenes:", delImgErr);
+
+    const { error: dbErr } = await supabase
         .from("tbl_trabajos_portafolio")
         .delete()
         .eq("id_portafolio", id)
-        .eq("id_proveedor", user.id);
+        .eq("id_proveedor", user.id)
+        .select();
 
-    if (error) {
-        return NextResponse.json({ error: error.message }, { status: 500 });
+    if (dbErr) {
+        return NextResponse.json({ error: dbErr.message }, { status: 500 });
     }
 
     return GET();

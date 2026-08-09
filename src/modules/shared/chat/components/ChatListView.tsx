@@ -3,12 +3,14 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { MessageSquareText } from "lucide-react";
 import { useAuthContext } from "@/lib/context/auth-context";
 import type { ConversacionListado } from "../types/chat.types";
 import Header from "@/shared/components/HeaderInicio";
 import Sidebar from "@/shared/components/Sidebar";
 import Card from "@/shared/components/Card";
+import { getAvatarUrl } from "@/shared/utils/getAvatarUrl";
 
 interface ChatListViewProps {
   conversaciones: ConversacionListado[];
@@ -57,43 +59,60 @@ export default function ChatListView({ conversaciones, tieneNotificacionesNuevas
           </Card>
         ) : (
           <div className="flex flex-col gap-2.5">
-            {conversaciones.map((c) => (
-              <div
-                key={c.id_conversacion}
-                onClick={() => router.push(`${basePath}/${c.id_conversacion}`)}
-                className="cursor-pointer"
-              >
-                <Card className="hover:shadow-md transition-shadow !p-3.5">
-                  <div className="flex items-center gap-3">
-                    <div className="w-11 h-11 rounded-2xl bg-festiva-electric-violet/10 border border-festiva-electric-violet/20 flex items-center justify-center shrink-0 text-sm font-bold text-festiva-electric-violet">
-                      {c.nombre_otro.charAt(0)}
-                    </div>
+            {conversaciones.map((c) => {
+              
+              const avatarUrl = getAvatarUrl(c.foto_perfil_otro_url);
 
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between gap-2">
-                        <span className="font-bold text-[14px] text-festiva-midnight-blue truncate">
-                          {c.nombre_otro}
-                        </span>
-                        {c.ultimo_mensaje_en && (
-                          <span className="text-[11px] text-festiva-midnight-blue/40 shrink-0">
-                            {tiempoRelativo(c.ultimo_mensaje_en)}
+              return (
+                <div
+                  key={c.id_conversacion}
+                  onClick={() => router.push(`${basePath}/${c.id_conversacion}`)}
+                  className="cursor-pointer"
+                >
+                  <Card className="hover:shadow-md transition-shadow !p-3.5">
+                    <div className="flex items-center gap-3">
+                      
+                      {avatarUrl ? (
+                        <Image
+                          src={avatarUrl}
+                          alt={c.nombre_otro}
+                          width={44}
+                          height={44}
+                          className="w-11 h-11 rounded-2xl object-cover shrink-0 border border-festiva-electric-violet/20"
+                          unoptimized
+                        />
+                      ) : (
+                        <div className="w-11 h-11 rounded-2xl bg-festiva-electric-violet/10 border border-festiva-electric-violet/20 flex items-center justify-center shrink-0 text-sm font-bold text-festiva-electric-violet">
+                          {c.nombre_otro.charAt(0)}
+                        </div>
+                      )}
+
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="font-bold text-[14px] text-festiva-midnight-blue truncate">
+                            {c.nombre_otro}
                           </span>
-                        )}
+                          {c.ultimo_mensaje_en && (
+                            <span className="text-[11px] text-festiva-midnight-blue/40 shrink-0">
+                              {tiempoRelativo(c.ultimo_mensaje_en)}
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-[12px] text-festiva-midnight-blue/50 truncate m-0 mt-0.5">
+                          {c.ultimo_mensaje ?? `Sobre: ${c.evento_titulo}`}
+                        </p>
                       </div>
-                      <p className="text-[12px] text-festiva-midnight-blue/50 truncate m-0 mt-0.5">
-                        {c.ultimo_mensaje ?? `Sobre: ${c.evento_titulo}`}
-                      </p>
-                    </div>
 
-                    {c.mensajes_no_leidos > 0 && (
-                      <span className="flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full bg-festiva-euphoric-pink text-white text-[11px] font-bold shrink-0">
-                        {c.mensajes_no_leidos}
-                      </span>
-                    )}
-                  </div>
-                </Card>
-              </div>
-            ))}
+                      {c.mensajes_no_leidos > 0 && (
+                        <span className="flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full bg-festiva-euphoric-pink text-white text-[11px] font-bold shrink-0">
+                          {c.mensajes_no_leidos}
+                        </span>
+                      )}
+                    </div>
+                  </Card>
+                </div>
+              );
+            })}
           </div>
         )}
       </section>
