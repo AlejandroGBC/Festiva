@@ -65,7 +65,7 @@ export function Sidebar({ isOpen, onClose, user, signOut, mainLinks }: SidebarPr
                 isOpen ? "translate-x-0" : "-translate-x-full"
                 }`}
             >
-                <div className="bg-festiva-midnight-blue px-4 pt-9 pb-4">
+                <div className="shrink-0 bg-festiva-midnight-blue px-4 pt-9 pb-4">
                 {avatarUrl ? (
                     <Image
                         src={avatarUrl}
@@ -88,7 +88,7 @@ export function Sidebar({ isOpen, onClose, user, signOut, mainLinks }: SidebarPr
                 </span>
                 </div>
 
-                <div className="py-4">
+                <div className="flex-1 min-h-0 overflow-y-scroll no-scrollbar py-4">
                 <div className="flex flex-col gap-2">
                     {mainLinks.map((link) => {
                     const Icon = link.icon;
@@ -140,7 +140,7 @@ export function Sidebar({ isOpen, onClose, user, signOut, mainLinks }: SidebarPr
                 </div>
                 </div>
 
-                <div className="flex justify-center px-4 mt-auto pb-6">
+                <div className="shrink-0 flex justify-center px-4 pb-6 pt-2">
                 <button
                     onClick={handleLogout}
                     disabled={isSigningOut}
