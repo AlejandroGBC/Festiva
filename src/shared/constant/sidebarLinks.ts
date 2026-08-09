@@ -1,4 +1,4 @@
-import { Home, Calendar, Briefcase, MessageSquare, ChartLine } from "lucide-react";
+import { Home, Calendar, Briefcase, MessageSquare, ChartLine, Search } from "lucide-react";
 
 export const clienteLinks = [
     {
@@ -62,6 +62,18 @@ export const proveedorLinks = [
             hoverBg: "hover:bg-festiva-electric-violet/10",
             hoverText: "group-hover:text-festiva-electric-violet",
             bl: "border-l-4 border-l-festiva-electric-violet",
+        },
+    },
+    {
+        label: "Explorar eventos",
+        href: "buscar",
+        icon: Search,
+        color: {
+            text: "text-festiva-euphoric-pink",
+            bg: "bg-festiva-euphoric-pink/10",
+            hoverBg: "hover:bg-festiva-euphoric-pink/10",
+            hoverText: "group-hover:text-festiva-euphoric-pink",
+            bl: "border-l-4 border-l-festiva-euphoric-pink",
         },
     },
     {
