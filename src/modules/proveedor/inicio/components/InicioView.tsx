@@ -32,7 +32,7 @@ export default function InicioView({ stats, eventos }: InicioViewProps) {
             <section className="px-5">
                 <div className="pb-6">
                     <p className="text-festiva-midnight-blue/45 text-sm pb-2">
-                        Buenos días, proveedor
+                        Buen día, proveedor
                     </p>
                     <h1 className="text-festiva-midnight-blue font-bold text-3xl">
                         {user?.nombre}
