@@ -80,7 +80,7 @@ export default function InicioView({
         )}
 
         <div className="pb-7">
-          <p className="text-festiva-midnight-blue/45 text-sm pb-2">Buenos días</p>
+          <p className="text-festiva-midnight-blue/45 text-sm pb-2">Buen día</p>
           <h1 className="text-festiva-midnight-blue font-bold text-3xl">{user?.nombre}</h1>
         </div>
 
