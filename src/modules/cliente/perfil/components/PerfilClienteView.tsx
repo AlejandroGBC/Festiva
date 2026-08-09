@@ -218,7 +218,7 @@ export default function PerfilClienteView({ perfil, tieneNotificacionesNuevas }:
               icon={<CreditCard size={18} className="text-festiva-electric-violet" />}
               iconBg="rgba(123,63,228,0.08)"
               titulo="Historial de pagos"
-              subtitulo="Facturas y recibos"
+              subtitulo="Pagos"
               onClick={() => router.push("/cliente/pagos")}
             />
             <FilaCuenta
