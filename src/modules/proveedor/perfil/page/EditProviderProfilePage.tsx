@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import React, { useState, useEffect } from 'react';
+import { Star, ChevronRight } from 'lucide-react';
 import { useProviderProfile } from '../hooks/useProviderProfile';
 import ProfileBanner from '../components/ProfileBanner';
 import ProfileHeader from '../components/ProfileHeader';
@@ -134,7 +135,27 @@ export default function EditProviderProfilePage() {
                         availability={profile.availability} 
                         onToggleChange={handleAvailabilityToggle} 
                     />
-                    
+
+                    {/* Acceso rápido — Mis reseñas */}
+                    <div>
+                        <p className="text-[11px] font-bold text-festiva-midnight-blue/40 uppercase tracking-wide mb-2">
+                            Mi reputación
+                        </p>
+                        <div
+                            onClick={() => router.push('/proveedor/reportes/resenas')}
+                            className="flex items-center gap-3 px-4 py-3.5 rounded-2xl bg-white border border-[#EDEAF8] cursor-pointer hover:bg-[#F9F8FF] transition-colors"
+                        >
+                            <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: 'rgba(255,156,46,0.10)' }}>
+                                <Star size={18} className="text-festiva-confetti-orange" />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                                <p className="font-bold text-sm text-festiva-midnight-blue m-0">Mis reseñas</p>
+                                <p className="text-xs text-festiva-midnight-blue/45 m-0 mt-0.5">Calificaciones que te dejaron los clientes</p>
+                            </div>
+                            <ChevronRight size={16} className="text-festiva-midnight-blue/25 shrink-0" />
+                        </div>
+                    </div>
+
                     <SaveProfileButton onClick={onSaveTrigger} isSaving={isSaving} />
                 </div>
             </div>
