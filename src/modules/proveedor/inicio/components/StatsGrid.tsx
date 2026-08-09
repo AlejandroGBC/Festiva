@@ -23,6 +23,7 @@ export default function StatsGrid({
         detalle={variacionDetalle.detalle}
         detalleColor={variacionDetalle.detalleColor}
         detalleIcon={variacionDetalle.detalleIcon}
+        href="/proveedor/reportes"
       />
 
       <StatCard
@@ -31,6 +32,7 @@ export default function StatsGrid({
         detalle={`${eventosEnNegociacion} en negociacion`}
         detalleColor="text-festiva-electric-violet"
         detalleIcon={<Briefcase className="h-3.5 w-3.5" />}
+        href="/proveedor/eventos"
       />
 
       <StatCard
@@ -39,6 +41,7 @@ export default function StatsGrid({
         detalle={`${cantidadResenas} resenas`}
         detalleColor="text-festiva-confetti-orange"
         detalleIcon={<Star className="h-3.5 w-3.5 fill-current" />}
+        href="/proveedor/reportes/resenas"
       />
 
       <StatCard
@@ -50,4 +53,4 @@ export default function StatsGrid({
       />
     </div>
   );
-}
+}
