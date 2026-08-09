@@ -23,25 +23,23 @@ export async function generarPropuestaIA(descripcion: string): Promise<Propuesta
       body: JSON.stringify({ descripcion }),
     });
 
-    if (!res.ok) {
-      const texto = await res.text();
-      throw new Error(`Error ${res.status}: ${texto.slice(0, 100)}`);
+    const respuesta = await res.json();
+
+    if (!res.ok || !respuesta?.success) {
+      throw new Error(respuesta?.error ?? `Error ${res.status} al generar la propuesta`);
     }
 
-    const data = await res.json();
-    if (!data?.datos) {
-      throw new Error(data?.error ?? "La IA no devolvió datos válidos");
+    const datos = respuesta?.data?.datos;
+    if (!datos) {
+      throw new Error("La IA no devolvió datos válidos");
     }
 
-    return data.datos as PropuestaIA;
+    return datos as PropuestaIA;
   }
 
   try {
     return await llamarIA();
   } catch (e) {
-    // Reintento único: la primera llamada tras un cold-start del server
-    // a veces falla por timeout de conexión; la segunda casi siempre
-    // funciona porque la conexión ya quedó "caliente".
     console.warn("Primer intento de IA falló, reintentando una vez:", e);
     return await llamarIA();
   }
