@@ -69,7 +69,7 @@ export default function ConfiguracionUnificadaView() {
         CargarDatos();
 
         return () => { isMounted = false; };
-    }, []);
+    }, [router, signOut]);
 
     if (loading) { return <Loading fullScreen label="Cargando configuración..." />; }
 

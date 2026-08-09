@@ -109,7 +109,9 @@ export async function getOfertaDetalle(
     }
   }
 
-  const fotoPerfilUrl = (perfilRes.data as any)?.tbl_usuarios?.foto_perfil_url ?? null;
+  const fotoPerfilUrl =
+    (perfilRes.data as { tbl_usuarios?: { foto_perfil_url?: string | null } | null })
+      ?.tbl_usuarios?.foto_perfil_url ?? null;
 
   return {
     id_evento: of.id_evento,
