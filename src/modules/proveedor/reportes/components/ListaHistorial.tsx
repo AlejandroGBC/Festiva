@@ -11,7 +11,7 @@ export default function ListaHistorial({ historial, formatCurrency }: ListaHisto
     if (historial.length === 0) {
         return (
             <div className="my-4">
-                <SectionHeader title="Historial reciente" accion="Ver todos" href="pagos" />
+                <SectionHeader title="Historial reciente" accion="Ver todos" href="/proveedor/pagos" />
                 <div className="bg-white py-4 px-4 rounded-2xl">
                     <p className="text-festiva-midnight-blue/40 text-sm py-2">No hay movimientos recientes</p>
                 </div>
@@ -21,7 +21,7 @@ export default function ListaHistorial({ historial, formatCurrency }: ListaHisto
 
     return (
         <div className="my-4">
-            <SectionHeader title="Historial reciente" accion="Ver todos" href="pagos" />
+            <SectionHeader title="Historial reciente" accion="Ver todos" href="/proveedor/pagos" />
             <div className="bg-white py-4 px-4 rounded-2xl space-y-2">
                 {historial.map((item, index) => (
                     <ItemHistorial
