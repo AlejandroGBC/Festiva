@@ -1,10 +1,11 @@
-import { CalendarDays, CreditCard, Store, CheckCircle2 } from "lucide-react";
+import { CalendarDays, CreditCard, Store, CheckCircle2, ChevronRight } from "lucide-react";
 import { formatCurrency } from "@/shared/utils/formatCurrency";
 import type { PagoCliente } from "../types/historial-pagos.types";
 
 interface ItemPagoClienteProps {
     pago: PagoCliente;
     isLast: boolean;
+    onClick?: () => void;
 }
 
 function formatFecha(fechaStr: string | null): string {
@@ -23,10 +24,12 @@ function formatMetodo(metodo: string | null, mascara: string | null): string {
     return metodo;
 }
 
-export default function ItemPagoCliente({ pago, isLast }: ItemPagoClienteProps) {
+export default function ItemPagoCliente({ pago, isLast, onClick }: ItemPagoClienteProps) {
     return (
-        <div
-            className={`py-4 ${!isLast ? "border-b border-festiva-midnight-blue/8" : ""}`}
+        <button
+            type="button"
+            onClick={onClick}
+            className={`w-full text-left py-4 transition-colors active:bg-festiva-midnight-blue/5 ${!isLast ? "border-b border-festiva-midnight-blue/8" : ""}`}
         >
             {/* Fila principal: evento + monto */}
             <div className="flex items-start justify-between gap-3 mb-3">
@@ -46,10 +49,12 @@ export default function ItemPagoCliente({ pago, isLast }: ItemPagoClienteProps) 
                         </div>
                     </div>
                 </div>
-                {/* El cliente solo ve lo que pagó — sin desglose interno */}
-                <span className="text-festiva-midnight-blue font-bold text-base shrink-0">
-                    {formatCurrency(pago.montoTotal)}
-                </span>
+                <div className="flex items-center gap-1 shrink-0">
+                    <span className="text-festiva-midnight-blue font-bold text-base">
+                        {formatCurrency(pago.montoTotal)}
+                    </span>
+                    <ChevronRight size={14} className="text-festiva-midnight-blue/30" />
+                </div>
             </div>
 
             {/* Fila secundaria: proveedor + método de pago */}
@@ -67,6 +72,6 @@ export default function ItemPagoCliente({ pago, isLast }: ItemPagoClienteProps) 
                     </span>
                 </div>
             </div>
-        </div>
+        </button>
     );
 }
