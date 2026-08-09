@@ -1,5 +1,5 @@
 import { HistorialPago } from "../types/reportes.types";
-import { CircleCheckBig, Percent, GraduationCap } from "lucide-react";
+import { CircleCheckBig, Percent } from "lucide-react";
 
 interface ItemHistorialProps {
     item: HistorialPago;
@@ -10,7 +10,6 @@ interface ItemHistorialProps {
 const getIconForTransaction = (nombre: string) => {
     const lower = nombre.toLowerCase();
     if (lower.includes("comision") || lower.includes("comisión")) return Percent;
-    if (lower.includes("graduacion") || lower.includes("graduación")) return GraduationCap;
     return CircleCheckBig;
 };
 
