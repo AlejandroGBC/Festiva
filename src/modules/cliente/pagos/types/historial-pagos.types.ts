@@ -1,5 +1,6 @@
 export interface PagoCliente {
   idPago: string;
+  idEvento: string;          // Para navegar al detalle del evento
   nombreEvento: string;
   nombreProveedor: string;
   fechaPago: string | null;

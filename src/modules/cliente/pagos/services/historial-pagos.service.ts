@@ -98,6 +98,7 @@ export async function getPagosCliente(
 
         return {
             idPago: p.id_pago,
+            idEvento,
             nombreEvento,
             nombreProveedor,
             fechaPago: p.creado_en ?? null,

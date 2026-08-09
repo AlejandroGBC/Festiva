@@ -74,6 +74,7 @@ export async function getPagosProveedor(
 
         return {
             idPago: p.id_pago,
+            idEvento: idEvento ?? "",
             nombreEvento,
             fechaPago: p.creado_en ?? null,
             montoTotal: p.monto_total ?? 0,

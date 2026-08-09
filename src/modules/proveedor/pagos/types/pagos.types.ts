@@ -1,5 +1,6 @@
 export interface PagoProveedor {
   idPago: string;
+  idEvento: string;          // Para navegar al detalle del evento
   nombreEvento: string;
   fechaPago: string | null;
   montoTotal: number;        // Lo que pagó el cliente
