@@ -1,10 +1,3 @@
-/**
- * Ubicación sugerida:
- *   src/modules/cliente/ofertas/services/oferta-detalle.service.ts
- *
- * Corre en el SERVIDOR. Se llama directo desde page.tsx.
- */
-
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import type { OfertaDetalle } from "@/modules/cliente/ofertas/types/oferta-detalle.types";
 
@@ -26,8 +19,6 @@ export async function getOfertaDetalle(
     .maybeSingle();
   if (!perfilCliente) return null;
 
-  // La oferta + el evento al que pertenece, verificando en el mismo
-  // filtro que el evento sea del cliente logueado (seguridad).
   const { data: oferta, error } = await supabase
     .from("tbl_ofertas")
     .select(
@@ -59,10 +50,15 @@ export async function getOfertaDetalle(
   }
   const of = oferta as unknown as OfertaRow;
 
+  // Consulta con relación anidada hacia tbl_usuarios para obtener la foto de perfil
   const [perfilRes, telefonoRes, serviciosRes, itemsRes, calificacionesRes] = await Promise.all([
     supabase
       .from("tbl_perfiles_proveedor")
-      .select("nombre_comercial, ubicacion_base")
+      .select(`
+        nombre_comercial,
+        ubicacion_base,
+        tbl_usuarios ( foto_perfil_url )
+      `)
       .eq("id_proveedor", idProveedor)
       .maybeSingle(),
 
@@ -79,7 +75,6 @@ export async function getOfertaDetalle(
       .eq("id_evento", idEvento)
       .eq("id_proveedor", idProveedor),
 
-    // Rating general del proveedor (todas sus contrataciones, no solo esta)
     supabase
       .from("tbl_contrataciones")
       .select("id_contratacion")
@@ -114,14 +109,16 @@ export async function getOfertaDetalle(
     }
   }
 
+  const fotoPerfilUrl = (perfilRes.data as any)?.tbl_usuarios?.foto_perfil_url ?? null;
+
   return {
     id_evento: of.id_evento,
     id_proveedor: of.id_proveedor,
     evento_titulo: of.tbl_eventos?.titulo ?? "Evento",
     evento_fecha: of.tbl_eventos?.fecha_evento ?? "",
     proveedor_nombre: perfilRes.data?.nombre_comercial ?? "Proveedor",
+    proveedor_foto_url: fotoPerfilUrl,
     proveedor_categoria: categoria,
-    servicios_cubiertos: serviciosCubiertos,
     proveedor_ubicacion: perfilRes.data?.ubicacion_base ?? "",
     proveedor_telefono: telefonoRes.data?.telefono ?? null,
     proveedor_calificacion: calificacionPromedio,
@@ -129,6 +126,7 @@ export async function getOfertaDetalle(
     descripcion_servicio: of.descripcion_servicio,
     estado: of.estado ?? "enviada",
     creada_en: of.creada_en ?? new Date().toISOString(),
+    servicios_cubiertos: serviciosCubiertos,
     items_incluidos: itemsIncluidos,
   };
 }

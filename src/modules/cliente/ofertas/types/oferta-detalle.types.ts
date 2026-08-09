@@ -1,14 +1,10 @@
-/**
- * Ubicación sugerida:
- *   src/modules/cliente/ofertas/types/oferta-detalle.types.ts
- */
-
 export interface OfertaDetalle {
   id_evento: string;
   id_proveedor: string;
   evento_titulo: string;
   evento_fecha: string;
   proveedor_nombre: string;
+  proveedor_foto_url: string | null;
   proveedor_categoria: string;
   proveedor_ubicacion: string;
   proveedor_telefono: string | null;

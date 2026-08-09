@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import Image from "next/image"; // <--- Importado
 import { ArrowLeft, MapPin, Star, Clock, MessageCircle, CheckCircle2, AlertCircle } from "lucide-react";
 import Card from "@/shared/components/Card";
 import Chip from "@/shared/components/Chip";
@@ -10,6 +11,8 @@ import { useState } from "react";
 import { aceptarOferta } from "@/modules/cliente/ofertas/services/aceptar-oferta.service";
 import Button from "@/shared/components/Button";
 import { formatFecha } from "@/shared/utils/tiempo";
+import { getAvatarUrl } from "@/shared/utils/getAvatarUrl";
+import { obtenerIniciales } from "@/shared/utils/obtenerIniciales";
 
 const ESTADO_LABEL: Record<OfertaDetalle["estado"], string> = {
   enviada: "Nueva",
@@ -41,7 +44,7 @@ export default function OfertaDetalleView({ oferta }: OfertaDetalleViewProps) {
   const [error, setError] = useState("");
 
   const puedeAceptar = oferta.estado === "enviada";
-  const inicial = oferta.proveedor_nombre.charAt(0);
+  const avatarUrl = getAvatarUrl(oferta.proveedor_foto_url);
 
   async function handleAceptar() {
     setProcesando(true);
@@ -76,9 +79,21 @@ export default function OfertaDetalleView({ oferta }: OfertaDetalleViewProps) {
         </div>
 
         <div className="flex items-center gap-3.5">
-          <div className="w-16 h-16 rounded-2xl bg-festiva-euphoric-pink/20 border-2 border-festiva-euphoric-pink/30 flex items-center justify-center shrink-0 text-lg font-bold text-white">
-            {inicial}
-          </div>
+          {avatarUrl ? (
+            <Image
+              src={avatarUrl}
+              alt={oferta.proveedor_nombre}
+              width={64}
+              height={64}
+              className="w-16 h-16 rounded-2xl object-cover border-2 border-white/20 shrink-0"
+              unoptimized
+            />
+          ) : (
+            <div className="w-16 h-16 rounded-2xl bg-festiva-euphoric-pink/20 border-2 border-festiva-euphoric-pink/30 flex items-center justify-center shrink-0 text-lg font-bold text-white">
+              {obtenerIniciales(oferta.proveedor_nombre)}
+            </div>
+          )}
+
           <div className="min-w-0">
             <h1 className="font-bold text-xl text-white m-0 truncate">{oferta.proveedor_nombre}</h1>
             <div className="flex items-center gap-1.5 mt-1 flex-wrap">
