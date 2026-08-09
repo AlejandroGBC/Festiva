@@ -16,12 +16,10 @@ export default function GraficoIngresos({ data, porcentaje, formatCurrency }: Gr
 
     const isPositive = porcentaje >= 0;
 
-    // Colores y clases según signo
     const trendColor = isPositive ? "text-festiva-mint-neon" : "text-festiva-berry-punch";
     const bgColor = isPositive ? "bg-festiva-mint-neon/10" : "bg-festiva-berry-punch/10";
     const IconComponent = isPositive ? TrendingUp : TrendingDown;
 
-    // Formatear el porcentaje para mostrar siempre con signo
     const displayPercentage = isPositive && porcentaje > 0 ? `+${porcentaje}%` : `${porcentaje}%`;
 
     return (
