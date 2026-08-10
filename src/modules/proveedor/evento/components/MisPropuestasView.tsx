@@ -60,7 +60,7 @@ export default function MisPropuestasView({ propuestasIniciales, error }: MisPro
           ))
         ) : (
           <p className="text-sm text-gray-400 text-center py-10">
-            No tienes propuestas {tabActivo === "aceptadas" ? "aceptadas" : "rechazadas"} por ahora.
+            No tienes propuestas {tabActivo} por ahora.
           </p>
         )}
       </div>
