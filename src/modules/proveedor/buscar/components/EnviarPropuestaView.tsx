@@ -12,6 +12,7 @@ import { ServicioIncluidoItem } from "@/modules/proveedor/buscar/components/Serv
 import type { EventoParaPropuesta } from "@/shared/types/enviar-propuesta-proveedor.types";
 import type { ServicioIncluido } from "@/shared/types/enviar-propuesta-proveedor.types";
 import { enviarPropuesta } from "../service/enviar-propuesta.service";
+import { DetalleEventoPropuestaCard } from "./DetalleEventoPropuestaCard";
 
 interface EnviarPropuestaViewProps {
   evento: EventoParaPropuesta;
@@ -74,6 +75,8 @@ export default function EnviarPropuestaView({ evento }: EnviarPropuestaViewProps
 
       <div className="flex-1 overflow-y-auto no-scrollbar w-full px-5 pt-2 pb-10 flex flex-col gap-5">
         <ResumenEventoCard evento={evento} />
+
+        <DetalleEventoPropuestaCard evento={evento} />
 
         <PrecioPropuestaInput precio={precio} onChange={setPrecio} comisionPorcentaje={7} />
 
