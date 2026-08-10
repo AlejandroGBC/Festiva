@@ -22,6 +22,4 @@ export interface EnviarPropuestaPayload {
   precio_total: number;
   mensaje: string;
   servicios_incluidos: number[]; // ids de tbl_servicios
-  horas_montaje: number;
-  horas_servicio: number;
 }

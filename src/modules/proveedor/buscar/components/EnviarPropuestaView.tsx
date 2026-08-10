@@ -2,9 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Clock, Send } from "lucide-react";
+import { Send } from "lucide-react";
 import Button from "@/shared/components/Button";
-import Input from "@/shared/components/Input";
 import Textarea from "@/shared/components/Textarea";
 import { EnviarPropuestaHeader } from "@/modules/proveedor/buscar/components/EnviarPropuestaHeader";
 import { ResumenEventoCard } from "@/modules/proveedor/buscar/components/ResumenEventoCard";
@@ -30,8 +29,6 @@ export default function EnviarPropuestaView({ evento }: EnviarPropuestaViewProps
       incluido: true, // por defecto, todo lo que el evento pidió y el proveedor ofrece va marcado
     }))
   );
-  const [montajeHoras, setMontajeHoras] = useState(0);
-  const [servicioHoras, setServicioHoras] = useState(0);
   const [mensaje, setMensaje] = useState("");
   const [enviando, setEnviando] = useState(false);
   const [error, setError] = useState("");
@@ -60,8 +57,6 @@ export default function EnviarPropuestaView({ evento }: EnviarPropuestaViewProps
         precio_total: precio,
         mensaje,
         servicios_incluidos: serviciosSeleccionados,
-        horas_montaje: montajeHoras,
-        horas_servicio: servicioHoras,
       });
       router.push("/proveedor/eventos"); //seria este, para mostrar las propuestas enviadas
       router.refresh();
@@ -80,7 +75,7 @@ export default function EnviarPropuestaView({ evento }: EnviarPropuestaViewProps
       <div className="flex-1 overflow-y-auto no-scrollbar w-full px-5 pt-2 pb-10 flex flex-col gap-5">
         <ResumenEventoCard evento={evento} />
 
-        <PrecioPropuestaInput precio={precio} onChange={setPrecio} comisionPorcentaje={8} />
+        <PrecioPropuestaInput precio={precio} onChange={setPrecio} comisionPorcentaje={7} />
 
         <div className="bg-white rounded-3xl shadow-sm p-5">
           <p className="font-bold text-festiva-midnight-blue mb-2">Servicios que incluyes</p>
@@ -93,28 +88,6 @@ export default function EnviarPropuestaView({ evento }: EnviarPropuestaViewProps
                 esUltimo={index === servicios.length - 1}
               />
             ))}
-          </div>
-        </div>
-
-        <div className="bg-white rounded-3xl shadow-sm p-5">
-          <p className="font-bold text-festiva-midnight-blue mb-3">Tiempo de servicio</p>
-          <div className="grid grid-cols-2 gap-3">
-            <Input
-              label="Montaje"
-              icon={Clock}
-              type="number"
-              value={montajeHoras}
-              onChange={(e) => setMontajeHoras(Number(e.target.value))}
-              variant="monochromatic"
-            />
-            <Input
-              label="Servicio"
-              icon={Clock}
-              type="number"
-              value={servicioHoras}
-              onChange={(e) => setServicioHoras(Number(e.target.value))}
-              variant="monochromatic"
-            />
           </div>
         </div>
 
