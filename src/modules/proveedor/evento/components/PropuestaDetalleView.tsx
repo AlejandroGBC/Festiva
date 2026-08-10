@@ -154,7 +154,7 @@ export default function PropuestaDetalleView({ propuesta }: PropuestaDetalleView
         </Card>
 
         <Link
-          href={`/proveedor/chat/iniciar/${propuesta.id_evento}`}
+          href={`/proveedor/chat/iniciar/${propuesta.id_evento}/${propuesta.id_cliente}`}
           className="flex items-center justify-center gap-2 mt-5 w-full bg-festiva-electric-violet text-white rounded-2xl px-4 py-3.5 text-[14px] font-bold shadow-[0_6px_20px_rgba(124,58,237,0.3)]"
         >
           <MessageCircle size={18} />
