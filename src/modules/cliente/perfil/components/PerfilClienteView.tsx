@@ -198,7 +198,7 @@ export default function PerfilClienteView({ perfil, tieneNotificacionesNuevas }:
               iconBg="rgba(255,156,46,0.10)"
               titulo="Notificaciones"
               subtitulo="Email y push"
-              onClick={() => router.push("/cliente/perfil/notificaciones")}
+              onClick={() => router.push("/cliente/notificaciones")}
             />
           </div>
 
